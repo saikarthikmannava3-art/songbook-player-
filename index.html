@@ -44,6 +44,12 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .songhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
 .songhead h2{font-family:var(--display);font-weight:800;letter-spacing:.01em;font-size:clamp(24px,5vw,32px);margin:0;color:var(--fg)}
 .songhead .by{color:var(--muted)}
+.songid{display:flex;align-items:center;gap:14px;min-width:0}
+.avstack{display:inline-flex;flex-shrink:0}.avstack .avatar+.avatar{margin-left:-14%}
+.avatar{display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;background:var(--sunk);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);color:var(--fg);font-family:var(--display);font-weight:800;flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.avatar.edit{cursor:pointer}.avatar.edit:hover{box-shadow:0 0 0 2px var(--accent)}
+.shelf button{display:inline-flex;align-items:center;gap:8px}.shelf button .avatar{border-width:1px;font-size:9px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
 .pill{font-size:13px;padding:5px 10px;border:1px solid var(--line);border-radius:99px;background:var(--bg)}
 .pill b{color:var(--accent)}
@@ -53,6 +59,9 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .seg button{font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:7px 12px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .vdesc{font-size:14px;color:var(--muted);margin:6px 0 0}
+.vdesc.note{margin-top:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;line-height:1.55;color:var(--fg);opacity:.92}
+.vdesc.note .slots{margin-top:8px}
+.cchip{display:inline-block;font:700 13px/1.2 var(--mono);color:var(--cc);border:1.5px solid var(--cc);background:color-mix(in srgb,var(--cc) 14%,transparent);border-radius:99px;padding:1px 8px;margin:1px 1px}
 .pickers{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .links{display:flex;flex-wrap:wrap;gap:8px}
 .links a{font-size:14px;font-weight:700;color:var(--fg);background:var(--bg);border:1px solid var(--line);text-decoration:none;border-radius:8px;padding:7px 11px}
@@ -110,6 +119,21 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .warm .chips button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .warm ol{margin:0;padding-left:22px;display:grid;gap:8px;line-height:1.45}
 .warm ol b{color:var(--fg)}
+.warm details.sub{background:var(--sunk);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:12px}
+.warm details.sub>summary{font-weight:800;font-size:17px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--accent);border-left:4px solid var(--accent);padding:2px 0 2px 10px;margin:-2px 0 -2px -4px}
+.warm details.sub>summary::-webkit-details-marker{display:none}
+.warm details.sub>summary::after{content:"＋";color:var(--muted);font-weight:700}
+.warm details.sub[open]>summary::after{content:"－"}
+.warm details.sub:not([open])>summary{color:var(--fg)}
+.warm>summary,details.card.chart>summary>span:first-child,#lyrBox>summary{color:var(--accent)}
+#lyrBox>summary,details.card.chart>summary>span:first-child{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+.warm details.sub[open]>summary{margin-bottom:10px}
+.warm details.sub .box{background:var(--surface)}
+.warm details.sub>*+*{margin-top:10px}
+.warm .dnow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.warm .dnow .big{font-size:56px;min-width:90px}
+.warm .slots i.now{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);transform:scale(1.12)}
+.warm .go.on{background:var(--fg);color:var(--bg)}
 .warm .go{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:.03em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:10px 16px;cursor:pointer;align-self:flex-start}
 /* count-in */
 .countin{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:color-mix(in srgb,var(--stage) 72%,transparent);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);cursor:pointer}
@@ -160,9 +184,12 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .nextup .nl{font-size:11px;letter-spacing:.12em;text-transform:uppercase}.nextup b{color:var(--fg)}.nextup .nc{font-family:var(--mono);font-size:12px}
 .nextup.soon{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.nextup.soon b{color:var(--accent-ink)}
 .blocks{display:flex;flex-direction:column;gap:14px}
-.blk{display:flex;flex-direction:column;gap:8px}
-.blk .blklab{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.blk.cur .blklab{display:none}
+.blk{display:grid;grid-template-columns:130px minmax(0,1fr);column-gap:14px;row-gap:8px;align-items:start}
+.blk>*{grid-column:2}
+.blk .blklab{grid-column:1;grid-row:1 / span 2;align-self:stretch;display:flex;align-items:center;font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-right:3px solid var(--line);padding-right:10px;line-height:1.15}
+.blk.cur .blklab{color:var(--fg);font-size:22px;border-right-color:var(--accent)}
+.stagehd .secname{display:none}.stagehd{justify-content:flex-end}
+@media (max-width:700px){.blk{grid-template-columns:1fr}.blk>*,.blk .blklab{grid-column:1;grid-row:auto}.blk .blklab{border-right:0;border-bottom:3px solid var(--line);padding:0 0 4px}.blk.cur .blklab{border-bottom-color:var(--accent)}}
 .blk.next{opacity:.5}.blk.next .ccard{transform:none}
 .bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .ccard{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 10px 8px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;min-width:0}
@@ -208,7 +235,66 @@ details.card>summary::after{content:"＋";color:var(--muted)}
 details[open].card>summary::after{content:"－"}
 .shapes{display:flex;flex-wrap:wrap;gap:10px}
 .shape{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px 4px;text-align:center}
-.shape span{display:block;font-family:var(--mono);font-weight:700;color:var(--chord)}
+.shape span{display:block;font-family:var(--display);font-weight:900;font-size:24px;line-height:1.1;margin-top:2px;color:var(--chord)}
+
+/* 🎓 side dashboard */
+.dash{position:fixed;top:0;left:0;bottom:0;width:320px;z-index:25;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:16px 14px 40px;display:flex;flex-direction:column;gap:10px;transform:translateX(-100%);transition:transform .2s ease;box-shadow:0 0 30px rgba(0,0,0,.25)}
+body.dash-on .dash{transform:none}
+@media (min-width:1100px){body.dash-on .dash{box-shadow:none}body.dash-on .wrap{margin-left:max(340px,calc((100vw - 1040px)/2))}}
+.dashtab{position:fixed;left:0;top:96px;z-index:24;writing-mode:vertical-rl;transform:rotate(180deg);font:inherit;font-weight:800;font-size:14px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:0 10px 10px 0;padding:12px 7px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+body.dash-on .dashtab{display:none}
+.dhead{display:flex;align-items:center;justify-content:space-between}.dhead h2{margin:0;font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;color:var(--accent);letter-spacing:.02em}
+.dclose{background:none;border:0;color:var(--muted);font-size:18px;cursor:pointer}
+.dsub{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+.dprog{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}.dbar{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden}.dbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.dnow{background:var(--sunk);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.dnow .label{margin:0}.dnow .libbtn{align-self:flex-start;font-size:13px;padding:7px 10px}
+.dline{margin:0;font-size:13px;line-height:1.45;color:var(--fg)}
+.dchips{display:flex;flex-wrap:wrap;gap:4px}
+.dgrade{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px}
+.dgrade>summary{font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase;color:var(--fg);cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+.dgrade>summary::-webkit-details-marker,.dmod>summary::-webkit-details-marker{display:none}
+.dgrade>summary::after{content:"＋";color:var(--muted)}.dgrade[open]>summary::after{content:"－"}
+.dpages{display:flex;flex-wrap:wrap;gap:4px}
+.pglink{font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:3px 8px;white-space:nowrap;background:var(--bg)}
+.dmod{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 9px;display:flex;flex-direction:column;gap:6px}
+.dmod>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700}
+.dmod .mn{font:800 12px var(--mono);color:var(--accent);min-width:24px}.dmod .mt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmod.now{border-color:var(--accent)}.dmod.done .mt{color:var(--muted);text-decoration:line-through}
+.dmod input[type=checkbox],.dl input{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;margin:0}
+.dl{display:flex;align-items:flex-start;gap:7px;font-size:13px;line-height:1.4;cursor:pointer}.dl span{flex:1}
+.dlessons{display:flex;flex-direction:column;gap:5px}
+.dstrum{display:flex;flex-direction:column;gap:1px;font-size:13px}.dstrum code{font:700 13px var(--mono);color:var(--chord)}.dstrum small{color:var(--muted)}
+.dmy{display:flex;align-items:center;gap:6px;font-size:13px}.dmy select{flex:1;min-width:0;font:inherit;font-size:13px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px}.dmy .libbtn{padding:5px 9px}
+.dreset{align-self:flex-start;background:none;border:0;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:6px}
+/* songbook (PDFs) */
+.songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
+.songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
+.sbtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sbq{flex:1 1 200px;font:inherit;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);padding:9px 12px}
+.sbtools .libbtn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.sblist{display:flex;flex-direction:column;gap:6px}
+.sbrow{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
+.sbrow.on{border-color:var(--accent)}
+.sbname{flex:1;min-width:0;text-align:left;font:inherit;font-weight:700;color:var(--fg);background:none;border:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px}
+.sbmeta{font-size:12px;color:var(--muted);white-space:nowrap}
+.sbpin,.sbact{font:inherit;font-size:16px;background:none;border:0;color:var(--muted);cursor:pointer;padding:4px 6px;text-decoration:none}
+.sbpin{color:var(--accent)}
+.sbact:hover,.sbpin:hover{color:var(--fg)}
+.sbviewer:empty{display:none}
+.sbquick:empty{display:none}.sbquick{display:flex;flex-direction:column;gap:6px}.sbquick .label{margin:4px 0 0}
+.sbchips{display:flex;flex-wrap:wrap;gap:6px}
+.sbtoc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.sbtoc button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:99px;padding:5px 10px;cursor:pointer}
+.sbtoc button.mine{border-color:var(--accent);color:var(--accent)}
+.sbtoc button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.sbpin:disabled{cursor:default;opacity:1}
+.sheetbody{display:flex;flex-direction:column;gap:8px}.sheetbody>a{align-self:flex-start}
+.sheetbody iframe{width:100%;height:85vh;border:1px solid var(--line);border-radius:10px;background:#fff}
+.sbvhd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}.sbvhd b{flex:1;min-width:0}
+.sbviewer iframe{width:100%;height:82vh;border:1px solid var(--line);border-radius:10px;background:#fff}
+@media (max-width:640px){.sbmeta{display:none}}
+
 .strums{display:grid;gap:8px}
 .srow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .sname{font-size:14px;color:var(--muted);min-width:15em}
@@ -238,6 +324,8 @@ details[open].card>summary::after{content:"－"}
 @media (prefers-reduced-motion:reduce){.ccard{transition:none}}
 </style></head><body>
 
+<aside class="dash" id="dash" aria-label="Guitar course"></aside>
+<button class="dashtab" id="dashTab" type="button" title="Show / hide the guitar course">🎓 Course</button>
 <div class="wrap">
   <header class="top">
     <h1>Songbook <span>Player</span></h1>
@@ -279,7 +367,7 @@ details[open].card>summary::after{content:"－"}
    ===================================================================================== */
 const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords cross-checked"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"]];
 function qaStatus(s){const q=s.qa||{};const miss=QA_GATES.filter(([k])=>!q[k]).map(([,l])=>l);return {ok:!miss.length,miss,q};}
-const SONGS=[{"artist": "Sadhu Tiwari", "beatsPerBar": 4, "bpm": 86.1, "capo": 1, "firstBeat": 0.906, "from": "Hanuman Ansh", "key": "E♭ (D shapes, capo 1)", "length": "4:45", "notes": ["Capo 1, D shapes (sounds in E♭). 86 BPM, timed to your MP3.", "Chorus: Am → C on “kaay zid kar rahi…”, D – C – Am on “jaake sees pe ganga…”, D – F – G – D on “Bholenath”.", "One-beat chords get one down strum, not the whole pattern.", "Lyrics: open “Parvati — lyrics and chords.txt” in the Lyrics panel."], "order": 1, "patterns": {"full": {"label": "Main — ↓ ↓ ↑ ✕ ↓", "s": "D.DuX.D."}, "mid": {"label": "Lighter — same pattern, soft", "s": "d.dux.d."}, "ring": {"label": "Soft — one strum, let ring", "s": "D......."}}, "sources": [{"label": "Your Ultimate Guitar sheet (abhishekyadav123)", "url": "#"}, {"label": "Your recording (Parvati MP3)", "url": "#"}, {"label": "bibekac lesson", "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"}, {"label": "Sagar Roy lesson", "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"}], "title": "Parvati", "youtube": "https://www.youtube.com/watch?v=nJlbqQEFYaE", "id": "parvati", "subdiv": 2, "versions": {"simple": {"label": "Easy", "desc": "Just three open chords, one per bar: D, C, G. Quick Am and F moments are skipped (the F → G on “Bholenath” is played as G).", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["C", "C", "C", "D", "C", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["C", "C", "C", "D", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "C", "G", "G", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["C", "C", "C", "D", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "D", "D", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your Ultimate Guitar sheet, timed to the recording: Am → C, and F → G on “Bholenath”.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "Am:1 C:3", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "C", "G", "G:2 D:2", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "D", "D", "D"]}]}, "band": {"label": "Band", "desc": "Sheet + colour: Cadd9, and Dsus2 / Dsus4 movement on the long D stretches.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "Am:1 Cadd9:3", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "Cadd9", "G", "G:2 D:2", "D:2 Dsus2:2"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1"]}]}}, "strums": [{"label": "Pattern 1 — 4 downs (beginner)", "s": "D.D.D.D."}, {"label": "Pattern 2 — D DU UDU (the classic)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — song feel ↓ ↓↑ ✕ ↓", "s": "D.DuX.D."}], "links": [{"label": "Original song", "url": "https://www.youtube.com/watch?v=nJlbqQEFYaE"}, {"label": "bibekac lesson", "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"}, {"label": "Sagar Roy lesson", "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"}], "timeLabel": "4/4", "qa": {"g1": true, "g2": true, "g3": true, "g4": true, "g5": true, "g6": true, "g7": true, "top1": 0.842, "bpm_measured": 86.1, "disputed": "Chorus 1 bar 5: the sheet's Am → C is heard as G in the recording; kept the sheet so the lyrics line up. Old chart (C instead of F → G) scored 81%, the sheet 84%."}, "map": [0.906, 31.602, 81.827, 129.289, 176.727, 224.189, 271.441], "rev": 3}, {"id": "perfect", "order": 2, "title": "Perfect", "artist": "Ed Sheeran", "from": "÷ (Divide)", "key": "A♭ (G shapes, capo 1)", "capo": 1, "bpm": 63, "beatsPerBar": 2, "subdiv": 3, "timeLabel": "6 counts a card (slow 6/8 feel)", "length": "4:23", "firstBeat": 0, "youtube": "https://www.youtube.com/watch?v=tCh3NiOWh9c", "links": [{"label": "Play-along: chords video", "url": "https://www.youtube.com/watch?v=tCh3NiOWh9c"}, {"label": "Super easy lesson", "url": "https://www.youtube.com/watch?v=Z3KUCrpOyu0"}, {"label": "Guitar tutorial", "url": "https://www.youtube.com/watch?v=9-DqIDNwWdY"}], "patterns": {"ring": {"label": "Soft — one strum, let ring", "s": "D....."}, "mid": {"label": "Verse — downs on 1 and 4", "s": "D..D.."}, "full": {"label": "Chorus — six beats", "s": "DddDdd"}}, "strums": [{"label": "Pattern 1 — Four downs (one per main beat)", "s": "D..D.."}, {"label": "Pattern 2 — Six beats (loud on 1 and 4)", "s": "DddDdd"}, {"label": "Pattern 3 — Usual 12:8 (count 1–12 over two cards)", "s": "DddDdd"}, {"label": "Pattern 4 — D · D U D U", "s": "D.DUDU"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords G, Em, C, D — one per card; in two-chord bars you play the first chord.", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em", "G", "Em", "G"]}, {"name": "Interlude", "feel": "mid", "bars": ["G", "Em", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em", "G", "Em", "G"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["C", "D", "C", "G", "C", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G", "Em", "C", "G"]}]}, "intermediate": {"label": "Intermediate", "desc": "Exactly your Karthik Songbook: verse one chord per bar, chorus two chords a bar (Em–C, G–D).", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G D", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em C", "G D", "Em C", "G D"]}, {"name": "Interlude", "feel": "mid", "bars": ["G D", "Em D", "C D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G D", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em C", "G D", "Em C", "G D"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["C G", "D Em", "C", "G Em", "C", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G D", "Em D", "C D", "G"]}]}, "band": {"label": "Band", "desc": "Songbook + colour: Cadd9 for C and the G → D/F# walk-down.", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D", "G", "Em", "Cadd9", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "Cadd9", "G D/F#", "G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#"]}, {"name": "Interlude", "feel": "mid", "bars": ["G D/F#", "Em D", "Cadd9 D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D", "G", "Em", "Cadd9", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "Cadd9", "G D/F#", "G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["Cadd9 G", "D Em", "Cadd9", "G Em", "Cadd9", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G D/F#", "Em D", "Cadd9 D", "G"]}]}}, "notes": ["From your Karthik Songbook: capo 1, G shapes, about 63 BPM, all downstrokes.", "Two chords in one bar share it equally (Em–C, G–D = half a bar each).", "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."], "sources": [{"label": "Your Karthik Songbook (PDF)", "url": "#"}, {"label": "Lauren Bateman chart", "url": "https://www.laurenbateman.com/perfect-chord-chart/"}, {"label": "Guitartwitt", "url": "https://guitartwitt.com/perfect-chords-ed-sheeran"}], "qa": {"g1": true, "g3": true, "g7": true}, "rev": 2}, {"id": "three-little-birds", "order": 3, "title": "Three Little Birds", "artist": "Bob Marley & The Wailers", "from": "Exodus", "key": "A (no capo)", "capo": 0, "bpm": 74, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4 — reggae", "length": "3:00", "firstBeat": 0, "youtube": "https://www.youtube.com/watch?v=VAx4l-C2pJI", "links": [{"label": "Play-along guitar lesson", "url": "https://www.youtube.com/watch?v=VAx4l-C2pJI"}, {"label": "Easy play-along with chords", "url": "https://www.youtube.com/watch?v=9o4petoHyLo"}, {"label": "Beginner tutorial", "url": "https://www.youtube.com/watch?v=gJGzHXkzi34"}], "patterns": {"ring": {"label": "Intro — four downs", "s": "D.D.D.D."}, "full": {"label": "Off-beat (most taught)", "s": "BDBDBDBD"}}, "strums": [{"label": "Pattern 1 — Four downs", "s": "D.D.D.D."}, {"label": "Pattern 2 — Reggae (bass · down · up · chuck · down)", "s": "B.DUX.D."}, {"label": "Pattern 3 — DDUUDU", "s": "D.DU.UDU"}, {"label": "Pattern 4 — Off-beat (most taught: bass on the beat, strum on the &)", "s": "BDBDBDBD"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords A, D, E — one per bar; in the D–A bars play D.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Exactly your Karthik Songbook: Intro A ×4, Chorus A | D A | A | D A, Verse A E A D / A E D A.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}]}, "band": {"label": "Band", "desc": "Songbook + E7 in the verses and an Asus4 hammer-on in the chorus.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E7", "A", "D", "A", "E7", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E7", "A", "D", "A", "E7", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}]}}, "notes": ["From your Karthik Songbook: no capo, open A, D, E, about 74 BPM.", "Intro: play the intro tab ×4 over A (see your songbook PDF).", "B = bass note, ✕ = chuck (muted strum).", "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."], "sources": [{"label": "Your Karthik Songbook (PDF)", "url": "#"}, {"label": "Guitartwitt", "url": "https://guitartwitt.com/three-little-birds-chords-by-bob-marley"}], "qa": {"g1": true, "g3": true, "g7": true}, "rev": 2}, {"id": "7-years", "order": 4, "title": "7 Years", "artist": "Lukas Graham", "from": "Lukas Graham (Blue Album)", "key": "Gm (Em-G-C-D shapes, capo 3)", "capo": 3, "bpm": 120, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4", "length": "3:55", "firstBeat": 2.09, "youtube": "https://www.youtube.com/watch?v=rBZlcitXX8o", "links": [{"label": "Play-along", "url": "https://www.youtube.com/watch?v=rBZlcitXX8o"}, {"label": "Tutorial: capo 3 (0:32)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=32s"}, {"label": "Chords Em G C D (1:09)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=69s"}, {"label": "B and B7 (2:39)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=159s"}, {"label": "Pattern 1 (3:56)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=236s"}, {"label": "Pattern 2 (6:21)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=381s"}, {"label": "Pattern 3 (10:44)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=644s"}, {"label": "Song structure (12:54)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=774s"}, {"label": "B-chord progression (16:53)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=1013s"}], "patterns": {"ring": {"label": "Intro/outro — one down per chord", "s": "D......."}, "mid": {"label": "Verse — D D U U D U", "s": "D.DU.UDU"}, "full": {"label": "Chorus — D D U U D U", "s": "D.DU.UDU"}}, "strums": [{"label": "Pattern 1 — one down per chord change (Ellen: intro & outro)", "s": "D......."}, {"label": "Pattern 2 — D D U U D U (Ellen's main pattern)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — D D U U D · (last up dropped to make quick changes)", "s": "D.DU.UD."}], "versions": {"simple": {"label": "Easy", "desc": "Only the 4 chords from your tutorial — Em, G, C, D (capo 3), one per bar. The B / Bsus4 / G/B moments are played as D and G.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C", "Em", "D", "G", "C", "D", "D", "D"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C", "Em", "D", "G", "C", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em", "G"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your Ultimate Guitar chords, timed to the recording: Em→D and C→D change on beat 3.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G/B"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C:2 D:2", "Em", "D", "G/B", "C", "D:2 Em:2", "Bsus4", "B"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C:2 D:2", "Em", "D", "G/B", "C:2 D:2", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em:2 D:2", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em:2 D:2", "G"]}]}, "band": {"label": "Band", "desc": "Advanced (Ellen's optional B-chord version) + colour: Bsus4 → B7 in the sixty-years chorus, D/F# walk-ups, Cmaj7 in the verses.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G/B"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C:2 Dsus4:1 D:1", "Em", "D", "G/B", "C", "D:2 Em:2", "Bsus4", "B7"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C:2 Dsus4:1 D:1", "Em", "D", "G/B", "C:2 Dsus4:1 D:1", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em:2 D/F#:2", "G"]}]}}, "notes": ["Ellen's lesson: capo 3, standard tuning. Required chords Em, G, C, D; B and B7 are optional (Intermediate / Band).", "Start with Pattern 1 (one down per chord change), then Pattern 2: D D U U D U.", "Timed to your MP3: 120 BPM, every section is 8 bars."], "sources": [{"label": "Your Ultimate Guitar sheet", "url": "https://tabs.ultimate-guitar.com/tab/lukas-graham/7-years-chords-1803179"}, {"label": "Cifra Club", "url": "https://www.cifraclub.com/lukas-graham/7-years/jpkwgp.html"}, {"label": "Billchords", "url": "https://billchords.blogspot.com/2016/02/guitar-chords-lukas-graham-7-years.html"}, {"label": "Wikipedia (key, 120 BPM)", "url": "https://en.wikipedia.org/wiki/7_Years_(Lukas_Graham_song)"}, {"label": "Musicnotes (♩=120)", "url": "https://www.musicnotes.com/sheetmusic/lukas-graham/7-years/MN0160995"}], "map": [2.09, 18.065, 34.11, 50.109, 66.084, 82.083, 97.919, 114.08, 130.078, 146.1, 162.122, 178.074, 194.072, 210.094, 226.069], "rev": 3, "qa": {"g1": true, "g2": true, "g3": true, "g4": true, "g5": true, "g6": true, "g7": true, "top1": 0.849, "top2": 0.902, "bpm_measured": 120.02, "disputed": "Bridge & 'sixty years old' choruses: Cifra Club simplifies to Em-D-G-C; kept the UG sheet (G/B, Bsus4→B), confirmed by the recording."}}, {"id": "sunflower", "order": 5, "title": "Sunflower", "artist": "Post Malone, Swae Lee", "from": "Spider-Man: Into the Spider-Verse", "key": "D (no capo)", "capo": 0, "bpm": 90, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4", "length": "2:38", "firstBeat": 0, "rev": 1, "youtube": "https://www.youtube.com/watch?v=o-v5ltkpOZQ", "links": [{"label": "Chord & lyric play-along (Skye C. Hale)", "url": "https://www.youtube.com/watch?v=o-v5ltkpOZQ"}], "patterns": {"ring": {"label": "Intro — one down per chord, let ring", "s": "D......."}, "mid": {"label": "D D U U D U", "s": "D.DU.UDU"}, "full": {"label": "D D U U D U", "s": "D.DU.UDU"}}, "strums": [{"label": "Pattern 1 — one down per chord (intro)", "s": "D......."}, {"label": "Pattern 2 — D D U U D U (rest of the song)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — D D U D U D U (busier, from your sheet's 2nd pattern)", "s": "D.DUDUDU"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords only: D, G, Em — one per bar, as in your sheet.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G", "D", "D", "G", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G", "D", "D", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "G", "G", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your sheet with the optional Dsus2 on every second D bar (one lesson uses it).", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G", "D", "Dsus2", "G", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G", "D", "Dsus2", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "G", "G", "D"]}]}, "band": {"label": "Band", "desc": "Colour chords: Dmaj7, D → Dsus2 hammer-ons, G → Gmaj7, Em7.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Dmaj7", "Dmaj7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Chorus", "feel": "full", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2"]}, {"name": "Chorus", "feel": "full", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Outro", "feel": "ring", "bars": ["Dmaj7", "Dmaj7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7"]}]}}, "notes": ["From your own chord sheet: 90 BPM, 4/4, no capo, open D, G, Em (Dsus2 optional).", "Intro: one down strum per chord, let it ring. Then D D U U D U for the rest of the song.", "Draft until timed to an MP3 — send it and I'll run the pipeline."], "sources": [{"label": "Your Sunflower chord sheets (PDF)", "url": "#"}, {"label": "Ultimate Guitar (absolute beginner)", "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2497134"}, {"label": "Ultimate Guitar ver 2 (Dsus2)", "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2496459"}, {"label": "Musicnotes (♩=90, key D)", "url": "https://www.musicnotes.com/sheetmusic/post-malone-swae-lee/sunflower/MN0190311"}], "qa": {"g1": true, "g2": true, "g3": true, "g7": true, "disputed": "Your sheet and Ultimate Guitar agree on D G Em G; the real recording adds colour (maj7 chords) — that's the Band version."}}];
+const SONGS=[{"artist": "Sadhu Tiwari", "beatsPerBar": 4, "bpm": 86.1, "capo": 1, "firstBeat": 0.906, "from": "Hanuman Ansh", "key": "E♭ (D shapes, capo 1)", "length": "4:45", "notes": ["Capo 1, D shapes (sounds in E♭). 86 BPM, timed to your MP3.", "Chorus: Am → C on “kaay zid kar rahi…”, D – C – Am on “jaake sees pe ganga…”, D – F – G – D on “Bholenath”.", "One-beat chords get one down strum, not the whole pattern.", "Lyrics: open “Parvati — lyrics and chords.txt” in the Lyrics panel."], "order": 1, "patterns": {"full": {"label": "Main — ↓ ↓ ↑ ✕ ↓", "s": "D.DuX.D."}, "mid": {"label": "Lighter — same pattern, soft", "s": "d.dux.d."}, "ring": {"label": "Soft — one strum, let ring", "s": "D......."}}, "sources": [{"label": "Your Ultimate Guitar sheet (abhishekyadav123)", "url": "#"}, {"label": "Your recording (Parvati MP3)", "url": "#"}, {"label": "bibekac lesson", "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"}, {"label": "Sagar Roy lesson", "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"}], "title": "Parvati", "youtube": "https://www.youtube.com/watch?v=nJlbqQEFYaE", "id": "parvati", "subdiv": 2, "versions": {"simple": {"label": "Easy", "desc": "Just three open chords, one per bar: D, C, G. Quick Am and F moments are skipped (the F → G on “Bholenath” is played as G).", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D"]}, {"name": "Opening verse", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["C", "C", "C", "D", "C", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["C", "C", "C", "D", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "C", "G", "G", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["C", "C", "C", "D", "D", "D", "C", "D", "C", "D", "G", "D", "D", "C", "D", "G", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "D", "D", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your Ultimate Guitar sheet, timed to the recording: Am → C, and F → G on “Bholenath”.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D"]}, {"name": "Opening verse", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "Am:1 C:3", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "D", "C", "G", "G:2 D:2", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Am:1 C:3", "C", "Am:1 C:3", "D", "D", "D", "C Am", "D", "C Am", "D", "F:2 G:2", "D", "D", "C Am", "D", "F:2 G:2", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "D", "D", "D"]}]}, "band": {"label": "Band", "desc": "Sheet + colour: Cadd9, and Dsus2 / Dsus4 movement on the long D stretches.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "D", "D"]}, {"name": "Opening verse", "feel": "mid", "bars": ["D", "D", "D", "D", "D", "D", "D"]}, {"name": "Chorus 1", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "Am:1 Cadd9:3", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "D:2 Dsus2:2", "Cadd9", "G", "G:2 D:2", "D:2 Dsus2:2"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Am:1 Cadd9:3", "Cadd9", "Am:1 Cadd9:3", "D", "D", "D", "Cadd9 Am", "D", "Cadd9 Am", "D", "F:2 G:2", "D", "D", "Cadd9 Am", "D", "F:2 G:2", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1", "D:2 Dsus4:1 D:1"]}]}}, "strums": [{"label": "Pattern 1 — 4 downs (beginner)", "s": "D.D.D.D."}, {"label": "Pattern 2 — D DU UDU (the classic)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — song feel ↓ ↓↑ ✕ ↓", "s": "D.DuX.D."}], "links": [{"label": "Original song", "url": "https://www.youtube.com/watch?v=nJlbqQEFYaE"}, {"label": "bibekac lesson", "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"}, {"label": "Sagar Roy lesson", "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"}], "timeLabel": "4/4", "qa": {"g1": true, "g2": true, "g3": true, "g4": true, "g5": true, "g6": true, "g7": true, "top1": 0.842, "bpm_measured": 86.1, "disputed": "Chorus 1 bar 5: the sheet's Am → C is heard as G in the recording; kept the sheet so the lyrics line up. Old chart (C instead of F → G) scored 81%, the sheet 84%."}, "map": [0.906, 12.056, 31.602, 81.827, 129.289, 176.727, 224.189, 271.441], "rev": 3}, {"id": "perfect", "order": 2, "title": "Perfect", "artist": "Ed Sheeran", "from": "÷ (Divide)", "key": "A♭ (G shapes, capo 1)", "capo": 1, "bpm": 63, "beatsPerBar": 2, "subdiv": 3, "timeLabel": "6 counts a card (slow 6/8 feel)", "length": "4:23", "firstBeat": 0, "youtube": "https://www.youtube.com/watch?v=tCh3NiOWh9c", "links": [{"label": "Play-along: chords video", "url": "https://www.youtube.com/watch?v=tCh3NiOWh9c"}, {"label": "Super easy lesson", "url": "https://www.youtube.com/watch?v=Z3KUCrpOyu0"}, {"label": "Guitar tutorial", "url": "https://www.youtube.com/watch?v=9-DqIDNwWdY"}], "patterns": {"ring": {"label": "Soft — one strum, let ring", "s": "D....."}, "mid": {"label": "Verse — downs on 1 and 4", "s": "D..D.."}, "full": {"label": "Chorus — six beats", "s": "DddDdd"}}, "strums": [{"label": "Pattern 1 — Four downs (one per main beat)", "s": "D..D.."}, {"label": "Pattern 2 — Six beats (loud on 1 and 4)", "s": "DddDdd"}, {"label": "Pattern 3 — Usual 12:8 (count 1–12 over two cards)", "s": "DddDdd"}, {"label": "Pattern 4 — D · D U D U", "s": "D.DUDU"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords G, Em, C, D — one per card; in two-chord bars you play the first chord.", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em", "G", "Em", "G"]}, {"name": "Interlude", "feel": "mid", "bars": ["G", "Em", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em", "G", "Em", "G"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em", "G", "Em", "G", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["C", "D", "C", "G", "C", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G", "Em", "C", "G"]}]}, "intermediate": {"label": "Intermediate", "desc": "Exactly your Karthik Songbook: verse one chord per bar, chorus two chords a bar (Em–C, G–D).", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G D", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em C", "G D", "Em C", "G D"]}, {"name": "Interlude", "feel": "mid", "bars": ["G D", "Em D", "C D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "C", "D", "G", "Em", "C", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "C", "G D", "G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em C", "G D", "Em C", "G D"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "C", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em C", "G D", "Em C", "G D", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["C G", "D Em", "C", "G Em", "C", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G D", "Em D", "C D", "G"]}]}, "band": {"label": "Band", "desc": "Songbook + colour: Cadd9 for C and the G → D/F# walk-down.", "sections": [{"name": "Verse 1", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D", "G", "Em", "Cadd9", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "Cadd9", "G D/F#", "G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#"]}, {"name": "Interlude", "feel": "mid", "bars": ["G D/F#", "Em D", "Cadd9 D"]}, {"name": "Verse 2", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D", "G", "Em", "Cadd9", "D"]}, {"name": "Pre-chorus", "feel": "mid", "bars": ["G", "Em", "Cadd9", "G D/F#", "G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#"]}, {"name": "Instrumental", "feel": "mid", "bars": ["G", "Em", "Cadd9", "D"]}, {"name": "Chorus", "feel": "full", "bars": ["Em Cadd9", "G D/F#", "Em Cadd9", "G D/F#", "Em"]}, {"name": "Bridge", "feel": "mid", "bars": ["Cadd9 G", "D Em", "Cadd9", "G Em", "Cadd9", "D", "D"]}, {"name": "Outro", "feel": "ring", "bars": ["G D/F#", "Em D", "Cadd9 D", "G"]}]}}, "notes": ["From your Karthik Songbook: capo 1, G shapes, about 63 BPM, all downstrokes.", "Two chords in one bar share it equally (Em–C, G–D = half a bar each).", "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."], "sources": [{"label": "Your Karthik Songbook (PDF)", "url": "#"}, {"label": "Lauren Bateman chart", "url": "https://www.laurenbateman.com/perfect-chord-chart/"}, {"label": "Guitartwitt", "url": "https://guitartwitt.com/perfect-chords-ed-sheeran"}], "qa": {"g1": true, "g3": true, "g7": true}, "rev": 2}, {"id": "three-little-birds", "order": 3, "title": "Three Little Birds", "artist": "Bob Marley & The Wailers", "from": "Exodus", "key": "A (no capo)", "capo": 0, "bpm": 74, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4 — reggae", "length": "3:00", "firstBeat": 0, "youtube": "https://www.youtube.com/watch?v=VAx4l-C2pJI", "links": [{"label": "Play-along guitar lesson", "url": "https://www.youtube.com/watch?v=VAx4l-C2pJI"}, {"label": "Easy play-along with chords", "url": "https://www.youtube.com/watch?v=9o4petoHyLo"}, {"label": "Beginner tutorial", "url": "https://www.youtube.com/watch?v=gJGzHXkzi34"}], "patterns": {"ring": {"label": "Intro — four downs", "s": "D.D.D.D."}, "full": {"label": "Off-beat (most taught)", "s": "BDBDBDBD"}}, "strums": [{"label": "Pattern 1 — Four downs", "s": "D.D.D.D."}, {"label": "Pattern 2 — Reggae (bass · down · up · chuck · down)", "s": "B.DUX.D."}, {"label": "Pattern 3 — DDUUDU", "s": "D.DU.UDU"}, {"label": "Pattern 4 — Off-beat (most taught: bass on the beat, strum on the &)", "s": "BDBDBDBD"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords A, D, E — one per bar; in the D–A bars play D.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D", "A", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Exactly your Karthik Songbook: Intro A ×4, Chorus A | D A | A | D A, Verse A E A D / A E D A.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E", "A", "D", "A", "E", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A", "D:2 A:2", "A", "D:2 A:2"]}]}, "band": {"label": "Band", "desc": "Songbook + E7 in the verses and an Asus4 hammer-on in the chorus.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["A", "A", "A", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E7", "A", "D", "A", "E7", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}, {"name": "Verse", "feel": "full", "bars": ["A", "E7", "A", "D", "A", "E7", "D", "A"]}, {"name": "Chorus", "feel": "full", "bars": ["A:2 Asus4:1 A:1", "D:2 A:2", "A:2 Asus4:1 A:1", "D:2 A:2"]}]}}, "notes": ["From your Karthik Songbook: no capo, open A, D, E, about 74 BPM.", "Intro: play the intro tab ×4 over A (see your songbook PDF).", "B = bass note, ✕ = chuck (muted strum).", "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."], "sources": [{"label": "Your Karthik Songbook (PDF)", "url": "#"}, {"label": "Guitartwitt", "url": "https://guitartwitt.com/three-little-birds-chords-by-bob-marley"}], "qa": {"g1": true, "g3": true, "g7": true}, "rev": 2}, {"id": "7-years", "order": 4, "title": "7 Years", "artist": "Lukas Graham", "from": "Lukas Graham (Blue Album)", "key": "Gm (Em-G-C-D shapes, capo 3)", "capo": 3, "bpm": 120, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4", "length": "3:55", "firstBeat": 2.015, "youtube": "https://www.youtube.com/watch?v=rBZlcitXX8o", "links": [{"label": "Play-along", "url": "https://www.youtube.com/watch?v=rBZlcitXX8o"}, {"label": "Tutorial: capo 3 (0:32)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=32s"}, {"label": "Chords Em G C D (1:09)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=69s"}, {"label": "B and B7 (2:39)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=159s"}, {"label": "Pattern 1 (3:56)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=236s"}, {"label": "Pattern 2 (6:21)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=381s"}, {"label": "Pattern 3 (10:44)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=644s"}, {"label": "Song structure (12:54)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=774s"}, {"label": "B-chord progression (16:53)", "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=1013s"}], "patterns": {"ring": {"label": "Intro/outro — one down per chord", "s": "D......."}, "mid": {"label": "Verse — D D U U D U", "s": "D.DU.UDU"}, "full": {"label": "Chorus — D D U U D U", "s": "D.DU.UDU"}}, "strums": [{"label": "Pattern 1 — one down per chord change (Ellen: intro & outro)", "s": "D......."}, {"label": "Pattern 2 — D D U U D U (Ellen's main pattern)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — D D U U D · (last up dropped to make quick changes)", "s": "D.DU.UD."}], "versions": {"simple": {"label": "Easy", "desc": "Only the 4 chords from your tutorial — Em, G, C, D (capo 3), one per bar. The B / Bsus4 / G/B moments are played as D and G.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C", "Em", "D", "G", "C", "D", "D", "D"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C", "Em", "D", "G", "C", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em", "G", "C", "C", "Em", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em", "G"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your Ultimate Guitar chords, timed to the recording: Em→D and C→D change on beat 3.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em:2 D:2", "G", "C", "D", "Em:2 D:2", "G", "C", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G/B"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C:2 D:2", "Em", "D", "G/B", "C", "D:2 Em:2", "Bsus4", "B"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C:2 D:2", "Em", "D", "G/B", "C:2 D:2", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em:2 D:2", "G", "C", "C:2 D:2", "Em:2 D:2", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em:2 D:2", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em:2 D:2", "G"]}]}, "band": {"label": "Band", "desc": "Advanced (Ellen's optional B-chord version) + colour: Bsus4 → B7 in the sixty-years chorus, D/F# walk-ups, Cmaj7 in the verses.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Chorus 1", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "C"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 2", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 3", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Verse 3", "feel": "mid", "bars": ["Em:2 D/F#:2", "G", "Cmaj7", "D", "Em:2 D/F#:2", "G", "Cmaj7", "D"]}, {"name": "Chorus 4", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Chorus 5", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Bridge", "feel": "mid", "bars": ["Em", "G", "C", "D", "Em", "G", "C", "G/B"]}, {"name": "Chorus 6", "feel": "full", "bars": ["C:2 Dsus4:1 D:1", "Em", "D", "G/B", "C", "D:2 Em:2", "Bsus4", "B7"]}, {"name": "Chorus 7", "feel": "full", "bars": ["C:2 Dsus4:1 D:1", "Em", "D", "G/B", "C:2 Dsus4:1 D:1", "Em", "C", "C"]}, {"name": "Chorus 8", "feel": "full", "bars": ["Em:2 D/F#:2", "G", "C", "C:2 Dsus4:1 D:1", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Chorus 9", "feel": "full", "bars": ["Em", "G", "C", "D", "Em:2 D/F#:2", "G", "C", "C"]}, {"name": "Outro", "feel": "ring", "bars": ["Em:2 D/F#:2", "G"]}]}}, "notes": ["Ellen's lesson: capo 3, standard tuning. Required chords Em, G, C, D; B and B7 are optional (Intermediate / Band).", "Start with Pattern 1 (one down per chord change), then Pattern 2: D D U U D U.", "Timed to your MP3: 120 BPM, every section is 8 bars."], "sources": [{"label": "Your Ultimate Guitar sheet", "url": "https://tabs.ultimate-guitar.com/tab/lukas-graham/7-years-chords-1803179"}, {"label": "Cifra Club", "url": "https://www.cifraclub.com/lukas-graham/7-years/jpkwgp.html"}, {"label": "Billchords", "url": "https://billchords.blogspot.com/2016/02/guitar-chords-lukas-graham-7-years.html"}, {"label": "Wikipedia (key, 120 BPM)", "url": "https://en.wikipedia.org/wiki/7_Years_(Lukas_Graham_song)"}, {"label": "Musicnotes (♩=120)", "url": "https://www.musicnotes.com/sheetmusic/lukas-graham/7-years/MN0160995"}], "map": [2.015, 17.99, 34.035, 50.034, 66.009, 82.008, 97.844, 114.005, 130.003, 146.025, 162.047, 177.999, 193.997, 210.019, 225.994], "rev": 4, "qa": {"g1": true, "g2": true, "g3": true, "g4": true, "g5": true, "g6": true, "g7": true, "top1": 0.849, "top2": 0.902, "bpm_measured": 120.02, "disputed": "Bridge & 'sixty years old' choruses: Cifra Club simplifies to Em-D-G-C; kept the UG sheet (G/B, Bsus4→B), confirmed by the recording."}}, {"id": "sunflower", "order": 5, "title": "Sunflower", "artist": "Post Malone, Swae Lee", "from": "Spider-Man: Into the Spider-Verse", "key": "D (no capo)", "capo": 0, "bpm": 90, "beatsPerBar": 4, "subdiv": 2, "timeLabel": "4/4", "length": "2:38", "firstBeat": 0, "rev": 1, "youtube": "https://www.youtube.com/watch?v=o-v5ltkpOZQ", "links": [{"label": "Chord & lyric play-along (Skye C. Hale)", "url": "https://www.youtube.com/watch?v=o-v5ltkpOZQ"}], "patterns": {"ring": {"label": "Intro — one down per chord, let ring", "s": "D......."}, "mid": {"label": "D D U U D U", "s": "D.DU.UDU"}, "full": {"label": "D D U U D U", "s": "D.DU.UDU"}}, "strums": [{"label": "Pattern 1 — one down per chord (intro)", "s": "D......."}, {"label": "Pattern 2 — D D U U D U (rest of the song)", "s": "D.DU.UDU"}, {"label": "Pattern 3 — D D U D U D U (busier, from your sheet's 2nd pattern)", "s": "D.DUDUDU"}], "versions": {"simple": {"label": "Easy", "desc": "Open chords only: D, G, Em — one per bar, as in your sheet.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G", "D", "D", "G", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G", "D", "D", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "G", "G", "D"]}]}, "intermediate": {"label": "Intermediate", "desc": "Your sheet with the optional Dsus2 on every second D bar (one lesson uses it).", "sections": [{"name": "Intro", "feel": "ring", "bars": ["D", "D", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 1", "feel": "mid", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G", "D", "Dsus2", "G", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Verse 2", "feel": "mid", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G", "D", "Dsus2", "G"]}, {"name": "Chorus", "feel": "full", "bars": ["D", "Dsus2", "G", "G", "Em", "Em", "G", "G"]}, {"name": "Outro", "feel": "ring", "bars": ["D", "D", "G", "G", "D"]}]}, "band": {"label": "Band", "desc": "Colour chords: Dmaj7, D → Dsus2 hammer-ons, G → Gmaj7, Em7.", "sections": [{"name": "Intro", "feel": "ring", "bars": ["Dmaj7", "Dmaj7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Verse 1", "feel": "mid", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Chorus", "feel": "full", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Verse 2", "feel": "mid", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2"]}, {"name": "Chorus", "feel": "full", "bars": ["Dmaj7", "D:2 Dsus2:2", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Em7", "Em7", "G:2 Gmaj7:2", "G:2 Gmaj7:2"]}, {"name": "Outro", "feel": "ring", "bars": ["Dmaj7", "Dmaj7", "G:2 Gmaj7:2", "G:2 Gmaj7:2", "Dmaj7"]}]}}, "notes": ["From your own chord sheet: 90 BPM, 4/4, no capo, open D, G, Em (Dsus2 optional).", "Intro: one down strum per chord, let it ring. Then D D U U D U for the rest of the song.", "Draft until timed to an MP3 — send it and I'll run the pipeline."], "sources": [{"label": "Your Sunflower chord sheets (PDF)", "url": "#"}, {"label": "Ultimate Guitar (absolute beginner)", "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2497134"}, {"label": "Ultimate Guitar ver 2 (Dsus2)", "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2496459"}, {"label": "Musicnotes (♩=90, key D)", "url": "https://www.musicnotes.com/sheetmusic/post-malone-swae-lee/sunflower/MN0190311"}], "qa": {"g1": true, "g2": true, "g3": true, "g7": true, "disputed": "Your sheet and Ultimate Guitar agree on D G Em G; the real recording adds colour (maj7 chords) — that's the Band version."}}];
 const SONG_AUDIO=/*AUDIO*/{};   // song files built into this copy (local copy only)
 // ---------- chord shapes (low E → high e; -1 muted, 0 open) ----------
 const SHAPES={
@@ -323,6 +411,10 @@ function parseBar(str,bpb){
 // ---------- chord colours: one colour per chord root, used everywhere (thin line on top) ----------
 function chordRoot(c){const m=String(c||"").match(/^([A-G])/);return m?m[1]:"X";}
 function chordColor(c){return "var(--c-"+chordRoot(c)+")";}
+// text → fragment with chord names shown as chips in their chord colour (same colours as the chord lane)
+function chordText(txt,s){const known=new Set();Object.values((s&&s.versions)||{}).forEach(v=>(v.sections||[]).forEach(sec=>(sec.bars||[]).forEach(b=>String(b).split(/[\s|]+/).forEach(x=>{if(x)known.add(x.replace(/[^A-Za-z0-9#\/]/g,""));}))));
+  const re=/^[A-G][#b]?(m|maj|min|sus|dim|aug|add)?\d*(sus\d*)?(\/[A-G][#b]?)?$/,f=document.createDocumentFragment();
+  String(txt).split(/(\s+|[,.;:()—–→]+)/).forEach(w=>{if(w&&re.test(w)&&(w.length>1||known.has(w))){const b=el("b","cchip",w);b.style.setProperty("--cc",chordColor(w));f.appendChild(b);}else if(w)f.append(w);});return f;}
 function colorLine(toks,bpbN){const tot=toks.reduce((a,t)=>a+t.b,0)||1;let at=0,stops=[];toks.forEach(t=>{const a=at/tot*100,b=(at+t.b)/tot*100;stops.push(chordColor(t.c)+" "+a+"% "+b+"%");at+=t.b;});
   const d=el("div","cline");d.style.background="linear-gradient(90deg,"+stops.join(",")+")";return d;}
 // smallest repeating unit of a section's bars (e.g. Em D G C ×4) → {p, reps}
@@ -350,7 +442,7 @@ function patFor(sec){
 function renderShelf(){
   shelf.innerHTML="";const q=($("q").value||"").trim().toLowerCase();
   const list=songs.filter(s=>!q||(s.title+" "+(s.artist||"")+" "+(s.from||"")).toLowerCase().includes(q));
-  list.forEach(s=>{const b=el("button",s.custom?"mine":null,s.title);b.type="button";b.title=[s.artist,s.custom?"your song":""].filter(Boolean).join(" · ");
+  list.forEach(s=>{const b=el("button",s.custom?"mine":null);if(artistList(s).length)b.appendChild(artistStack(s,22,false));b.append(s.title);b.type="button";b.title=[s.artist,s.custom?"your song":""].filter(Boolean).join(" · ");
     b.setAttribute("aria-pressed",cur&&cur.id===s.id&&!building?"true":"false");
     b.addEventListener("click",()=>choose(s.id));shelf.appendChild(b);});
   if(!list.length){const n=el("span","none","No song matches “"+q+"”. ");const a=el("button","libbtn","＋ Build “"+$("q").value.trim()+"”");a.type="button";
@@ -374,7 +466,8 @@ function renderSong(){
 
   // song card
   const vc=el("div","card");
-  const head=el("div","songhead");const ht=el("div");ht.append(el("h2",null,s.title),el("div","by",[s.artist,s.from].filter(Boolean).join(" · ")));head.appendChild(ht);
+  const head=el("div","songhead");const ht=el("div");ht.append(el("h2",null,s.title),el("div","by",[s.artist,s.from].filter(Boolean).join(" · ")));
+  const hl=el("div","songid");if(artistList(s).length)hl.appendChild(artistStack(s,64,true));hl.appendChild(ht);head.appendChild(hl);
   const tl=el("div","songtools");
   const eb=el("button",null,s.custom?"✎ Edit song":"✎ Edit as my copy");eb.type="button";eb.addEventListener("click",()=>openBuilder(songToForm(s),s.custom?s.id:null));
   const xb=el("button",null,"⇩ Save song file");xb.type="button";xb.addEventListener("click",()=>exportSong(s));
@@ -395,17 +488,22 @@ function renderSong(){
   const vw=el("div");vw.appendChild(el("p","label","Chord version"));const vs=el("div","seg");
   Object.entries(s.versions||{}).forEach(([k,v])=>{const b=el("button",null,v.label||k);b.type="button";b.setAttribute("aria-pressed",k===ver?"true":"false");
     b.addEventListener("click",()=>{ver=k;store.set("sb-ver-"+s.id,k);renderSong();});vs.appendChild(b);});
-  vw.appendChild(vs);const vd=(s.versions||{})[ver];if(vd&&vd.desc)vw.appendChild(el("p","vdesc",vd.desc));pk.appendChild(vw);
+  vw.appendChild(vs);const vd=(s.versions||{})[ver];if(vd&&vd.desc){const p=el("p","vdesc note");p.appendChild(chordText(vd.desc,s));vw.appendChild(p);}pk.appendChild(vw);
   const sw=el("div");sw.appendChild(el("p","label","Strumming"));const ss=el("div","seg");
   [["auto","Auto"]].concat((s.strums||[]).map((x,i)=>[String(i),"Pattern "+(i+1)])).forEach(([k,lab])=>{
     const b=el("button",null,lab);b.type="button";b.setAttribute("aria-pressed",k===strum?"true":"false");
     b.addEventListener("click",()=>{strum=k;store.set("sb-strum-"+s.id,k);renderSong();});ss.appendChild(b);});
   sw.appendChild(ss);
-  sw.appendChild(el("p","vdesc",strum==="auto"?"Changes with the song: one let-ring strum per bar in soft intros, fuller patterns in verses and choruses. Pick a pattern to use it everywhere.":(s.strums[+strum].label+" — used for the whole song, intro included.")));
+  {const p=el("div","vdesc note");
+   if(strum==="auto")p.append("Changes with the song: one let-ring strum per bar in soft intros, fuller patterns in verses and choruses. Pick a pattern to use it everywhere.");
+   else{const sp=s.strums[+strum],n=slots();p.append(String(sp.label).replace(/\s*[—-]\s*[DUXB.](\s+[DUXB.])+\s*/i," ").trim()+" · used for the whole song, intro included.");
+     const sl=el("div","slots");sl.style.gridTemplateColumns=`repeat(${n},auto)`;[...String(sp.s).padEnd(n,".").slice(0,n)].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));countLabels().forEach(x=>sl.appendChild(el("small",null,x)));p.appendChild(sl);}
+   sw.appendChild(p);}
   pk.appendChild(sw);vc.appendChild(pk);
 
-  if(s.links&&s.links.length){const lw=el("div");lw.appendChild(el("p","label","Play along on YouTube"));const lk=el("div","links");
-    s.links.forEach(x=>{const a=el("a",null,x.label+" ↗");a.href=x.url;a.target="sb-youtube";a.rel="noopener";lk.appendChild(a);});lw.appendChild(lk);vc.appendChild(lw);}
+  let ytBox=null;
+  if(s.links&&s.links.length){const lw=document.createElement("details");lw.className="sub";lw.id="playAlong";lw.open=store.get("sb-yt-open",true);lw.addEventListener("toggle",()=>store.set("sb-yt-open",lw.open));lw.appendChild(el("summary",null,"▶ Play along on YouTube"));ytBox=lw;const lk=el("div","links");
+    s.links.forEach(x=>{const a=el("a",null,x.label+" ↗");a.href=x.url;a.target="sb-youtube";a.rel="noopener";lk.appendChild(a);});lw.appendChild(lk);}
 
   const fr=el("div","filerow");
   const fb=el("button","filebtn","🎵 Load MP3 / M4A");fb.type="button";
@@ -422,7 +520,10 @@ function renderSong(){
   const fg=el("button","filebtn","✕ Forget file");fg.type="button";fg.id="forgetFile";fg.hidden=!au;
   fg.addEventListener("click",async()=>{await idb("delete",cur.id);dropAudio();mode=cur.youtube?"tab":"practice";renderSong();autoConnect(cur.id);});
   const fn=el("span","fname",auName?("✓ Connected: "+auName):"Checking this device for the song's MP3…");fn.id="fname";
-  fr.append(fb,fi,fdb,fdi,buy,fg,fn);vc.appendChild(fr);
+  const rg=el("button","filebtn","🎸 Remove guitar");rg.type="button";rg.title="Make a play-along backing from this song's MP3: guitar taken out, soft guide guitar only where the band drops out (needs pipeline/serve.py)";
+  const rgi=document.createElement("input");rgi.type="file";rgi.accept=fi.accept;rgi.style.cssText=fi.style.cssText;
+  rg.addEventListener("click",()=>removeGuitar(rg,rgi));rgi.addEventListener("change",()=>{const f=rgi.files&&rgi.files[0];if(f)removeGuitar(rg,rgi,f);});
+  fr.append(fb,fi,fdb,fdi,rg,rgi,buy,fg,fn);vc.appendChild(fr);
   fi.addEventListener("change",()=>{const f=fi.files&&fi.files[0];if(f)loadSongFile(f);});
   main.appendChild(vc);
 
@@ -485,12 +586,12 @@ function renderSong(){
   sections().forEach((sec,k)=>{
     const blk=el("div","blk");blk.hidden=true;const lab=el("div","blklab",sec.name);blk.appendChild(lab);
     const grid=el("div","bars");blk.appendChild(grid);
-    const L=loopOf(sec.bars||[]);if(L.reps>1){lab.textContent=sec.name+" · loop ×"+L.reps;const lp=el("div","looptag","Plays ×"+L.reps);lp.dataset.reps=L.reps;blk.insertBefore(lp,grid);}
+    const L=loopOf(sec.bars||[]);if(L.reps>1){const lp=el("div","looptag",L.p===1?L.reps+" bars":"Play "+L.reps+" times");lp.dataset.reps=L.reps;blk.insertBefore(lp,grid);}
     blk.dataset.p=L.p;blk.dataset.reps=L.reps;
     (sec.bars||[]).slice(0,L.p).forEach((_,i)=>{const idx=secFirst[k]+i,b=flat[idx];
       const c=el("div","ccard");c.tabIndex=0;c.setAttribute("role","button");
       const top=el("div","ctop");const nm=el("div","names");
-      b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));nm.appendChild(el("span",null,x.c));});top.appendChild(nm);
+      b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));const cs=el("span",null,x.c);cs.style.color=chordColor(x.c);nm.appendChild(cs);});top.appendChild(nm);
       const dg=el("div","dgs");[...new Set(b.toks.map(x=>x.c))].forEach(x=>{const d=diagram(x);if(d){d.setAttribute("width",b.toks.length>1?46:56);d.setAttribute("height",b.toks.length>1?55:66);dg.appendChild(d);}});top.appendChild(dg);
       c.appendChild(top);
       const stt=el("div","st");stt.style.gridTemplateColumns=cols;b.pat.forEach(p=>stt.appendChild(el("i",p!=="."&&p===p.toUpperCase()?"acc":"",ARW[p.toLowerCase()]||"·")));
@@ -507,7 +608,7 @@ function renderSong(){
   info.appendChild(el("summary",null,"Chord shapes, strumming & tips"));
   const used=[...new Set(flat.flatMap(b=>b.toks.map(t=>t.c)))];
   const cw=el("div");cw.appendChild(el("p","label","Chords in this version"));const shp=el("div","shapes");
-  used.forEach(x=>{const d=el("div","shape");d.style.borderTop="4px solid "+chordColor(x);const g=diagram(x);if(g)d.appendChild(g);d.appendChild(el("span",null,x));shp.appendChild(d);});
+  used.forEach(x=>{const d=el("div","shape");d.style.borderTop="4px solid "+chordColor(x);const g=diagram(x);if(g)d.appendChild(g);{const sn=el("span",null,x);sn.style.color=chordColor(x);d.appendChild(sn);}shp.appendChild(d);});
   cw.appendChild(shp);info.appendChild(cw);
   const st=el("div");st.appendChild(el("p","label","Strumming patterns"));const sg=el("div","strums");
   const rows=(s.strums||[]).map((p,i)=>["Pattern "+(i+1)+": "+p.label.replace(/^Pattern \d+ — /,""),p.s]).concat(Object.values(s.patterns||{}).map(p=>["Auto · "+p.label,p.s]));
@@ -524,6 +625,8 @@ function renderSong(){
   main.appendChild(info);
   renderLyrics();
   renderTrainer();
+  renderSongbook();
+  renderSheet();
 
   // song map: every section on one line — repeats collapsed (D ×11), its strum shown beside it; tap a chord to jump
   const chart=document.createElement("details");chart.className="card chart";chart.open=store.get("sb-map-open",false);
@@ -542,11 +645,11 @@ function renderSong(){
       const prog=el("span","prog","");ce.appendChild(prog);ce.addEventListener("click",()=>seekBar(first));g.appendChild(ce);cellGroups.push({el:ce,first,last,n:bars.length,prog});for(let q=first;q<=last;q++)cells[q]=ce;
       k+=bars.length;se.appendChild(g);chart.appendChild(se);return;}
     seenSec[sig]=sec.name;
-    const L=loopOf(bars);const lim=L.reps>1?L.p:bars.length;if(L.reps>1)hd.appendChild(el("span","maploop","loop ×"+L.reps));
+    const L=loopOf(bars);const lim=L.reps>1?L.p:bars.length;if(L.reps>1&&L.p>1)hd.appendChild(el("span","maploop","play "+L.reps+" times"));
     for(let i=0;i<lim;){let j=i;while(j+1<lim&&bars[j+1]===bars[i])j++;
       const first=k+i,last=k+j,n=j-i+1,b=flat[first],ce=el("div","cell");ce.tabIndex=0;ce.setAttribute("role","button");
       ce.setAttribute("aria-label",b.toks.map(x=>x.c).join(" then ")+(n>1?", "+n+" bars":""));
-      const nm=el("span","cn");b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));nm.appendChild(el("span",null,x.c));});ce.appendChild(nm);
+      const nm=el("span","cn");b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));const cs=el("span",null,x.c);cs.style.color=chordColor(x.c);nm.appendChild(cs);});ce.appendChild(nm);
       if(n>1)ce.appendChild(el("span","rep","×"+n));
       const prog=el("span","prog","");ce.appendChild(prog);
       ce.addEventListener("click",()=>seekBar(first));ce.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();seekBar(first);}});
@@ -555,7 +658,8 @@ function renderSong(){
       for(let r=0;r<(L.reps>1?L.reps:1);r++){const off=r*L.p;cellGroups.push({el:ce,first:first+off,last:last+off,n,prog});for(let q=first+off;q<=last+off;q++)cells[q]=ce;}
       i=j+1;}
     k+=bars.length;se.appendChild(g);chart.appendChild(se);});
-  stage.after(chart);chart.after(info);
+  ($("warm")||vc).after(chart);{const lb=$("lyrBox");if(lb)stage.after(lb);}
+  {const wm=$("warm");if(wm){info.className="sub";const sm=wm.querySelector(":scope>summary");sm.after(info);if(ytBox)sm.after(ytBox);}else{chart.after(info);if(ytBox)vc.appendChild(ytBox);}}
 
   // wire
   $("play").addEventListener("click",()=>isPlaying()?pause():play());
@@ -611,7 +715,7 @@ function ui(){
 }
 
 // ---------- lyrics: ChordPro-style "[C]word", tap a word to place a chord ----------
-let lyrEdit=false;
+let lyrEdit=false;const lyrTried={};
 const lyrKey=()=>"sb-lyrics-"+cur.id;
 function skeleton(){
   const per=sub()===3?4:2,out=[];let prev=null;
@@ -630,9 +734,13 @@ function parseLine(line){ // → [{chord, text, start}] where start = index of t
 const isHeader=l=>/^\s*(\{.*\}|#.*|[A-Za-z][\w\s\-']{0,24}:)\s*$/.test(l);
 const headerName=l=>l.replace(/^[\s{#]+|[}:\s]+$/g,"").replace(/^(c|comment|soc|start_of_\w+)\s*:\s*/i,"");
 function renderLyrics(){
-  const s=cur,box=el("section","card lyr");box.id="lyrBox";
+  const s=cur,box=document.createElement("details");box.className="card lyr";box.id="lyrBox";box.open=store.get("sb-lyr-open",true);
+  box.addEventListener("toggle",()=>store.set("sb-lyr-open",box.open));
   const text=store.get(lyrKey(),null);
-  box.appendChild(el("p","label","Lyrics with chords"));
+  // no lyrics saved in this browser yet → load songs/<id>-lyrics.txt if it sits beside the app (kept local, never committed)
+  if(text==null&&!lyrTried[s.id]){lyrTried[s.id]=1;fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null)
+    .then(t=>{if(t&&t.trim()&&cur===s&&store.get(lyrKey(),null)==null){store.set(lyrKey(),t);rerenderLyrics();}}).catch(()=>{});}
+  box.appendChild(el("summary",null,"Lyrics with chords"));
   const tools=el("div","tools");
   const eb=el("button",null,lyrEdit?"✓ Done editing":"✎ Paste / edit lyrics");eb.type="button";eb.setAttribute("aria-pressed",lyrEdit?"true":"false");
   eb.addEventListener("click",()=>{if(lyrEdit){const ta=$("lyrTa");if(ta)store.set(lyrKey(),ta.value);}lyrEdit=!lyrEdit;rerenderLyrics();});
@@ -909,7 +1017,7 @@ function updateStage(b,force){
   if(k!==stageSec||force){stageSec=k;
     secBlocks.forEach((blk,i)=>{blk.hidden=!(i===k||i===k+1);blk.classList.toggle("next",i===k+1);blk.classList.toggle("cur",i===k);});
     const sn=$("secName");if(sn)sn.textContent=b<0?"Get ready · "+secs[0].name:secs[k].name;}
-  {const blk=secBlocks[k],tag=blk&&blk.querySelector(".looptag");if(tag&&b>=0){const p=+blk.dataset.p,pass=Math.floor((b-secFirst[k])/p)+1;tag.textContent="Pass "+Math.min(pass,+blk.dataset.reps)+" of "+blk.dataset.reps;}}
+  {const blk=secBlocks[k],tag=blk&&blk.querySelector(".looptag");if(tag&&b>=0){const p=+blk.dataset.p,pass=Math.floor((b-secFirst[k])/p)+1;tag.textContent=p===1?"Bar "+Math.min(b-secFirst[k]+1,+blk.dataset.reps)+" of "+blk.dataset.reps:"Time "+Math.min(pass,+blk.dataset.reps)+" of "+blk.dataset.reps;}}
   const nx=$("nextUp");if(nx){const ns=secs[k+1];nx.innerHTML="";if(ns){nx.append(el("span","nl","Next"),el("b",null,ns.name));
       const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);nx.appendChild(el("span","nc",firsts.join(" · ")));}
     else nx.append(el("span","nl","Last section"));nx.classList.toggle("soon",!!soon);}
@@ -1107,9 +1215,12 @@ function warmData(){
   return {chords,top,hard,orig,start,steps,fast};
 }
 function renderWarmup(){
-  const d=warmData(),box=document.createElement("details");box.className="card warm";box.id="warm";box.open=store.get("sb-warm-open",true);
-  box.addEventListener("toggle",()=>store.set("sb-warm-open",box.open));
-  box.appendChild(el("summary",null,"Warm up before you play"));
+  const d=warmData(),outer=document.createElement("details");outer.className="card warm";outer.id="warm";outer.open=store.get("sb-warm-open",true);
+  outer.addEventListener("toggle",()=>store.set("sb-warm-open",outer.open));
+  outer.appendChild(el("summary",null,"🎸 Song practice"));
+  const box=document.createElement("details");box.className="sub";box.id="warmUp";box.open=store.get("sb-warmup-open",true);
+  box.addEventListener("toggle",()=>store.set("sb-warmup-open",box.open));
+  box.appendChild(el("summary",null,"Warm up before you play"));outer.appendChild(box);
   const g=el("div","grid3");
   // tempo
   const t=el("div","box");t.appendChild(el("h4",null,"Tempo"));
@@ -1123,7 +1234,7 @@ function renderWarmup(){
   const cl=el("div","chips");d.chords.forEach(x=>{const b=el("button",null,x);b.style.borderTop="3px solid "+chordColor(x);b.type="button";b.disabled=true;b.style.cursor="default";cl.appendChild(b);});c.appendChild(cl);
   c.appendChild(el("p","vdesc","Most common changes in this version. Tap one for a one-minute changes drill (aim for 30)."));
   const pl=el("div","chips");d.top.forEach(([k,n])=>{const [a,b]=k.split("↔");const bt=el("button","pair",a+" ↔ "+b+"  ×"+n);bt.type="button";
-    bt.addEventListener("click",()=>{const tr=$("trainer");if(!tr)return;tr.open=true;$("trA").value=a;$("trB").value=b;if(tr._show)tr._show();tr.scrollIntoView({block:"center",behavior:"smooth"});});pl.appendChild(bt);});
+    bt.addEventListener("click",()=>{const tr=$("trainer");if(!tr)return;const wm=$("warm");if(wm)wm.open=true;tr.open=true;$("trA").value=a;$("trB").value=b;if(tr._show)tr._show();tr.scrollIntoView({block:"center",behavior:"smooth"});});pl.appendChild(bt);});
   c.appendChild(pl);g.appendChild(c);
   // strum
   const sp=(cur.strums||[])[0],st=el("div","box");st.appendChild(el("h4",null,"Strum to start with"));
@@ -1145,12 +1256,274 @@ function renderWarmup(){
   go.addEventListener("click",()=>{pause();cancelCount();mode="practice";tune.bpm=d.start;saveTune();metOn=true;store.set("sb-met",true);renderSong();
     setClock(timeAtPos(secFirst[d.hard]||0));loopSec=d.hard;ramp=true;ui();play();});
   pw.appendChild(go);box.appendChild(pw);
-  const old=$("warm");if(old)old.replaceWith(box);else main.appendChild(box);
+  outer.appendChild(renderDrill(d));
+  const oldTr=$("trainer");if(oldTr)outer.appendChild(oldTr);
+  const old=$("warm");if(old)old.replaceWith(outer);else main.appendChild(outer);
+}
+
+// ---------- 🎸 chord & strumming practice: loop the song's chords with its strum pattern, metronome and a moving strum marker ----------
+let drill=null;
+function stopDrill(){if(!drill)return;clearInterval(drill.iv);cancelAnimationFrame(drill.raf);const b=drill.btn;drill=null;if(b&&b.isConnected){b.textContent="▶ Start practice";b.classList.remove("on");}}
+function renderDrill(d){
+  stopDrill();
+  const box=document.createElement("details");box.className="sub drill";box.id="drill";box.open=store.get("sb-drill-open",true);
+  box.addEventListener("toggle",()=>{store.set("sb-drill-open",box.open);if(!box.open)stopDrill();});
+  box.appendChild(el("summary",null,"Chord & strumming practice"));
+  box.appendChild(el("p","vdesc","Loop this song's chords with its strumming pattern. The marker shows each strum; change chord on beat 1. Start slow, then step up the tempo."));
+  const pk=store.get("sb-drill-"+cur.id,{}),n=slots(),strs=(cur.strums||[]).filter(x=>x&&x.s);
+  // what to practise: each common change, or every chord of the song in order of appearance
+  const seqs=d.top.map(([k])=>({label:k.replace("↔"," ↔ "),chords:k.split("↔")}));
+  const order=[];flat.forEach(b=>b.toks.forEach(t=>{if(order[order.length-1]!==t.c)order.push(t.c);}));
+  const prog=order.slice(0,Math.min(order.length,8));
+  if(d.chords.length>2)seqs.push({label:"All chords: "+d.chords.join(" → "),chords:d.chords});
+  if(prog.length>2)seqs.push({label:"Song order: "+prog.join(" → "),chords:prog});
+  if(!seqs.length)seqs.push({label:d.chords.join(" → ")||"—",chords:d.chords});
+  let si=Math.min(pk.s||0,seqs.length-1),pi=Math.min(pk.p||0,Math.max(0,strs.length-1)),bars=pk.b||2,bpm=pk.bpm||d.start;
+  const save=()=>{store.set("sb-drill-"+cur.id,{s:si,p:pi,b:bars,bpm});if(drill&&drill.btn===go){stopDrill();go.click();}};
+  const opts=el("div","grid3");
+  const chooser=(title,items,get,set)=>{const w=el("div","box");w.appendChild(el("h4",null,title));const ch=el("div","chips");
+    items.forEach((it,i)=>{const b=el("button",i===get()?"on":"",it);b.type="button";b.addEventListener("click",()=>{set(i);save();[...ch.children].forEach((x,j)=>x.classList.toggle("on",j===i));draw();});ch.appendChild(b);});
+    w.appendChild(ch);return w;};
+  opts.appendChild(chooser("Chords",seqs.map(x=>x.label),()=>si,i=>{si=i;}));
+  if(strs.length)opts.appendChild(chooser("Strumming",strs.map(x=>x.label),()=>pi,i=>{pi=i;}));
+  const tw=el("div","box");tw.appendChild(el("h4",null,"Tempo & bars per chord"));
+  const tr=el("div","chips");const bi=document.createElement("input");bi.type="number";bi.min=30;bi.max=240;bi.value=bpm;bi.setAttribute("aria-label","Practice BPM");
+  bi.style.cssText="width:70px;font:700 16px var(--mono);text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:5px";
+  bi.addEventListener("change",()=>{bpm=Math.max(30,Math.min(240,+bi.value||d.start));bi.value=bpm;save();});
+  const step=(v,lab)=>{const b=el("button",null,lab);b.type="button";b.addEventListener("click",()=>{bpm=Math.max(30,Math.min(240,bpm+v));bi.value=bpm;save();});return b;};
+  tr.append(step(-5,"−5"),bi,step(5,"+5"));const orig=el("button",null,d.orig+" ★");orig.type="button";orig.title="Original song tempo";orig.addEventListener("click",()=>{bpm=d.orig;bi.value=bpm;save();});tr.appendChild(orig);
+  tw.appendChild(tr);
+  const bc=el("div","chips");[1,2,4].forEach(v=>{const b=el("button",v===bars?"on":"",v+(v===1?" bar":" bars"));b.type="button";b.addEventListener("click",()=>{bars=v;save();[...bc.children].forEach(x=>x.classList.toggle("on",x===b));});bc.appendChild(b);});
+  tw.appendChild(bc);opts.appendChild(tw);box.appendChild(opts);
+  // live view: current chord (big + shape), next chord, strum row with moving marker
+  const stage=el("div","box dstage");const nowRow=el("div","dnow");
+  const cName=el("div","big","");const cDg=el("div","ddg");const nxt=el("div","vdesc","");
+  nowRow.append(cName,cDg,nxt);stage.appendChild(nowRow);
+  const sl=el("div","slots");sl.style.gridTemplateColumns=`repeat(${n},auto)`;stage.appendChild(sl);
+  const ctl=el("div","chips");const go=el("button","go","▶ Start practice");go.type="button";const info=el("span","vdesc","");ctl.append(go,info);stage.appendChild(ctl);
+  box.appendChild(stage);
+  const pat=()=>String((strs[pi]||{s:"D".padEnd(n,".")}).s).padEnd(n,".").slice(0,n);
+  function showChord(ci){const seq=seqs[si].chords,c=seq[ci%seq.length]||"—";cName.textContent=c;cName.style.color=chordColor(c);
+    cDg.innerHTML="";const g=diagram(c);if(g){g.setAttribute("width",70);g.setAttribute("height",84);cDg.appendChild(g);}
+    nxt.textContent=seq.length>1?"next: "+(seq[(ci+1)%seq.length]):"";}
+  function draw(){sl.innerHTML="";const p=pat();[...p].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));countLabels().forEach(x=>sl.appendChild(el("small",null,x)));if(!drill)showChord(0);}
+  draw();
+  go.addEventListener("click",()=>{
+    if(drill){stopDrill();return;}
+    pause();cancelCount();audio();if(!ctx){toast("Audio isn't available in this browser");return;}
+    const spb=60/bpm/sub();let k=0,t0=ctx.currentTime+0.15;const q=[];
+    drill={btn:go,iv:0,raf:0};go.textContent="■ Stop";go.classList.add("on");
+    const sched=()=>{if(!box.isConnected){stopDrill();return;}
+      while(t0+k*spb<ctx.currentTime+0.12){const at=t0+k*spb,s=k%n,bar=Math.floor(k/n);
+        click(at,s===0?2:s%sub()===0?1:0);q.push({at,s,ci:Math.floor(bar/bars),bar});k++;}};
+    const paint=()=>{if(!drill)return;const now=ctx.currentTime;let e=null;while(q.length&&q[0].at<=now)e=q.shift();
+      if(e){[...sl.querySelectorAll("i")].forEach((x,j)=>x.classList.toggle("now",j===e.s));
+        if(e.s===0){showChord(e.ci);info.textContent="bar "+((e.bar%bars)+1)+" of "+bars+" · "+bpm+" BPM";}}
+      drill.raf=requestAnimationFrame(paint);};
+    sched();drill.iv=setInterval(sched,25);drill.raf=requestAnimationFrame(paint);
+  });
+  return box;
+}
+
+
+
+// ---------- 📚 Songbook: your own PDFs (song sheets, books), stored in this browser only ----------
+function pdb(op,val){return new Promise(res=>{try{const r=indexedDB.open("songbook-pdfs",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("files",{keyPath:"id",autoIncrement:true});
+  r.onerror=()=>res(null);
+  r.onsuccess=()=>{const db=r.result,tx=db.transaction("files",op==="all"||op==="get"?"readonly":"readwrite"),st=tx.objectStore("files");
+    const q=op==="all"?st.getAll():op==="get"?st.get(val):op==="put"?st.put(val):st.delete(val);
+    q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);};}catch(e){res(null);}});}
+let sbView=null;
+const fmtSize=n=>n>1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";
+async function renderSongbook(){
+  const box=document.createElement("details");box.className="card songbook";box.id="songbook";box.open=store.get("sb-book-open",true);
+  box.addEventListener("toggle",()=>store.set("sb-book-open",box.open));
+  box.appendChild(el("summary",null,"📚 Songbook"));
+  const songId=cur.id,songTitle=cur.title;
+  const quick=el("div","sbquick");box.appendChild(quick);
+  const tools=el("div","sbtools");
+  const up=el("button","libbtn primary","⇧ Upload PDFs");up.type="button";
+  const inp=document.createElement("input");inp.type="file";inp.accept="application/pdf,.pdf";inp.multiple=true;inp.hidden=true;
+  const q=document.createElement("input");q.type="search";q.placeholder="Search your PDFs…";q.className="sbq";q.setAttribute("aria-label","Search PDFs");
+  const only=el("button","libbtn","☆ This song only");only.type="button";let onlyOn=store.get("sb-book-only",false);only.setAttribute("aria-pressed",onlyOn?"true":"false");
+  tools.append(up,inp,q,only);box.appendChild(tools);
+  box.appendChild(el("p","vdesc","Your PDFs stay in this browser on this device. ★ links a PDF page to the song that's open, so it opens right there. Drag-and-drop works too."));
+  const list=el("div","sblist");box.appendChild(list);
+  const viewer=el("div","sbviewer");box.appendChild(viewer);
+  // books kept beside the app (songbook/songbook.json): table of contents with the page of each song
+  let books=[];try{const r=await fetch("songbook/songbook.json",{cache:"no-store"});if(r.ok)books=((await r.json()).books||[]).map(b=>({id:"m:"+b.file,name:b.title||b.file.replace(/\.pdf$/i,""),builtin:true,url:"songbook/"+encodeURIComponent(b.file),toc:b.toc||[]}));}catch(e){}
+  const tocOf=r=>r.builtin?r.toc:Object.entries(r.pages||{}).map(([sid,p])=>{const sg=songs.find(x=>x.id===sid);return {title:sg?sg.title:sid,page:p,song:sid};});
+  const pageFor=r=>{const e=tocOf(r).find(x=>x.song===songId);return e?e.page:null;};
+  async function add(files){const pdfs=[...files].filter(f=>/pdf$/i.test(f.type)||/\.pdf$/i.test(f.name));
+    if(!pdfs.length){toast("Only PDF files go in the Songbook.");return;}
+    for(const f of pdfs)await pdb("put",{name:f.name.replace(/\.pdf$/i,""),size:f.size,added:Date.now(),pages:{},blob:f});
+    toast("Added "+pdfs.length+" PDF"+(pdfs.length>1?"s":"")+" — ★ one to link a page to "+songTitle);draw();}
+  function close(){if(sbView&&sbView.blob)URL.revokeObjectURL(sbView.url);sbView=null;viewer.innerHTML="";}
+  function open(rec,page){
+    if(!sbView||sbView.id!==rec.id){close();const url=rec.builtin?rec.url:URL.createObjectURL(new Blob([rec.blob],{type:"application/pdf"}));sbView={id:rec.id,url,blob:!rec.builtin};}
+    const url=sbView.url;viewer.innerHTML="";
+    const hd=el("div","sbvhd");hd.append(el("b",null,rec.name+(page?" · page "+page:"")));
+    const nw=el("a","libbtn","Open in new tab ↗");nw.href=url+(page?"#page="+page:"");nw.target="_blank";nw.rel="noopener";
+    const cl=el("button","libbtn","✕ Close");cl.type="button";cl.addEventListener("click",()=>{close();draw();});hd.append(nw,cl);viewer.appendChild(hd);
+    const toc=tocOf(rec);if(toc.length){const tc=el("div","sbtoc");toc.slice().sort((a,b)=>a.page-b.page).forEach(e=>{const b=el("button",e.page===page?"on":"",e.page+" · "+e.title);b.type="button";if(e.song===songId)b.classList.add("mine");b.addEventListener("click",()=>open(rec,e.page));tc.appendChild(b);});viewer.appendChild(tc);}
+    const fr=document.createElement("iframe");fr.src=url+"#page="+(page||1)+"&view=FitH";fr.title=rec.name;viewer.appendChild(fr);
+    viewer.scrollIntoView({block:"start",behavior:"smooth"});draw();}
+  function quickLinks(all){quick.innerHTML="";const mine=[],prac=[];
+    all.forEach(r=>tocOf(r).forEach(e=>{if(e.song===songId)mine.push([r,e]);else if(e.practice)prac.push([r,e]);}));
+    if(mine.length){quick.appendChild(el("p","label","For "+songTitle));const w=el("div","chips sbchips");mine.forEach(([r,e])=>{const b=el("button","libbtn primary","📄 "+e.title+" — p."+e.page);b.type="button";b.addEventListener("click",()=>open(r,e.page));w.appendChild(b);});quick.appendChild(w);}
+    if(prac.length){quick.appendChild(el("p","label","Practice sheets"));const w=el("div","chips sbchips");prac.forEach(([r,e])=>{const b=el("button","libbtn",e.title+" — p."+e.page);b.type="button";b.addEventListener("click",()=>open(r,e.page));w.appendChild(b);});quick.appendChild(w);}}
+  async function draw(){const up_=(await pdb("all"))||[];const all=books.concat(up_);quickLinks(all);
+    const s=q.value.trim().toLowerCase();list.innerHTML="";
+    let rows=all.filter(r=>(!s||r.name.toLowerCase().includes(s)||tocOf(r).some(e=>e.title.toLowerCase().includes(s)))&&(!onlyOn||pageFor(r)));
+    rows.sort((a,b)=>(!!pageFor(b)-!!pageFor(a))||a.name.localeCompare(b.name));
+    if(!rows.length){list.appendChild(el("p","vdesc",all.length?"No PDFs match.":"No PDFs yet — tap ⇧ Upload PDFs."));return;}
+    rows.forEach(r=>{const pg=pageFor(r),row=el("div","sbrow"+(sbView&&sbView.id===r.id?" on":""));
+      const pin=el("button","sbpin",pg?"★":"☆");pin.type="button";
+      if(r.builtin){pin.disabled=true;pin.title=pg?songTitle+" is on page "+pg:"Listed in songbook/songbook.json";}
+      else{pin.title=pg?"Unlink from "+songTitle:"Link a page of this PDF to "+songTitle;
+        pin.addEventListener("click",async e=>{e.stopPropagation();r.pages=r.pages||{};
+          if(pg){delete r.pages[songId];}else{const v=prompt("Which page of “"+r.name+"” is "+songTitle+"?","1");const n=parseInt(v,10);if(!(n>0))return;r.pages[songId]=n;}
+          await pdb("put",r);draw();});}
+      const nm=el("button","sbname","📄 "+r.name+(pg?"  · "+songTitle+" p."+pg:""));nm.type="button";nm.addEventListener("click",()=>open(r,pg||1));
+      row.append(pin,nm);
+      if(r.builtin){row.append(el("span","sbmeta",tocOf(r).length+" entries · songbook folder"));}
+      else{row.append(el("span","sbmeta",fmtSize(r.size)+" · "+new Date(r.added).toLocaleDateString()));
+        const dl=el("a","sbact","⇩");dl.title="Download";dl.addEventListener("click",()=>{const u=URL.createObjectURL(r.blob);dl.href=u;dl.download=r.name+".pdf";setTimeout(()=>URL.revokeObjectURL(u),4000);});
+        const rn=el("button","sbact","✎");rn.type="button";rn.title="Rename";rn.addEventListener("click",async()=>{const v=prompt("Rename PDF",r.name);if(v&&v.trim()){r.name=v.trim();await pdb("put",r);draw();}});
+        const rm=el("button","sbact","✕");rm.type="button";rm.title="Remove from Songbook";rm.addEventListener("click",async()=>{if(!confirm("Remove “"+r.name+"” from your Songbook?"))return;if(sbView&&sbView.id===r.id)close();await pdb("del",r.id);draw();});
+        row.append(dl,rn,rm);}
+      list.appendChild(row);});}
+  up.addEventListener("click",()=>inp.click());inp.addEventListener("change",()=>{add(inp.files);inp.value="";});
+  q.addEventListener("input",draw);
+  only.addEventListener("click",()=>{onlyOn=!onlyOn;store.set("sb-book-only",onlyOn);only.setAttribute("aria-pressed",onlyOn?"true":"false");draw();});
+  box.addEventListener("dragover",e=>{e.preventDefault();e.stopPropagation();box.classList.add("drag");});
+  box.addEventListener("dragleave",()=>box.classList.remove("drag"));
+  box.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();box.classList.remove("drag");document.body.style.outline="";if(e.dataTransfer&&e.dataTransfer.files)add(e.dataTransfer.files);});
+  if(sbView){if(sbView.blob)URL.revokeObjectURL(sbView.url);sbView=null;}
+  const old=$("songbook");if(old)old.replaceWith(box);else main.appendChild(box);
+  draw();
+}
+
+
+
+
+// ---------- 👤 artist photos (Wikimedia Commons, see images/artists/CREDITS.json) · tap a photo to use your own ----------
+const ARTIST_IMG={"Lukas Graham": {"src": "images/artists/lukas-graham.jpg", "credit": "Tore Sætre, CC BY-SA 4.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Lukas_Graham_Stavernfestivalen_(181424).jpg"}, "Ed Sheeran": {"src": "images/artists/ed-sheeran.jpg", "credit": "Number 10, CC BY 2.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Ed_Sheeran_2022_(3x4_crop).jpg"}, "Post Malone": {"src": "images/artists/post-malone.jpg", "credit": "Chrisallmeid, CC BY-SA 4.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Post_Malone_July_2021_(cropped).jpg"}, "Swae Lee": {"src": "images/artists/swae-lee.png", "credit": "Icebox, CC BY 3.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Swae_Lee_(2019).png"}, "Bob Marley": {"src": "images/artists/bob-marley.jpg", "credit": "Public domain · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Bob_Marley_circa_1976_(cropped).jpg"}};
+const artistList=s=>String((s&&s.artist)||"").split(/\s*(?:,|&| and | feat\.? | ft\.? | x )\s*/i).map(x=>x.trim()).filter(Boolean);
+const artistSlug=n=>n.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+function artistAvatar(name,size,editable){
+  const own=store.get("sb-artist-img-"+artistSlug(name),null),lib=ARTIST_IMG[name];
+  const w=el("span","avatar");w.style.width=w.style.height=size+"px";w.title=name+(lib&&!own?" — photo: "+lib.credit:"")+(editable?"\nClick to use your own photo":"");
+  if(own||lib){const im=document.createElement("img");im.src=own||lib.src;im.alt=name;im.loading="lazy";im.onerror=()=>{im.remove();w.textContent=initials(name);};w.appendChild(im);}
+  else{w.textContent=initials(name);w.style.fontSize=Math.round(size*0.38)+"px";w.style.background="color-mix(in srgb,"+chordColor(name)+" 35%,var(--surface))";}
+  if(editable){w.classList.add("edit");w.tabIndex=0;w.setAttribute("role","button");
+    const pick=()=>{const i=document.createElement("input");i.type="file";i.accept="image/*";i.onchange=()=>{const f=i.files&&i.files[0];if(!f)return;const img=new Image();img.onload=()=>{const c=document.createElement("canvas"),z=200,m=Math.min(img.width,img.height);c.width=c.height=z;c.getContext("2d").drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,z,z);store.set("sb-artist-img-"+artistSlug(name),c.toDataURL("image/jpeg",0.85));URL.revokeObjectURL(img.src);renderShelf();renderSong();};img.src=URL.createObjectURL(f);};i.click();};
+    w.addEventListener("click",e=>{if(e.altKey||e.shiftKey){store.set("sb-artist-img-"+artistSlug(name),null);renderShelf();renderSong();return;}pick();});
+    w.addEventListener("keydown",e=>{if(e.key==="Enter")pick();});}
+  return w;}
+const initials=n=>n.split(/\s+/).map(x=>x[0]||"").join("").slice(0,2).toUpperCase();
+function artistStack(s,size,editable){const st=el("span","avstack"),L=artistList(s),ph=L.filter(n=>ARTIST_IMG[n]||store.get("sb-artist-img-"+artistSlug(n),null));(ph.length?ph:L.slice(0,1)).slice(0,3).forEach(n=>st.appendChild(artistAvatar(n,size,editable)));return st;}
+
+
+// ---------- 🎓 side dashboard: guitar course (from Karthik Songbook pages 4–11), progress kept in this browser ----------
+const COURSE={"title": "JustinGuitar Beginner Course", "source": "Karthik Songbook · pages 4–11", "grades": [{"id": "g1", "name": "Grade 1", "sub": "Modules 0–7: the 8 open chords, core drills and strumming", "pages": [["Practice sheet", 5], ["Module cheat sheet", 6]], "modules": [{"n": 0, "skills": "Tune, read chord boxes, hold guitar and pick, finger placement", "practice": "Setup habits: tuning and posture every session", "next": "You can tune and read a chord box", "chords": []}, {"n": 1, "skills": "A, D; anchor fingers; one-minute changes; first song", "practice": "3 min Chord Perfect D, 3 min A, 2 min anchor fingers, 2 min A–D changes, 10 min song", "next": "A and D memorised; you tried a song", "chords": ["A", "D"]}, {"n": 2, "skills": "E chord; foot tapping; strumming on the beat; first riff (Peter Gunn)", "practice": "2 min E, 1 min D, 1 min A Chord Perfect; 2 min anchor fingers; songs. Target about 30 changes/min", "next": "E, A, D from memory; steady foot tap", "chords": ["E"]}, {"n": 3, "skills": "Am, Em; up strums; capo", "practice": "Chord Perfect Am and Em; OMC Am–Em, Em–D; air changes; up strums on their own; songs", "next": "Am and Em clean; down-up strums possible slowly", "chords": ["Am", "Em"]}, {"n": 4, "skills": "Metronome; finger stretches; THE pattern (Old Faithful); Dm; reading TAB; riff (Sunshine of Your Love)", "practice": "1 min Dm, 1 min hardest chord, 2 min Old Faithful, 2 min riff, stretches, songs with metronome", "next": "Dm playable; Old Faithful works slowly", "chords": ["Dm"]}, {"n": 5, "skills": "Basic theory (note names); C chord; strumming tips; riff (Come As You Are)", "practice": "1 min C, 1 min a weak chord, 2 min strumming (any pattern, focus on timing), songs", "next": "One C-chord song mostly through; about 30 changes/min", "chords": ["C"]}, {"n": 6, "skills": "G chord (hack); 6:8 time; alternate picking; forcing changes", "practice": "Chord Perfect G; OMC G–C and G–D; 6:8 pattern; alternate picking; mix old and new songs", "next": "All 8 chords playable; G–C and G–D smoothing out", "chords": ["G"]}, {"n": 7, "skills": "Air changes; best changes to work on; dynamics; feel; consolidation", "practice": "Build your own routine: weakest chords, air changes, dynamics (soft vs loud), your 5 songs", "next": "Passes the Grade 1 checklist", "chords": []}], "checklist": ["All 8 chords (A, D, E, Am, Em, Dm, C, G) ring cleanly at least half the time from memory", "One-minute changes at roughly 30 per minute on your main pairs", "5 songs you can play all the way through from memory, with a strumming pattern", "Old Faithful (THE pattern) at a comfortable ~80 BPM", "A consolidation pass done; air changes underway"], "strum": [["Down on every beat", "D D D D", "Mod 1–2"], ["Add up strums", "D U D U D U D U", "Mod 3"], ["THE pattern (Old Faithful)", "D · D U · U D U", "Mod 4 · aim ~80 BPM"], ["6:8 feel", "2 beats a bar, each split in 3", "Mod 6"]], "session": [["2–3 min", "Tune, posture, warm-up stretches"], ["6–8 min", "Chord Perfect + one-minute changes (weakest first)"], ["2–3 min", "Strumming with metronome or foot tap"], ["8–10 min", "Songs: a favourite, plus a new one"]], "pairs": ["A–D", "A–E", "D–E", "Am–Em", "Em–D", "Am–D", "G–C", "G–D", "C–Am"]}, {"id": "g2", "name": "Grade 2", "sub": "Module 8: your first scale, pick tricks & 8th-note strumming", "pages": [["Module 8 lesson guide", 8], ["Stuck 3 & 4 chords", 9], ["E minor pentatonic", 10], ["Notes in open position", 11]], "modules": [{"n": 8, "skills": "Stuck 3 & 4 chords (G, G5, Cadd9, Dsus4, A7sus4, Em7, Dadd11/F#); open E minor pentatonic; muting; all-down 8th-note strumming; pick manipulation; notes in open position", "practice": "Your own ~30 min routine: stuck 3 & 4 chords, the scale (muted, down picks), the riff, songs", "next": "At least two songs with the stuck 3 & 4 chords; ideally one all the way through", "chords": ["G", "Cadd9", "Dsus4", "Em7"], "lessons": [["The Stuck 3 & 4 Chords", 9], ["Perfect Fast Changes", 8], ["Open E Minor Pentatonic Scale", 10], ["Muting Strings Deliberately", 8], ["All Down 8th Note Strumming", 8], ["Pick Manipulation", 8], ["Songs For Module 8", 8], ["Wish You Were Here Riff For Beginners", 8], ["Notes In Open Position", 11], ["Module 8 Practice", 8]]}]}]};
+const courseState=()=>Object.assign({done:{},check:{},lesson:{},my5:["","","","",""]},store.get("sb-course",{}));
+async function renderDash(){
+  const host=$("dash");if(!host)return;const st=courseState(),save=()=>{store.set("sb-course",st);renderDash();};
+  const book=(await loadBooks())[0]||null;const pg=(p,label)=>{if(!book)return null;const a=el("a","pglink","📄 "+(label||"p."+p));a.href=book.url+"#page="+p;a.target="_blank";a.rel="noopener";a.title="Open page "+p+" of "+book.name;return a;};
+  host.innerHTML="";
+  const hd=el("div","dhead");hd.append(el("h2",null,"🎓 Guitar course"));const x=el("button","dclose","✕");x.type="button";x.title="Hide the course panel";x.addEventListener("click",()=>toggleDash(false));hd.appendChild(x);host.appendChild(hd);
+  host.appendChild(el("p","dsub",COURSE.title+" · from "+COURSE.source));
+  // progress
+  const mods=COURSE.grades.flatMap(g=>g.modules);const nDone=mods.filter(m=>st.done["m"+m.n]).length;
+  const les=COURSE.grades[1].modules[0].lessons,nL=les.filter((l,i)=>st.lesson[i]).length,nC=COURSE.grades[0].checklist.filter((c,i)=>st.check[i]).length;
+  const tot=mods.length+les.length+COURSE.grades[0].checklist.length,got=nDone+nL+nC,pct=Math.round(got/tot*100);
+  const pr=el("div","dprog");const bar=el("div","dbar");const fill=el("i");fill.style.width=pct+"%";bar.appendChild(fill);pr.append(bar,el("span",null,pct+"% · "+nDone+"/"+mods.length+" modules"));host.appendChild(pr);
+  const curM=mods.find(m=>!st.done["m"+m.n]);
+  if(curM){const c=el("div","dnow");c.appendChild(el("p","label","Up next · Module "+curM.n));c.appendChild(el("b",null,curM.skills));
+    c.appendChild(el("p","dline","🔁 "+curM.practice));c.appendChild(el("p","dline","✅ Move on when: "+curM.next));
+    if(curM.chords.length){const ch=el("div","dchips");curM.chords.forEach(n=>{const b=el("span","cchip",n);b.style.setProperty("--cc",chordColor(n));ch.appendChild(b);});c.appendChild(ch);}
+    const dn=el("button","libbtn primary","✓ Mark Module "+curM.n+" done");dn.type="button";dn.addEventListener("click",()=>{st.done["m"+curM.n]=true;save();});c.appendChild(dn);host.appendChild(c);}
+  else host.appendChild(el("div","dnow",["🎉 All modules done — keep the songs going!"].join("")));
+  COURSE.grades.forEach(g=>{
+    const gd=document.createElement("details");gd.className="dgrade";gd.open=store.get("sb-dash-"+g.id,g.id==="g1");gd.addEventListener("toggle",()=>store.set("sb-dash-"+g.id,gd.open));
+    gd.appendChild(el("summary",null,g.name));gd.appendChild(el("p","dsub",g.sub));
+    if(book&&g.pages.length){const pl=el("div","dpages");g.pages.forEach(([l,p])=>pl.appendChild(pg(p,l+" · p."+p)));gd.appendChild(pl);}
+    g.modules.forEach(m=>{const md=document.createElement("details");md.className="dmod"+(st.done["m"+m.n]?" done":"")+(curM===m?" now":"");
+      const sm=el("summary");const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!st.done["m"+m.n];cb.title="Module done";cb.addEventListener("click",e=>e.stopPropagation());cb.addEventListener("change",()=>{st.done["m"+m.n]=cb.checked;save();});
+      sm.append(cb,el("span","mn","M"+m.n),el("span","mt",m.skills.split(";")[0]));md.appendChild(sm);
+      md.append(el("p","dline","🆕 "+m.skills),el("p","dline","🔁 "+m.practice),el("p","dline","✅ "+m.next));
+      if(m.lessons){const ol=el("div","dlessons");m.lessons.forEach(([l,p],i)=>{const r=el("label","dl");const c=document.createElement("input");c.type="checkbox";c.checked=!!st.lesson[i];c.addEventListener("change",()=>{st.lesson[i]=c.checked;save();});r.append(c,el("span",null,(i+1)+". "+l));const a=pg(p);if(a)r.appendChild(a);ol.appendChild(r);});md.appendChild(ol);}
+      gd.appendChild(md);});
+    if(g.checklist){const ck=document.createElement("details");ck.className="dmod";ck.open=store.get("sb-dash-ck",false);ck.addEventListener("toggle",()=>store.set("sb-dash-ck",ck.open));
+      ck.appendChild(el("summary",null,"☑ Pass Grade 1 checklist · "+nC+"/"+g.checklist.length));
+      g.checklist.forEach((c,i)=>{const r=el("label","dl");const b=document.createElement("input");b.type="checkbox";b.checked=!!st.check[i];b.addEventListener("change",()=>{st.check[i]=b.checked;save();});r.append(b,el("span",null,c));ck.appendChild(r);});gd.appendChild(ck);}
+    if(g.strum){const sd=document.createElement("details");sd.className="dmod";sd.appendChild(el("summary",null,"🥁 Strumming — build in this order"));
+      g.strum.forEach(([n,p,w],i)=>{const r=el("div","dstrum");r.append(el("b",null,(i+1)+". "+n),el("code",null,p),el("small",null,w));sd.appendChild(r);});gd.appendChild(sd);}
+    if(g.session){const sd=document.createElement("details");sd.className="dmod";sd.appendChild(el("summary",null,"⏱ A 20-minute session"));
+      g.session.forEach(([a,b])=>{const r=el("div","dstrum");r.append(el("b",null,a),el("span",null,b));sd.appendChild(r);});
+      sd.appendChild(el("p","dline","One-minute change pairs: "+g.pairs.join(" · ")+" — target ~30/min."));
+      const tr=el("button","libbtn","⏱ Open the one-minute trainer");tr.type="button";tr.addEventListener("click",()=>{const w=$("warm"),t=$("trainer");if(w)w.open=true;if(t){t.open=true;t.scrollIntoView({block:"center",behavior:"smooth"});}if(innerWidth<1100)toggleDash(false);});sd.appendChild(tr);gd.appendChild(sd);}
+    if(g.id==="g1"){const my=document.createElement("details");my.className="dmod";my.open=store.get("sb-dash-my5",true);my.addEventListener("toggle",()=>store.set("sb-dash-my5",my.open));
+      my.appendChild(el("summary",null,"🎵 My 5 songs"));
+      st.my5.forEach((v,i)=>{const r=el("div","dmy");const s=document.createElement("select");s.appendChild(el("option",null,"— pick a song —"));s.firstChild.value="";
+        songs.forEach(x=>{const o=el("option",null,x.title);o.value=x.id;s.appendChild(o);});s.value=v||"";s.addEventListener("change",()=>{st.my5[i]=s.value;save();});
+        const go=el("button","libbtn","▶");go.type="button";go.disabled=!v;go.title="Open this song";go.addEventListener("click",()=>{choose(v);if(innerWidth<1100)toggleDash(false);scrollTo({top:0,behavior:"smooth"});});
+        r.append(el("span",null,(i+1)+"."),s,go);my.appendChild(r);});gd.appendChild(my);}
+    host.appendChild(gd);});
+  const rs=el("button","dreset","Reset course progress");rs.type="button";rs.addEventListener("click",()=>{if(confirm("Clear all course ticks and your 5 songs?")){store.set("sb-course",{});renderDash();}});host.appendChild(rs);
+}
+function toggleDash(on){const open=on==null?!document.body.classList.contains("dash-on"):on;document.body.classList.toggle("dash-on",open);store.set("sb-dash-open",open);}
+
+// ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
+async function removeGuitar(btn,picker,file){
+  const s=cur,say=m=>{const fn=$("fname");if(fn&&cur===s)fn.textContent=m;};
+  let h=null;try{const r=await fetch("api/health",{cache:"no-store"});if(r.ok)h=await r.json();}catch(e){}
+  if(!h||!h.ok){alert("🎸 Remove guitar needs the Songbook server.\n\nStop the current server (Ctrl+C in its terminal), then start the app with:\n\n  ~/.venvs/demucs/bin/python pipeline/serve.py\n\nand reload this page. It works the same as python3 -m http.server, plus this button.");return;}
+  if(!h.demucs||!h.ffmpeg){alert("The server is running but is missing "+(!h.demucs?"Demucs":"ffmpeg")+".\nStart it with ~/.venvs/demucs/bin/python pipeline/serve.py (see the top of pipeline/make_backing.py).");return;}
+  if(!file){let rec=null;if(SONG_AUDIO[s.id]){try{const bl=await (await fetch(SONG_AUDIO[s.id].data)).blob();rec={name:SONG_AUDIO[s.id].name,blob:bl};}catch(e){}}
+    if(!rec)rec=await idb("get",s.id);
+    if(rec&&/backing|no guitar|karaoke|instrumental/i.test(rec.name||"")){if(!confirm("The file connected to "+s.title+" (“"+rec.name+"”) already looks like a backing track.\n\nOK = pick the original song file instead\nCancel = stop"))return;rec=null;}
+    if(!rec){picker.value="";picker.click();return;}
+    file=rec.blob instanceof File?rec.blob:new File([rec.blob],rec.name||"song.mp3",{type:rec.blob.type});}
+  btn.disabled=true;const t0=Date.now();const tick=setInterval(()=>say("🎸 Taking the guitar out of “"+file.name+"”… "+Math.round((Date.now()-t0)/1000)+" s (usually 1–2 min)"),1000);
+  try{const r=await fetch("api/backing",{method:"POST",body:file,headers:{"X-Filename":encodeURIComponent(file.name),"X-Title":encodeURIComponent(s.title||""),"X-Artist":encodeURIComponent(s.artist||""),"X-Guide":"0.5"}});
+    if(!r.ok){let m="error "+r.status;try{m=(await r.json()).error||m;}catch(e){}throw new Error(m);}
+    const name=decodeURIComponent(r.headers.get("X-Filename")||(s.title+" (backing, no guitar).m4a"));let info={};try{info=JSON.parse(decodeURIComponent(r.headers.get("X-Info")||"{}"));}catch(e){}
+    const out=new File([await r.blob()],name,{type:"audio/mp4"});clearInterval(tick);
+    if(cur!==s){toast("✓ Backing for "+s.title+" saved to Downloads › Songbook Backing Tracks");return;}
+    await loadSongFile(out);
+    toast("✓ Guitar removed — playing “"+name+"”. Also saved to Downloads › Songbook Backing Tracks"+(info.guide_guitar_at&&info.guide_guitar_at.length?" · soft guitar at "+info.guide_guitar_at.map(x=>x.join("–")).join(", "):""));
+  }catch(e){clearInterval(tick);say("🎸 Couldn't make the backing: "+e.message);}
+  finally{btn.disabled=false;}
+}
+
+// ---------- 📄 song sheet: this song's page from your songbook PDFs, shown inside Song practice ----------
+let booksP=null;
+function loadBooks(){return booksP||(booksP=fetch("songbook/songbook.json",{cache:"no-store"}).then(r=>r.ok?r.json():{books:[]}).then(j=>(j.books||[]).map(b=>({name:b.title||b.file.replace(/\.pdf$/i,""),url:"songbook/"+encodeURIComponent(b.file),toc:b.toc||[]}))).catch(()=>[]));}
+async function renderSheet(){
+  const s=cur,books=await loadBooks(),ups=(await pdb("all"))||[];if(cur!==s)return;
+  const hits=[];books.forEach(b=>b.toc.filter(e=>e.song===s.id).forEach(e=>hits.push({name:b.name,url:b.url,page:e.page,title:e.title})));
+  ups.forEach(r=>{const p=(r.pages||{})[s.id];if(p)hits.push({name:r.name,blob:r.blob,page:p,title:s.title});});
+  const box=document.createElement("details");box.className="sub sheetbox";box.id="songSheet";box.open=store.get("sb-sheet-open",false);
+  box.appendChild(el("summary",null,"📄 Song sheet"+(hits.length?" — "+hits[0].name+", page "+hits[0].page:"")));
+  if(!hits.length){box.appendChild(el("p","vdesc","No page for "+s.title+" in your songbook yet. Upload a PDF in 📚 Songbook at the bottom and tap ☆ to link its page to this song."));}
+  else{let urls=[];const body=el("div","sheetbody");box.appendChild(body);
+    const show=h=>{body.innerHTML="";if(hits.length>1){const w=el("div","chips sbchips");hits.forEach(x=>{const b=el("button","libbtn"+(x===h?" primary":""),x.name+" · p."+x.page);b.type="button";b.addEventListener("click",()=>show(x));w.appendChild(b);});body.appendChild(w);}
+      let u=h.url;if(h.blob){u=URL.createObjectURL(new Blob([h.blob],{type:"application/pdf"}));urls.push(u);}
+      const nw=el("a","libbtn","Open full page ↗");nw.href=u+"#page="+h.page;nw.target="_blank";nw.rel="noopener";body.appendChild(nw);
+      const fr=document.createElement("iframe");fr.src=u+"#page="+h.page+"&view=FitH";fr.title=h.title;body.appendChild(fr);};
+    const lazy=()=>{if(box.open&&!body.firstChild)show(hits[0]);};
+    box.addEventListener("toggle",()=>{store.set("sb-sheet-open",box.open);lazy();});lazy();}
+  if(!hits.length)box.addEventListener("toggle",()=>store.set("sb-sheet-open",box.open));
+  const wm=$("warm");if(!wm||cur!==s)return;const old=$("songSheet");if(old){old.replaceWith(box);return;}
+  const after=$("playAlong")||wm.querySelector(":scope>summary");after.after(box);
 }
 
 // ---------- ⏱ one-minute chord changes (JustinGuitar-style trainer) ----------
 function renderTrainer(){
-  const box=document.createElement("details");box.className="card";box.id="trainer";box.open=store.get("sb-train-open",false);
+  const box=document.createElement("details");box.className="sub";box.id="trainer";box.open=store.get("sb-train-open",false);
   box.addEventListener("toggle",()=>store.set("sb-train-open",box.open));
   box.appendChild(el("summary",null,"⏱ One-minute chord changes"));
   const used=[...new Set(flat.flatMap(b=>b.toks.map(t=>t.c)))];
@@ -1177,7 +1550,7 @@ function renderTrainer(){
   tick.addEventListener("click",()=>{if(!timer)return;n++;cnt.textContent=String(n);});
   tick.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();e.stopPropagation();if(timer){n++;cnt.textContent=String(n);}}});
   showBest();
-  const old=$("trainer");if(old)old.replaceWith(box);else main.appendChild(box);
+  const old=$("trainer");if(old)old.replaceWith(box);else{const w=$("warm");(w||main).appendChild(box);}
 }
 
 // ---------- library: your songs, open/save song files, song builder ----------
@@ -1486,6 +1859,7 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 
 // ---------- start ----------
 refreshSongs();
+$("dashTab").addEventListener("click",()=>toggleDash(true));toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();
 </script>
 </body></html>

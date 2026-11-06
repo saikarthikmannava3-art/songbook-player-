@@ -6,3 +6,8 @@
 *lyrics*.txt
 *lyrics and chords*.txt
 .DS_Store
+
+# Your own songbook PDFs + their page index stay local
+songbook/
+audio/
+__pycache__/

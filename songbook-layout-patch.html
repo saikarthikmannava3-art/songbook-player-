@@ -2,11 +2,11 @@
 <style id="sb-layout-patch">
 #main{display:flex;flex-direction:column}
 #main>*{order:50}
-#main>.card:first-child{order:0}
+#main>.card:has(>.songhead){order:0}
 #main>details.chart{order:1}
 #main>#lyrBox{order:2}
 #main>details.card:not(.chart):not(#warm):not(#trainer){order:3}
-#main>#warm{order:4}
+#main>#warm{order:98}
 #main>.bar{order:5}
 #main>.stage{order:6}
 #main>#trainer{order:7}
@@ -31,7 +31,7 @@
       var lab=L.querySelector(':scope>.label');
       if(lab){lab.title='Show / hide lyrics';lab.addEventListener('click',function(){var c=!L.classList.contains('sb-collapsed');L.classList.toggle('sb-collapsed',c);set(c);});}
     }
-    var head=main.querySelector(':scope>.card:first-child');
+    var sh=main.querySelector(':scope>.card>.songhead'),head=sh&&sh.parentElement;
     var yt=head && [].slice.call(head.querySelectorAll(':scope>div')).find(function(d){var l=d.querySelector(':scope>.label');return l&&/play along on youtube/i.test(l.textContent)});
     if(yt){
       [].slice.call(main.querySelectorAll(':scope>.sb-yt')).forEach(function(o){o.remove()});

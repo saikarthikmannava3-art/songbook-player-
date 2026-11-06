@@ -697,24 +697,34 @@ async function autoConnect(id){
 }
 
 // ---------- song file (local only) ----------
-function loadSongFile(f,opt){
-  opt=opt||{};const songId=cur&&cur.id;const fn=$("fname");
+const MIME={mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",mp4:"video/mp4",m4v:"video/mp4",mov:"video/quicktime",wav:"audio/wav",ogg:"audio/ogg",oga:"audio/ogg",opus:"audio/ogg",flac:"audio/flac",webm:"audio/webm",caf:"audio/x-caf",aif:"audio/aiff",aiff:"audio/aiff"};
+function mimeFor(f){const ext=(String(f.name||"").match(/\.([a-z0-9]+)$/i)||[])[1];return MIME[(ext||"").toLowerCase()]||f.type||"audio/mpeg";}
+function loadSongFile(f,opt,attempt){
+  opt=opt||{};attempt=attempt||0;const songId=cur&&cur.id;const fn=$("fname");
   if(!/^(audio|video)\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|oga|opus|flac|webm|mp4|m4v|mov|caf|aiff?)$/i.test(f.name)){if(fn)fn.textContent="“"+f.name+"” isn't an audio or video file. Try an MP3, M4A or MP4.";return;}
   pause();dropAudio();
+  // label the file with the right audio type from its extension (Safari and some pickers give an empty or wrong type)
+  const mime=mimeFor(f),src=attempt===0&&f.type!==mime?new Blob([f],{type:mime}):f;
   const a=new Audio();a.preload="auto";a.preservesPitch=true;a.playbackRate=speed;
   if(fn)fn.textContent="Loading “"+f.name+"”…";
-  a.addEventListener("loadedmetadata",()=>{au=a;auName=f.name;
+  let done=false;
+  const ready=()=>{if(done||a.error)return;done=true;au=a;auName=f.name;
     ["play","pause","seeked","ended"].forEach(ev=>a.addEventListener(ev,()=>{schedReset();ui();kick();paint(true);}));
     try{audio();const sn=ctx.createMediaElementSource(a),an=ctx.createAnalyser();an.fftSize=8192;an.smoothingTimeConstant=0.6;sn.connect(ctx.destination);sn.connect(an);fileAn=an;}catch(e){fileAn=null;}
     mode="file";const ms=$("mode");if(ms){ms.querySelector('[value="file"]').disabled=false;ms.value="file";}
-    if($("fname"))$("fname").textContent=(opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+" ("+fmt(a.duration||0).replace(/\.\d$/,"")+") — press ▶ Play."+(opt.save===false?"":" Saved for next time.");
+    const dur=isFinite(a.duration)&&a.duration>0?" ("+fmt(a.duration).replace(/\.\d$/,"")+")":"";
+    if($("fname"))$("fname").textContent=(opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+dur+" — press ▶ Play."+(opt.save===false?"":" Saved for next time.");
     if($("forgetFile"))$("forgetFile").hidden=false;
-    if(opt.save!==false&&songId)idb("put",songId,{name:f.name,type:f.type,blob:f});
-    ui();paint(true);},{once:true});
-  a.addEventListener("error",()=>{try{URL.revokeObjectURL(a.src);}catch(e){}
+    if(opt.save!==false&&songId)idb("put",songId,{name:f.name,type:mime,blob:f});
+    ui();paint(true);};
+  a.addEventListener("loadedmetadata",ready,{once:true});a.addEventListener("canplay",ready,{once:true});
+  setTimeout(()=>{if(!done&&!a.error&&a.readyState===0&&a.networkState!==3)ready();},2500);   // iPhone only loads audio after a tap — accept it and let ▶ start it
+  a.addEventListener("error",()=>{if(done)return;try{URL.revokeObjectURL(a.src);}catch(e){}
+    if(attempt===0){loadSongFile(f,opt,1);return;}                                   // second try with the file exactly as picked
     if(opt.auto&&!opt.builtIn&&songId){idb("delete",songId);if(SONG_AUDIO[songId]){autoConnect(songId);return;}}   // drop a broken saved copy
-    if($("fname"))$("fname").textContent="This browser can't play “"+f.name+"”. Convert it to MP3 or M4A and try again.";},{once:true});
-  a.src=URL.createObjectURL(f);a.load();
+    const code=a.error?a.error.code:0;
+    if($("fname"))$("fname").textContent="This browser couldn't open “"+f.name+"”"+(code===4?" (format not supported here)":code?" (error "+code+")":"")+". Try it in Chrome, or use an MP3 / M4A that plays in your music app.";},{once:true});
+  a.src=URL.createObjectURL(src);a.load();
 }
 addEventListener("dragover",e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files")){e.preventDefault();document.body.style.outline="3px dashed var(--accent)";}});
 addEventListener("dragleave",e=>{if(!e.relatedTarget)document.body.style.outline="";});

@@ -1,0 +1,523 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "perfect",
+   "order": 2,
+   "title": "Perfect",
+   "artist": "Ed Sheeran",
+   "from": "÷ (Divide)",
+   "key": "A♭ (G shapes, capo 1)",
+   "capo": 1,
+   "bpm": 63,
+   "beatsPerBar": 2,
+   "subdiv": 3,
+   "timeLabel": "6 counts a card (slow 6/8 feel)",
+   "length": "4:23",
+   "firstBeat": 0,
+   "youtube": "https://www.youtube.com/watch?v=tCh3NiOWh9c",
+   "links": [
+    {
+     "label": "Play-along: chords video",
+     "url": "https://www.youtube.com/watch?v=tCh3NiOWh9c"
+    },
+    {
+     "label": "Super easy lesson",
+     "url": "https://www.youtube.com/watch?v=Z3KUCrpOyu0"
+    },
+    {
+     "label": "Guitar tutorial",
+     "url": "https://www.youtube.com/watch?v=9-DqIDNwWdY"
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Soft — one strum, let ring",
+     "s": "D....."
+    },
+    "mid": {
+     "label": "Verse — downs on 1 and 4",
+     "s": "D..D.."
+    },
+    "full": {
+     "label": "Chorus — six beats",
+     "s": "DddDdd"
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — Four downs (one per main beat)",
+     "s": "D..D.."
+    },
+    {
+     "label": "Pattern 2 — Six beats (loud on 1 and 4)",
+     "s": "DddDdd"
+    },
+    {
+     "label": "Pattern 3 — Usual 12:8 (count 1–12 over two cards)",
+     "s": "DddDdd"
+    },
+    {
+     "label": "Pattern 4 — D · D U D U",
+     "s": "D.DUDU"
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Open chords G, Em, C, D — one per card; in two-chord bars you play the first chord.",
+     "sections": [
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "G",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "Em",
+        "G",
+        "Em",
+        "G",
+        "Em",
+        "G"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "G",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "Em",
+        "G",
+        "Em",
+        "G",
+        "Em",
+        "G"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "Em",
+        "G",
+        "Em"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "C",
+        "D",
+        "C",
+        "G",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "G"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Exactly your Karthik Songbook: verse one chord per bar, chorus two chords a bar (Em–C, G–D).",
+     "sections": [
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "G D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em C",
+        "G D",
+        "Em C",
+        "G D",
+        "Em C",
+        "G D",
+        "Em C",
+        "G D"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "mid",
+       "bars": [
+        "G D",
+        "Em D",
+        "C D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "G D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em C",
+        "G D",
+        "Em C",
+        "G D",
+        "Em C",
+        "G D",
+        "Em C",
+        "G D"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em C",
+        "G D",
+        "Em C",
+        "G D",
+        "Em"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "C G",
+        "D Em",
+        "C",
+        "G Em",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "G D",
+        "Em D",
+        "C D",
+        "G"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Songbook + colour: Cadd9 for C and the G → D/F# walk-down.",
+     "sections": [
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "Cadd9",
+        "D",
+        "G",
+        "Em",
+        "Cadd9",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "Cadd9",
+        "G D/F#",
+        "G",
+        "Em",
+        "Cadd9",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "mid",
+       "bars": [
+        "G D/F#",
+        "Em D",
+        "Cadd9 D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "Cadd9",
+        "D",
+        "G",
+        "Em",
+        "Cadd9",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "Cadd9",
+        "G D/F#",
+        "G",
+        "Em",
+        "Cadd9",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Em",
+        "Cadd9",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Em Cadd9",
+        "G D/F#",
+        "Em Cadd9",
+        "G D/F#",
+        "Em"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "Cadd9 G",
+        "D Em",
+        "Cadd9",
+        "G Em",
+        "Cadd9",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "G D/F#",
+        "Em D",
+        "Cadd9 D",
+        "G"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "From your Karthik Songbook: capo 1, G shapes, about 63 BPM, all downstrokes.",
+    "Two chords in one bar share it equally (Em–C, G–D = half a bar each).",
+    "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."
+   ],
+   "sources": [
+    {
+     "label": "Your Karthik Songbook (PDF)",
+     "url": "#"
+    },
+    {
+     "label": "Lauren Bateman chart",
+     "url": "https://www.laurenbateman.com/perfect-chord-chart/"
+    },
+    {
+     "label": "Guitartwitt",
+     "url": "https://guitartwitt.com/perfect-chords-ed-sheeran"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g3": true,
+    "g7": true
+   },
+   "rev": 2
+  }
+ ]
+}

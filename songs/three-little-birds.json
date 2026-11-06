@@ -1,0 +1,309 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "three-little-birds",
+   "order": 3,
+   "title": "Three Little Birds",
+   "artist": "Bob Marley & The Wailers",
+   "from": "Exodus",
+   "key": "A (no capo)",
+   "capo": 0,
+   "bpm": 74,
+   "beatsPerBar": 4,
+   "subdiv": 2,
+   "timeLabel": "4/4 — reggae",
+   "length": "3:00",
+   "firstBeat": 0,
+   "youtube": "https://www.youtube.com/watch?v=VAx4l-C2pJI",
+   "links": [
+    {
+     "label": "Play-along guitar lesson",
+     "url": "https://www.youtube.com/watch?v=VAx4l-C2pJI"
+    },
+    {
+     "label": "Easy play-along with chords",
+     "url": "https://www.youtube.com/watch?v=9o4petoHyLo"
+    },
+    {
+     "label": "Beginner tutorial",
+     "url": "https://www.youtube.com/watch?v=gJGzHXkzi34"
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Intro — four downs",
+     "s": "D.D.D.D."
+    },
+    "full": {
+     "label": "Off-beat (most taught)",
+     "s": "BDBDBDBD"
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — Four downs",
+     "s": "D.D.D.D."
+    },
+    {
+     "label": "Pattern 2 — Reggae (bass · down · up · chuck · down)",
+     "s": "B.DUX.D."
+    },
+    {
+     "label": "Pattern 3 — DDUUDU",
+     "s": "D.DU.UDU"
+    },
+    {
+     "label": "Pattern 4 — Off-beat (most taught: bass on the beat, strum on the &)",
+     "s": "BDBDBDBD"
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Open chords A, D, E — one per bar; in the D–A bars play D.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "A",
+        "A",
+        "A",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D",
+        "A",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E",
+        "A",
+        "D",
+        "A",
+        "E",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D",
+        "A",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E",
+        "A",
+        "D",
+        "A",
+        "E",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D",
+        "A",
+        "D"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Exactly your Karthik Songbook: Intro A ×4, Chorus A | D A | A | D A, Verse A E A D / A E D A.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "A",
+        "A",
+        "A",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D:2 A:2",
+        "A",
+        "D:2 A:2"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E",
+        "A",
+        "D",
+        "A",
+        "E",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D:2 A:2",
+        "A",
+        "D:2 A:2"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E",
+        "A",
+        "D",
+        "A",
+        "E",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A",
+        "D:2 A:2",
+        "A",
+        "D:2 A:2"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Songbook + E7 in the verses and an Asus4 hammer-on in the chorus.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "A",
+        "A",
+        "A",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2",
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E7",
+        "A",
+        "D",
+        "A",
+        "E7",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2",
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2"
+       ]
+      },
+      {
+       "name": "Verse",
+       "feel": "full",
+       "bars": [
+        "A",
+        "E7",
+        "A",
+        "D",
+        "A",
+        "E7",
+        "D",
+        "A"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2",
+        "A:2 Asus4:1 A:1",
+        "D:2 A:2"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "From your Karthik Songbook: no capo, open A, D, E, about 74 BPM.",
+    "Intro: play the intro tab ×4 over A (see your songbook PDF).",
+    "B = bass note, ✕ = chuck (muted strum).",
+    "Draft until timed to your MP3 — send the MP3 and I'll run the pipeline."
+   ],
+   "sources": [
+    {
+     "label": "Your Karthik Songbook (PDF)",
+     "url": "#"
+    },
+    {
+     "label": "Guitartwitt",
+     "url": "https://guitartwitt.com/three-little-birds-chords-by-bob-marley"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g3": true,
+    "g7": true
+   },
+   "rev": 2
+  }
+ ]
+}

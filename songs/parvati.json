@@ -1,0 +1,561 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "artist": "Sadhu Tiwari",
+   "beatsPerBar": 4,
+   "bpm": 86.1,
+   "capo": 1,
+   "firstBeat": 0.906,
+   "from": "Hanuman Ansh",
+   "key": "E♭ (D shapes, capo 1)",
+   "length": "4:45",
+   "notes": [
+    "Capo 1, D shapes (sounds in E♭). 86 BPM, timed to your MP3.",
+    "Chorus: Am → C on “kaay zid kar rahi…”, D – C – Am on “jaake sees pe ganga…”, D – F – G – D on “Bholenath”.",
+    "One-beat chords get one down strum, not the whole pattern.",
+    "Lyrics: open “Parvati — lyrics and chords.txt” in the Lyrics panel."
+   ],
+   "order": 1,
+   "patterns": {
+    "full": {
+     "label": "Main — ↓ ↓ ↑ ✕ ↓",
+     "s": "D.DuX.D."
+    },
+    "mid": {
+     "label": "Lighter — same pattern, soft",
+     "s": "d.dux.d."
+    },
+    "ring": {
+     "label": "Soft — one strum, let ring",
+     "s": "D......."
+    }
+   },
+   "sources": [
+    {
+     "label": "Your Ultimate Guitar sheet (abhishekyadav123)",
+     "url": "#"
+    },
+    {
+     "label": "Your recording (Parvati MP3)",
+     "url": "#"
+    },
+    {
+     "label": "bibekac lesson",
+     "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"
+    },
+    {
+     "label": "Sagar Roy lesson",
+     "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"
+    }
+   ],
+   "title": "Parvati",
+   "youtube": "https://www.youtube.com/watch?v=nJlbqQEFYaE",
+   "id": "parvati",
+   "subdiv": 2,
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Just three open chords, one per bar: D, C, G. Quick Am and F moments are skipped (the F → G on “Bholenath” is played as G).",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "C",
+        "C",
+        "C",
+        "D",
+        "C",
+        "D",
+        "D",
+        "C",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "C",
+        "C",
+        "C",
+        "D",
+        "D",
+        "D",
+        "C",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "C",
+        "G",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "C",
+        "C",
+        "C",
+        "D",
+        "D",
+        "D",
+        "C",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D",
+        "D",
+        "C",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Your Ultimate Guitar sheet, timed to the recording: Am → C, and F → G on “Bholenath”.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
+        "D",
+        "Am:1 C:3",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
+        "D",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "C",
+        "G",
+        "G:2 D:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
+        "D",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Sheet + colour: Cadd9, and Dsus2 / Dsus4 movement on the long D stretches.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "Am:1 Cadd9:3",
+        "Cadd9",
+        "Am:1 Cadd9:3",
+        "D",
+        "Am:1 Cadd9:3",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 Cadd9:3",
+        "Cadd9",
+        "Am:1 Cadd9:3",
+        "D",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "D:2 Dsus2:2",
+        "Cadd9",
+        "G",
+        "G:2 D:2",
+        "D:2 Dsus2:2"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "Am:1 Cadd9:3",
+        "Cadd9",
+        "Am:1 Cadd9:3",
+        "D",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D",
+        "D",
+        "Cadd9 Am",
+        "D",
+        "F:2 G:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "D:2 Dsus4:1 D:1",
+        "D:2 Dsus4:1 D:1",
+        "D:2 Dsus4:1 D:1",
+        "D:2 Dsus4:1 D:1",
+        "D:2 Dsus4:1 D:1"
+       ]
+      }
+     ]
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — 4 downs (beginner)",
+     "s": "D.D.D.D."
+    },
+    {
+     "label": "Pattern 2 — D DU UDU (the classic)",
+     "s": "D.DU.UDU"
+    },
+    {
+     "label": "Pattern 3 — song feel ↓ ↓↑ ✕ ↓",
+     "s": "D.DuX.D."
+    }
+   ],
+   "links": [
+    {
+     "label": "Original song",
+     "url": "https://www.youtube.com/watch?v=nJlbqQEFYaE"
+    },
+    {
+     "label": "bibekac lesson",
+     "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"
+    },
+    {
+     "label": "Sagar Roy lesson",
+     "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"
+    }
+   ],
+   "timeLabel": "4/4",
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "g5": true,
+    "g6": true,
+    "g7": true,
+    "top1": 0.842,
+    "bpm_measured": 86.1,
+    "disputed": "Chorus 1 bar 5: the sheet's Am → C is heard as G in the recording; kept the sheet so the lyrics line up. Old chart (C instead of F → G) scored 81%, the sheet 84%."
+   },
+   "map": [
+    0.906,
+    31.602,
+    81.827,
+    129.289,
+    176.727,
+    224.189,
+    271.441
+   ],
+   "rev": 3
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+# Song audio and lyrics stay on your own devices (copyrighted) — never commit them
+*.mp3
+*.m4a
+*.wav
+*.flac
+*lyrics*.txt
+*lyrics and chords*.txt
+.DS_Store

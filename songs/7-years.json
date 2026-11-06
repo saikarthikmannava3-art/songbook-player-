@@ -1,0 +1,777 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "7-years",
+   "order": 4,
+   "title": "7 Years",
+   "artist": "Lukas Graham",
+   "from": "Lukas Graham (Blue Album)",
+   "key": "Gm (Em-G-C-D shapes, capo 3)",
+   "capo": 3,
+   "bpm": 120,
+   "beatsPerBar": 4,
+   "subdiv": 2,
+   "timeLabel": "4/4",
+   "length": "3:55",
+   "firstBeat": 2.09,
+   "youtube": "https://www.youtube.com/watch?v=rBZlcitXX8o",
+   "links": [
+    {
+     "label": "Play-along",
+     "url": "https://www.youtube.com/watch?v=rBZlcitXX8o"
+    },
+    {
+     "label": "Tutorial: capo 3 (0:32)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=32s"
+    },
+    {
+     "label": "Chords Em G C D (1:09)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=69s"
+    },
+    {
+     "label": "B and B7 (2:39)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=159s"
+    },
+    {
+     "label": "Pattern 1 (3:56)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=236s"
+    },
+    {
+     "label": "Pattern 2 (6:21)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=381s"
+    },
+    {
+     "label": "Pattern 3 (10:44)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=644s"
+    },
+    {
+     "label": "Song structure (12:54)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=774s"
+    },
+    {
+     "label": "B-chord progression (16:53)",
+     "url": "https://www.youtube.com/watch?v=aBVpjcATYOI&t=1013s"
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Intro/outro — one down per chord",
+     "s": "D......."
+    },
+    "mid": {
+     "label": "Verse — D D U U D U",
+     "s": "D.DU.UDU"
+    },
+    "full": {
+     "label": "Chorus — D D U U D U",
+     "s": "D.DU.UDU"
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — one down per chord change (Ellen: intro & outro)",
+     "s": "D......."
+    },
+    {
+     "label": "Pattern 2 — D D U U D U (Ellen's main pattern)",
+     "s": "D.DU.UDU"
+    },
+    {
+     "label": "Pattern 3 — D D U U D · (last up dropped to make quick changes)",
+     "s": "D.DU.UD."
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Only the 4 chords from your tutorial — Em, G, C, D (capo 3), one per bar. The B / Bsus4 / G/B moments are played as D and G.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "C",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "C",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 4",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "C",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 5",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "C",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 6",
+       "feel": "full",
+       "bars": [
+        "C",
+        "Em",
+        "D",
+        "G",
+        "C",
+        "D",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 7",
+       "feel": "full",
+       "bars": [
+        "C",
+        "Em",
+        "D",
+        "G",
+        "C",
+        "Em",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 8",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "C",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 9",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "G"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Your Ultimate Guitar chords, timed to the recording: Em→D and C→D change on beat 3.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C:2 D:2",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C:2 D:2",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 4",
+       "feel": "full",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C:2 D:2",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 5",
+       "feel": "full",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C:2 D:2",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "G/B"
+       ]
+      },
+      {
+       "name": "Chorus 6",
+       "feel": "full",
+       "bars": [
+        "C:2 D:2",
+        "Em",
+        "D",
+        "G/B",
+        "C",
+        "D:2 Em:2",
+        "Bsus4",
+        "B"
+       ]
+      },
+      {
+       "name": "Chorus 7",
+       "feel": "full",
+       "bars": [
+        "C:2 D:2",
+        "Em",
+        "D",
+        "G/B",
+        "C:2 D:2",
+        "Em",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 8",
+       "feel": "full",
+       "bars": [
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C:2 D:2",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 9",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em:2 D:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Em:2 D:2",
+        "G"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Advanced (Ellen's optional B-chord version) + colour: Bsus4 → B7 in the sixty-years chorus, D/F# walk-ups, Cmaj7 in the verses.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D",
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C:2 Dsus4:1 D:1",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D",
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 3",
+       "feel": "full",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C:2 Dsus4:1 D:1",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D",
+        "Em:2 D/F#:2",
+        "G",
+        "Cmaj7",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 4",
+       "feel": "full",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C:2 Dsus4:1 D:1",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 5",
+       "feel": "full",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C:2 Dsus4:1 D:1",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Bridge",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em",
+        "G",
+        "C",
+        "G/B"
+       ]
+      },
+      {
+       "name": "Chorus 6",
+       "feel": "full",
+       "bars": [
+        "C:2 Dsus4:1 D:1",
+        "Em",
+        "D",
+        "G/B",
+        "C",
+        "D:2 Em:2",
+        "Bsus4",
+        "B7"
+       ]
+      },
+      {
+       "name": "Chorus 7",
+       "feel": "full",
+       "bars": [
+        "C:2 Dsus4:1 D:1",
+        "Em",
+        "D",
+        "G/B",
+        "C:2 Dsus4:1 D:1",
+        "Em",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 8",
+       "feel": "full",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C:2 Dsus4:1 D:1",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Chorus 9",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "G",
+        "C",
+        "D",
+        "Em:2 D/F#:2",
+        "G",
+        "C",
+        "C"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Em:2 D/F#:2",
+        "G"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "Ellen's lesson: capo 3, standard tuning. Required chords Em, G, C, D; B and B7 are optional (Intermediate / Band).",
+    "Start with Pattern 1 (one down per chord change), then Pattern 2: D D U U D U.",
+    "Timed to your MP3: 120 BPM, every section is 8 bars."
+   ],
+   "sources": [
+    {
+     "label": "Your Ultimate Guitar sheet",
+     "url": "https://tabs.ultimate-guitar.com/tab/lukas-graham/7-years-chords-1803179"
+    },
+    {
+     "label": "Cifra Club",
+     "url": "https://www.cifraclub.com/lukas-graham/7-years/jpkwgp.html"
+    },
+    {
+     "label": "Billchords",
+     "url": "https://billchords.blogspot.com/2016/02/guitar-chords-lukas-graham-7-years.html"
+    },
+    {
+     "label": "Wikipedia (key, 120 BPM)",
+     "url": "https://en.wikipedia.org/wiki/7_Years_(Lukas_Graham_song)"
+    },
+    {
+     "label": "Musicnotes (♩=120)",
+     "url": "https://www.musicnotes.com/sheetmusic/lukas-graham/7-years/MN0160995"
+    }
+   ],
+   "map": [
+    2.09,
+    18.065,
+    34.11,
+    50.109,
+    66.084,
+    82.083,
+    97.919,
+    114.08,
+    130.078,
+    146.1,
+    162.122,
+    178.074,
+    194.072,
+    210.094,
+    226.069
+   ],
+   "rev": 3,
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": true,
+    "g5": true,
+    "g6": true,
+    "g7": true,
+    "top1": 0.849,
+    "top2": 0.902,
+    "bpm_measured": 120.02,
+    "disputed": "Bridge & 'sixty years old' choruses: Cifra Club simplifies to Em-D-G-C; kept the UG sheet (G/B, Bsus4→B), confirmed by the recording."
+   }
+  }
+ ]
+}

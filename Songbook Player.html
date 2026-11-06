@@ -1488,4 +1488,52 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 refreshSongs();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();
 </script>
+<!-- ===== Layout patch: Song map / Lyrics / Chord shapes on top, all collapsible, Play-along last ===== -->
+<style id="sb-layout-patch">
+#main{display:flex;flex-direction:column}
+#main>*{order:50}
+#main>.card:first-child{order:0}
+#main>details.chart{order:1}
+#main>#lyrBox{order:2}
+#main>details.card:not(.chart):not(#warm):not(#trainer){order:3}
+#main>#warm{order:4}
+#main>.bar{order:5}
+#main>.stage{order:6}
+#main>#trainer{order:7}
+#main>.sb-yt{order:99}
+#lyrBox>.label{cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;font:700 16px/23.2px "Atkinson Hyperlegible",system-ui,sans-serif;letter-spacing:normal;text-transform:none;color:rgb(232,237,246);margin:0}
+#lyrBox:not(.sb-collapsed)>.label{margin-bottom:10px}
+#lyrBox>.label::after{content:"－";color:rgb(151,162,184)}
+#lyrBox.sb-collapsed>.label::after{content:"＋"}
+#lyrBox.sb-collapsed>:not(.label){display:none!important}
+</style>
+<script id="sb-layout-patch-js">
+(function(){
+  var KEY='sb-lyr-collapsed';
+  function get(){try{var v=localStorage.getItem(KEY);return v===null?true:v==='1'}catch(e){return true}}
+  function set(v){try{localStorage.setItem(KEY,v?'1':'0')}catch(e){}}
+  function apply(){
+    var main=document.getElementById('main'); if(!main) return;
+    var L=document.getElementById('lyrBox');
+    if(L && !L.dataset.sbCol){
+      L.dataset.sbCol='1';
+      L.classList.toggle('sb-collapsed',get());
+      var lab=L.querySelector(':scope>.label');
+      if(lab){lab.title='Show / hide lyrics';lab.addEventListener('click',function(){var c=!L.classList.contains('sb-collapsed');L.classList.toggle('sb-collapsed',c);set(c);});}
+    }
+    var head=main.querySelector(':scope>.card:first-child');
+    var yt=head && [].slice.call(head.querySelectorAll(':scope>div')).find(function(d){var l=d.querySelector(':scope>.label');return l&&/play along on youtube/i.test(l.textContent)});
+    if(yt){
+      [].slice.call(main.querySelectorAll(':scope>.sb-yt')).forEach(function(o){o.remove()});
+      yt.classList.add('card','sb-yt');
+      main.appendChild(yt);
+    }
+  }
+  var busy=false;
+  new MutationObserver(function(){if(busy)return;busy=true;requestAnimationFrame(function(){apply();busy=false;});})
+    .observe(document.body,{childList:true,subtree:true});
+  if(document.readyState!=='loading')apply();else document.addEventListener('DOMContentLoaded',apply);
+})();
+</script>
+
 </body></html>

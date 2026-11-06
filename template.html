@@ -5,6 +5,7 @@
 /* Layout: practice-room console — song shelf → song card → sticky transport rail → moving chord lane (the stage) → lyrics → shapes & strums → whole chart.
    Palette: cool steel paper by day, midnight stage by night; one warm accent from a sunburst guitar finish; chord names in cobalt ink. */
 :root{
+  --c-A:#d9534f; --c-B:#8e5bd6; --c-C:#2f80ed; --c-D:#e0822b; --c-E:#1d9a6c; --c-F:#c2408f; --c-G:#c9a227; --c-X:#8a93a6;
   --bg:#edf0f4; --surface:#ffffff; --sunk:#e1e6ed; --fg:#131a2b; --muted:#5a6477; --line:#d2d9e3;
   --accent:#e0822b; --accent-ink:#1c1205; --accent-soft:#fbe5cf;
   --chord:#2345b5; --now:#ffd46a; --now-ink:#1c1205;
@@ -13,11 +14,13 @@
   --r:12px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --c-A:#ff7a73; --c-B:#b38cff; --c-C:#6aa8ff; --c-D:#ffab5c; --c-E:#47d19a; --c-F:#f07cc2; --c-G:#f2cf5b; --c-X:#8a93a6;
   --bg:#0e1320; --surface:#161d2c; --sunk:#111725; --fg:#e8edf6; --muted:#97a2b8; --line:#263045;
   --accent:#f2a24a; --accent-ink:#1a1106; --accent-soft:#3a2a17;
   --chord:#93b2ff; --now:#f4c652; --now-ink:#1a1106;
   --good:#3cc08a; --good-ink:#06180f; --stage:#0a0f1a; --stage-ink:#eef2fa; color-scheme:dark}}
 :root[data-theme="dark"]{
+  --c-A:#ff7a73; --c-B:#b38cff; --c-C:#6aa8ff; --c-D:#ffab5c; --c-E:#47d19a; --c-F:#f07cc2; --c-G:#f2cf5b; --c-X:#8a93a6;
   --bg:#0e1320; --surface:#161d2c; --sunk:#111725; --fg:#e8edf6; --muted:#97a2b8; --line:#263045;
   --accent:#f2a24a; --accent-ink:#1a1106; --accent-soft:#3a2a17;
   --chord:#93b2ff; --now:#f4c652; --now-ink:#1a1106;
@@ -141,6 +144,14 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .beats i.on.one{background:var(--now);box-shadow:0 0 0 2px var(--accent)}
 .hint{flex-basis:100%;font-size:13px;color:var(--muted);margin:0}
 .hint b{color:var(--fg)}
+/* chord colour line */
+.cline{height:4px;border-radius:99px;margin:-2px 0 2px}
+.cell .cline{position:absolute;left:8px;right:8px;top:3px;height:3px;margin:0}
+.cell{padding-top:9px!important}
+.cell.same{color:var(--muted);font-family:var(--body);font-size:15px;font-weight:700}
+.maploop,.looptag{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent)}
+.looptag{align-self:flex-start;background:var(--accent-soft);border-radius:99px;padding:3px 10px}
+.sheet .c{border-bottom:3px solid transparent}
 /* stage: chord sheet for the current section */
 .stage{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px}
 .stagehd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -309,8 +320,16 @@ function parseBar(str,bpb){
   toks.forEach(t=>{if(!t.b)t.b=(bpb-fixed)/Math.max(free,1);});return toks;
 }
 
+// ---------- chord colours: one colour per chord root, used everywhere (thin line on top) ----------
+function chordRoot(c){const m=String(c||"").match(/^([A-G])/);return m?m[1]:"X";}
+function chordColor(c){return "var(--c-"+chordRoot(c)+")";}
+function colorLine(toks,bpbN){const tot=toks.reduce((a,t)=>a+t.b,0)||1;let at=0,stops=[];toks.forEach(t=>{const a=at/tot*100,b=(at+t.b)/tot*100;stops.push(chordColor(t.c)+" "+a+"% "+b+"%");at+=t.b;});
+  const d=el("div","cline");d.style.background="linear-gradient(90deg,"+stops.join(",")+")";return d;}
+// smallest repeating unit of a section's bars (e.g. Em D G C ×4) → {p, reps}
+function loopOf(bars){const n=bars.length;for(let p=1;p<=n/2;p++){if(n%p)continue;let ok=true;for(let i=p;i<n&&ok;i++)ok=bars[i]===bars[i%p];if(ok)return {p,reps:n/p};}return {p:n,reps:1};}
+
 // ---------- state ----------
-let songs=[],cur=null,flat=[],cards=[],cells=[],cellGroups=[],secBlocks=[],stageSec=-2,lastBar=null,lastSlot=null,lastSec=null;
+let songs=[],cur=null,flat=[],cards=[],cardIdx=[],cells=[],cellGroups=[],secBlocks=[],stageSec=-2,lastBar=null,lastSlot=null,lastSec=null;
 let tune={bpm:90,nudge:0}, ver="simple", strum="auto";
 let mode="tab"; // tab | file | practice
 let speed=1, metOn=store.get("sb-met",true), metVol=store.get("sb-vol",0.7);
@@ -344,7 +363,7 @@ function saveTune(){if(cur)store.set("sb-tune-"+cur.id,tune);}
 function dropAudio(){fileAn=null;if(au){au.pause();try{URL.revokeObjectURL(au.src);}catch(e){}au=null;auName="";}}
 function choose(id){
   const s=songs.find(x=>x.id===id);if(!s)return;
-  building=false;locks=[];loopSec=null;mapping=null;tapMode=false;hearHist=[];pause();dropAudio();if(LS.env)LS.env=[];pOff=0;cur=s;store.set("songbook-last",id);loadTune(s);
+  building=false;locks=[];loopSec=null;mapping=null;tapMode=false;loadSeq++;hearHist=[];pause();dropAudio();if(LS.env)LS.env=[];pOff=0;cur=s;store.set("songbook-last",id);loadTune(s);
   mode=SONG_AUDIO[s.id]?"file":(s.youtube?"tab":"practice");
   renderShelf();renderSong();autoConnect(id);
 }
@@ -462,11 +481,13 @@ function renderSong(){
   const stage=el("section","stage");stage.setAttribute("aria-label","Chord sheet for the current section");
   const sh=el("div","stagehd");const sn=el("h2","secname","");sn.id="secName";const nx=el("div","nextup","");nx.id="nextUp";sh.append(sn,nx);stage.appendChild(sh);
   const blocks=el("div","blocks");stage.appendChild(blocks);
-  secBlocks=[];cards=[];stageSec=-2;
+  secBlocks=[];cards=[];cardIdx=[];stageSec=-2;
   sections().forEach((sec,k)=>{
     const blk=el("div","blk");blk.hidden=true;const lab=el("div","blklab",sec.name);blk.appendChild(lab);
     const grid=el("div","bars");blk.appendChild(grid);
-    (sec.bars||[]).forEach((_,i)=>{const idx=secFirst[k]+i,b=flat[idx];
+    const L=loopOf(sec.bars||[]);if(L.reps>1){lab.textContent=sec.name+" · loop ×"+L.reps;const lp=el("div","looptag","Plays ×"+L.reps);lp.dataset.reps=L.reps;blk.insertBefore(lp,grid);}
+    blk.dataset.p=L.p;blk.dataset.reps=L.reps;
+    (sec.bars||[]).slice(0,L.p).forEach((_,i)=>{const idx=secFirst[k]+i,b=flat[idx];
       const c=el("div","ccard");c.tabIndex=0;c.setAttribute("role","button");
       const top=el("div","ctop");const nm=el("div","names");
       b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));nm.appendChild(el("span",null,x.c));});top.appendChild(nm);
@@ -475,7 +496,8 @@ function renderSong(){
       const stt=el("div","st");stt.style.gridTemplateColumns=cols;b.pat.forEach(p=>stt.appendChild(el("i",p!=="."&&p===p.toUpperCase()?"acc":"",ARW[p.toLowerCase()]||"·")));
       const ct=el("div","ct");ct.style.gridTemplateColumns=cols;cl.forEach(x=>ct.appendChild(el("span",null,x)));
       c.append(stt,ct);c.addEventListener("click",()=>seekBar(idx));c.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();seekBar(idx);}});
-      grid.appendChild(c);cards[idx]=c;});
+      c.insertBefore(colorLine(b.toks),c.firstChild);
+      grid.appendChild(c);for(let r=0;r<L.reps;r++)cards[idx+r*L.p]=c;cardIdx.push({el:c,idxs:Array.from({length:L.reps},(_,r)=>idx+r*L.p)});});
     blocks.appendChild(blk);secBlocks.push(blk);});
   main.appendChild(stage);
 
@@ -485,7 +507,7 @@ function renderSong(){
   info.appendChild(el("summary",null,"Chord shapes, strumming & tips"));
   const used=[...new Set(flat.flatMap(b=>b.toks.map(t=>t.c)))];
   const cw=el("div");cw.appendChild(el("p","label","Chords in this version"));const shp=el("div","shapes");
-  used.forEach(x=>{const d=el("div","shape");const g=diagram(x);if(g)d.appendChild(g);d.appendChild(el("span",null,x));shp.appendChild(d);});
+  used.forEach(x=>{const d=el("div","shape");d.style.borderTop="4px solid "+chordColor(x);const g=diagram(x);if(g)d.appendChild(g);d.appendChild(el("span",null,x));shp.appendChild(d);});
   cw.appendChild(shp);info.appendChild(cw);
   const st=el("div");st.appendChild(el("p","label","Strumming patterns"));const sg=el("div","strums");
   const rows=(s.strums||[]).map((p,i)=>["Pattern "+(i+1)+": "+p.label.replace(/^Pattern \d+ — /,""),p.s]).concat(Object.values(s.patterns||{}).map(p=>["Auto · "+p.label,p.s]));
@@ -509,19 +531,29 @@ function renderSong(){
   const ch=el("summary","maphead");ch.append(el("span",null,"Song map"),el("span","maplegend","tap a chord to jump · ×N = repeated bar"));chart.appendChild(ch);
   cells=[];cellGroups=[];let k=0;
   const cl2=countLabels();
+  const seenSec={};
   sections().forEach(sec=>{const se=el("section");
     const hd=el("div","sechd");hd.appendChild(el("h3",null,sec.name));
+    const sig=JSON.stringify(sec.bars||[]),same=seenSec[sig];
     const pat=patFor(sec),mini=el("div","mini");[...pat].forEach(p=>mini.appendChild(el("i",p!=="."&&p===p.toUpperCase()?"acc":"",ARW[p.toLowerCase()]||"·")));
     mini.title="Strum: "+[...pat].map((p,i)=>(ARW[p.toLowerCase()]||"·")+cl2[i]).join(" ");hd.appendChild(mini);se.appendChild(hd);
     const g=el("div","g");const bars=sec.bars||[];
-    for(let i=0;i<bars.length;){let j=i;while(j+1<bars.length&&bars[j+1]===bars[i])j++;
+    if(same){const first=k,last=k+bars.length-1,ce=el("div","cell same");ce.tabIndex=0;ce.setAttribute("role","button");ce.append(el("span","cn","↺ same as "+same),el("span","rep",bars.length+" bars"));
+      const prog=el("span","prog","");ce.appendChild(prog);ce.addEventListener("click",()=>seekBar(first));g.appendChild(ce);cellGroups.push({el:ce,first,last,n:bars.length,prog});for(let q=first;q<=last;q++)cells[q]=ce;
+      k+=bars.length;se.appendChild(g);chart.appendChild(se);return;}
+    seenSec[sig]=sec.name;
+    const L=loopOf(bars);const lim=L.reps>1?L.p:bars.length;if(L.reps>1)hd.appendChild(el("span","maploop","loop ×"+L.reps));
+    for(let i=0;i<lim;){let j=i;while(j+1<lim&&bars[j+1]===bars[i])j++;
       const first=k+i,last=k+j,n=j-i+1,b=flat[first],ce=el("div","cell");ce.tabIndex=0;ce.setAttribute("role","button");
       ce.setAttribute("aria-label",b.toks.map(x=>x.c).join(" then ")+(n>1?", "+n+" bars":""));
       const nm=el("span","cn");b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));nm.appendChild(el("span",null,x.c));});ce.appendChild(nm);
       if(n>1)ce.appendChild(el("span","rep","×"+n));
       const prog=el("span","prog","");ce.appendChild(prog);
       ce.addEventListener("click",()=>seekBar(first));ce.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();seekBar(first);}});
-      g.appendChild(ce);cellGroups.push({el:ce,first,last,n,prog});for(let q=first;q<=last;q++)cells[q]=ce;i=j+1;}
+      ce.insertBefore(colorLine(b.toks),ce.firstChild);
+      g.appendChild(ce);
+      for(let r=0;r<(L.reps>1?L.reps:1);r++){const off=r*L.p;cellGroups.push({el:ce,first:first+off,last:last+off,n,prog});for(let q=first+off;q<=last+off;q++)cells[q]=ce;}
+      i=j+1;}
     k+=bars.length;se.appendChild(g);chart.appendChild(se);});
   stage.after(chart);chart.after(info);
 
@@ -638,7 +670,7 @@ function renderLyrics(){
         if(first&&sg.chord){const g=el("span","sg");g.append(el("span","c",sg.chord),el("span","t"," "));ln.appendChild(g);}
       });
       sh.appendChild(ln);});
-    box.appendChild(sh);
+    box.appendChild(sh);sh.querySelectorAll(".c").forEach(c=>{if(c.textContent.trim())c.style.borderBottomColor=chordColor(c.textContent);});
     box.insertBefore(buildLyricSync(sh),sh);
   }
   const lb=$("lyrBox");if(lb)lb.replaceWith(box);else main.appendChild(box);
@@ -684,7 +716,7 @@ async function matchFolder(files){
   if(cur&&found.includes(cur.title))autoConnect(cur.id);
 }
 async function autoConnect(id){
-  if(!cur||cur.id!==id||au)return;
+  if(!cur||cur.id!==id||au)return;const seq0=loadSeq;
   let rec=null;
   if(SONG_AUDIO[id]){try{const bl=await (await fetch(SONG_AUDIO[id].data)).blob();rec={name:SONG_AUDIO[id].name,type:bl.type,blob:bl,builtIn:true};}catch(e){}}
   if(!rec)rec=await idb("get",id);
@@ -692,6 +724,7 @@ async function autoConnect(id){
   if(!cur||cur.id!==id||au)return;
   const fn=$("fname");
   if(!rec){if(fn)fn.textContent="No MP3 connected for this song yet — 🎵 load it, 📁 connect your music folder (auto-matches by name), or 🛒 get it. Drag-and-drop works too.";return;}
+  if(loadSeq!==seq0)return;   // you loaded a file yourself while we were looking
   const f=rec.blob instanceof File?rec.blob:new File([rec.blob],rec.name,{type:rec.type||rec.blob.type||"audio/mpeg"});
   loadSongFile(f,{save:false,auto:true,builtIn:!!rec.builtIn});
 }
@@ -699,32 +732,38 @@ async function autoConnect(id){
 // ---------- song file (local only) ----------
 const MIME={mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",mp4:"video/mp4",m4v:"video/mp4",mov:"video/quicktime",wav:"audio/wav",ogg:"audio/ogg",oga:"audio/ogg",opus:"audio/ogg",flac:"audio/flac",webm:"audio/webm",caf:"audio/x-caf",aif:"audio/aiff",aiff:"audio/aiff"};
 function mimeFor(f){const ext=(String(f.name||"").match(/\.([a-z0-9]+)$/i)||[])[1];return MIME[(ext||"").toLowerCase()]||f.type||"audio/mpeg";}
-function loadSongFile(f,opt,attempt){
-  opt=opt||{};attempt=attempt||0;const songId=cur&&cur.id;const fn=$("fname");
-  if(!/^(audio|video)\//.test(f.type)&&!AUDIO_RE.test(f.name)){if(fn)fn.textContent="“"+f.name+"” isn't a song file (MP3, M4A, WAV…). Chord charts (.json) go in ⇧ Open chart or MP3.";return;}
+let loadSeq=0;
+async function loadSongFile(f,opt){
+  opt=opt||{};const my=++loadSeq;const songId=cur&&cur.id;const say=s=>{if(my===loadSeq&&$("fname"))$("fname").textContent=s;};
+  if(!/^(audio|video)\//.test(f.type)&&!AUDIO_RE.test(f.name||"")){say("“"+f.name+"” isn't a song file (MP3, M4A, WAV…). Chord charts (.json) go in ⇧ Open chart or MP3.");return;}
+  say("Loading “"+f.name+"”…");
+  // read the whole file into memory first: works even if the original file was moved, renamed or replaced,
+  // and lets us label it with the right audio type (Safari / some pickers give none)
+  let bytes;
+  try{bytes=await f.arrayBuffer();}catch(e){
+    if(opt.auto&&!opt.builtIn&&songId)idb("delete",songId);
+    say(opt.auto?"The saved copy of this song is no longer readable — load the MP3 again with 🎵.":"Couldn't read “"+f.name+"” ("+(e&&e.name||"read error")+"). Pick the file again from Finder.");return;}
+  if(my!==loadSeq)return;                       // a newer load started meanwhile
+  const mime=mimeFor(f),blob=new Blob([bytes],{type:mime});
   pause();dropAudio();
-  // label the file with the right audio type from its extension (Safari and some pickers give an empty or wrong type)
-  const mime=mimeFor(f),src=attempt===0&&f.type!==mime?new Blob([f],{type:mime}):f;
   const a=new Audio();a.preload="auto";a.preservesPitch=true;a.playbackRate=speed;
-  if(fn)fn.textContent="Loading “"+f.name+"”…";
   let done=false;
-  const ready=()=>{if(done||a.error)return;done=true;au=a;auName=f.name;
+  const ready=()=>{if(done||a.error||my!==loadSeq)return;done=true;au=a;auName=f.name;
     ["play","pause","seeked","ended"].forEach(ev=>a.addEventListener(ev,()=>{schedReset();ui();kick();paint(true);}));
     try{audio();const sn=ctx.createMediaElementSource(a),an=ctx.createAnalyser();an.fftSize=8192;an.smoothingTimeConstant=0.6;sn.connect(ctx.destination);sn.connect(an);fileAn=an;}catch(e){fileAn=null;}
     mode="file";const ms=$("mode");if(ms){ms.querySelector('[value="file"]').disabled=false;ms.value="file";}
     const dur=isFinite(a.duration)&&a.duration>0?" ("+fmt(a.duration).replace(/\.\d$/,"")+")":"";
-    if($("fname"))$("fname").textContent=(opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+dur+" — press ▶ Play."+(opt.save===false?"":" Saved for next time.");
+    say((opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+dur+" — press ▶ Play."+(opt.save===false?"":" Saved for next time."));
     if($("forgetFile"))$("forgetFile").hidden=false;
-    if(opt.save!==false&&songId)idb("put",songId,{name:f.name,type:mime,blob:f});
+    if(opt.save!==false&&songId)idb("put",songId,{name:f.name,type:mime,blob});   // store the bytes, not a link to the file on disk
     ui();paint(true);};
   a.addEventListener("loadedmetadata",ready,{once:true});a.addEventListener("canplay",ready,{once:true});
-  setTimeout(()=>{if(!done&&!a.error&&a.readyState===0&&a.networkState!==3)ready();},2500);   // iPhone only loads audio after a tap — accept it and let ▶ start it
-  a.addEventListener("error",()=>{if(done)return;try{URL.revokeObjectURL(a.src);}catch(e){}
-    if(attempt===0){loadSongFile(f,opt,1);return;}                                   // second try with the file exactly as picked
-    if(opt.auto&&!opt.builtIn&&songId){idb("delete",songId);if(SONG_AUDIO[songId]){autoConnect(songId);return;}}   // drop a broken saved copy
+  setTimeout(()=>{if(!done&&!a.error&&a.readyState===0&&a.networkState!==3)ready();},2500);   // iPhone loads audio only after a tap
+  a.addEventListener("error",()=>{if(done||my!==loadSeq)return;try{URL.revokeObjectURL(a.src);}catch(e){}
+    if(opt.auto&&!opt.builtIn&&songId){idb("delete",songId);if(SONG_AUDIO[songId]){autoConnect(songId);return;}}
     const code=a.error?a.error.code:0;
-    if($("fname"))$("fname").textContent="This browser couldn't open “"+f.name+"”"+(code===4?" (format not supported here)":code?" (error "+code+")":"")+". Try it in Chrome, or use an MP3 / M4A that plays in your music app.";},{once:true});
-  a.src=URL.createObjectURL(src);a.load();
+    say("This browser couldn't play “"+f.name+"”"+(code===4?" (format not supported)":code?" (error "+code+")":"")+". Try Chrome, or an MP3 that plays in your music app.");},{once:true});
+  a.src=URL.createObjectURL(blob);a.load();
 }
 addEventListener("dragover",e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files")){e.preventDefault();document.body.style.outline="3px dashed var(--accent)";}});
 addEventListener("dragleave",e=>{if(!e.relatedTarget)document.body.style.outline="";});
@@ -870,6 +909,7 @@ function updateStage(b,force){
   if(k!==stageSec||force){stageSec=k;
     secBlocks.forEach((blk,i)=>{blk.hidden=!(i===k||i===k+1);blk.classList.toggle("next",i===k+1);blk.classList.toggle("cur",i===k);});
     const sn=$("secName");if(sn)sn.textContent=b<0?"Get ready · "+secs[0].name:secs[k].name;}
+  {const blk=secBlocks[k],tag=blk&&blk.querySelector(".looptag");if(tag&&b>=0){const p=+blk.dataset.p,pass=Math.floor((b-secFirst[k])/p)+1;tag.textContent="Pass "+Math.min(pass,+blk.dataset.reps)+" of "+blk.dataset.reps;}}
   const nx=$("nextUp");if(nx){const ns=secs[k+1];nx.innerHTML="";if(ns){nx.append(el("span","nl","Next"),el("b",null,ns.name));
       const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);nx.appendChild(el("span","nc",firsts.join(" · ")));}
     else nx.append(el("span","nl","Last section"));nx.classList.toggle("soon",!!soon);}
@@ -883,9 +923,10 @@ function paint(force){
   const clock=$("clock");if(clock)clock.textContent=fmt(Math.max(0,t));
   const b=pos<0?-1:Math.floor(pos),n=slots(),frac=pos-Math.floor(pos),slot=Math.floor(frac*n),beat=Math.floor(frac*bpb());
   if(b!==lastBar||force){
-    cards.forEach((c,i)=>{c.classList.toggle("now",i===b);c.classList.toggle("past",i<b);});
+    cardIdx.forEach(o=>{o.el.classList.toggle("now",o.idxs.includes(b));o.el.classList.toggle("past",o.idxs.length===1&&o.idxs[0]<b);});
     updateStage(b,force);
-    cellGroups.forEach(G=>{const on=b>=G.first&&b<=G.last;G.el.classList.toggle("now",on);G.el.classList.toggle("past",b>G.last);G.prog.textContent=on&&G.n>1?(b-G.first+1)+"/"+G.n:"";});
+    {const st=new Map();cellGroups.forEach(G=>{const s=st.get(G.el)||{on:false,past:true,txt:"",prog:G.prog};const on=b>=G.first&&b<=G.last;if(on){s.on=true;s.txt=G.n>1?(b-G.first+1)+"/"+G.n:"";}if(b<=G.last)s.past=false;st.set(G.el,s);});
+     st.forEach((s,e)=>{e.classList.toggle("now",s.on);e.classList.toggle("past",s.past&&!s.on);s.prog.textContent=s.txt;});}
     lastBar=b;
     // light the matching lyrics heading (nth occurrence of that section name)
     const f=flat[b];const key=f?f.secIdx:-1;
@@ -1079,7 +1120,7 @@ function renderWarmup(){
   t.appendChild(ch);g.appendChild(t);
   // chords & changes
   const c=el("div","box");c.appendChild(el("h4",null,"Chords and changes to drill"));
-  const cl=el("div","chips");d.chords.forEach(x=>{const b=el("button",null,x);b.type="button";b.disabled=true;b.style.cursor="default";cl.appendChild(b);});c.appendChild(cl);
+  const cl=el("div","chips");d.chords.forEach(x=>{const b=el("button",null,x);b.style.borderTop="3px solid "+chordColor(x);b.type="button";b.disabled=true;b.style.cursor="default";cl.appendChild(b);});c.appendChild(cl);
   c.appendChild(el("p","vdesc","Most common changes in this version. Tap one for a one-minute changes drill (aim for 30)."));
   const pl=el("div","chips");d.top.forEach(([k,n])=>{const [a,b]=k.split("↔");const bt=el("button","pair",a+" ↔ "+b+"  ×"+n);bt.type="button";
     bt.addEventListener("click",()=>{const tr=$("trainer");if(!tr)return;tr.open=true;$("trA").value=a;$("trB").value=b;if(tr._show)tr._show();tr.scrollIntoView({block:"center",behavior:"smooth"});});pl.appendChild(bt);});

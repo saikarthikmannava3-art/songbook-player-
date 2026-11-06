@@ -1,32 +1,37 @@
 {
  "lukas-graham": {
   "file": "lukas-graham.jpg",
-  "author": "Tore Sætre",
-  "license": "CC BY-SA 4.0",
-  "source": "https://commons.wikimedia.org/wiki/File:Lukas_Graham_Stavernfestivalen_(181424).jpg"
+  "author": "Warner Music New Zealand",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Lukas_Forchhammer.jpg",
+  "note": "square face crop"
  },
  "ed-sheeran": {
   "file": "ed-sheeran.jpg",
-  "author": "Number 10",
-  "license": "CC BY 2.0",
-  "source": "https://commons.wikimedia.org/wiki/File:Ed_Sheeran_2022_(3x4_crop).jpg"
+  "author": "Greg Williams",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Ed_Sheeran_-_2017_Press_(cropped).jpg",
+  "note": "square face crop"
  },
  "post-malone": {
   "file": "post-malone.jpg",
-  "author": "Chrisallmeid",
+  "author": "Toglenn",
   "license": "CC BY-SA 4.0",
-  "source": "https://commons.wikimedia.org/wiki/File:Post_Malone_July_2021_(cropped).jpg"
+  "source": "https://commons.wikimedia.org/wiki/File:Post_Malone_2018_(cropped).jpg",
+  "note": "square face crop"
  },
  "swae-lee": {
-  "file": "swae-lee.png",
+  "file": "swae-lee.jpg",
   "author": "Icebox",
   "license": "CC BY 3.0",
-  "source": "https://commons.wikimedia.org/wiki/File:Swae_Lee_(2019).png"
+  "source": "https://commons.wikimedia.org/wiki/File:Swae_Lee_(2019).png",
+  "note": "square face crop"
  },
  "bob-marley": {
   "file": "bob-marley.jpg",
   "author": "Not credited",
   "license": "Public domain",
-  "source": "https://commons.wikimedia.org/wiki/File:Bob_Marley_circa_1976_(cropped).jpg"
+  "source": "https://commons.wikimedia.org/wiki/File:Bob_Marley_circa_1976_(cropped).jpg",
+  "note": "square face crop"
  }
 }

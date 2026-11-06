@@ -47,7 +47,7 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .songid{display:flex;align-items:center;gap:14px;min-width:0}
 .avstack{display:inline-flex;flex-shrink:0}.avstack .avatar+.avatar{margin-left:-14%}
 .avatar{display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;background:var(--sunk);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);color:var(--fg);font-family:var(--display);font-weight:800;flex-shrink:0}
-.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
 .avatar.edit{cursor:pointer}.avatar.edit:hover{box-shadow:0 0 0 2px var(--accent)}
 .shelf button{display:inline-flex;align-items:center;gap:8px}.shelf button .avatar{border-width:1px;font-size:9px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
@@ -267,6 +267,34 @@ body.dash-on .dashtab{display:none}
 .dstrum{display:flex;flex-direction:column;gap:1px;font-size:13px}.dstrum code{font:700 13px var(--mono);color:var(--chord)}.dstrum small{color:var(--muted)}
 .dmy{display:flex;align-items:center;gap:6px;font-size:13px}.dmy select{flex:1;min-width:0;font:inherit;font-size:13px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px}.dmy .libbtn{padding:5px 9px}
 .dreset{align-self:flex-start;background:none;border:0;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:6px}
+
+.dash .dhead{position:sticky;top:-16px;background:var(--surface);z-index:1;padding:4px 0 6px}
+.dsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:8px}
+.dsec>summary{font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.02em;color:var(--accent);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.dsec>summary::-webkit-details-marker{display:none}.dsec>summary::after{content:"＋";color:var(--muted)}.dsec[open]>summary::after{content:"－"}
+.dsec[open]>summary{margin-bottom:6px}
+.dsongtools{display:flex;gap:6px}.dsongtools #q{flex:1;min-width:0;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);padding:8px 10px}.dsongtools .libbtn{padding:8px 10px;font-size:13px}
+.dash .shelf{flex-direction:column;flex-wrap:nowrap;gap:5px}
+.dash .shelf button{width:100%;border-radius:12px;padding:6px 10px 6px 6px;text-align:left;gap:10px;background:var(--bg)}
+.dash .shelf button .avatar{border-width:2px}
+.dash .shelf .stx{display:flex;flex-direction:column;min-width:0;line-height:1.2}.dash .shelf .stx b{font-size:15px}.dash .shelf .stx small{font-weight:400;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash .shelf button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.dash .shelf button[aria-pressed="true"] .stx small{color:inherit;opacity:.8}
+.tdisp{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tnote{font-family:var(--display);font-weight:900;font-size:56px;line-height:1;color:var(--muted)}.tnote[data-oct]::after{content:attr(data-oct);font-size:20px;vertical-align:sub;margin-left:2px}
+.tdisp.on .tnote{color:var(--fg)}.tdisp.ok .tnote{color:var(--c-E)}
+.thz{font:600 13px var(--mono);color:var(--muted)}
+.tmeter{position:relative;width:100%;height:30px;margin:6px 0 12px;border-radius:99px;background:linear-gradient(90deg,var(--c-A) 0%,var(--c-D) 30%,var(--c-E) 46%,var(--c-E) 54%,var(--c-D) 70%,var(--c-A) 100%);opacity:.9}
+.tmeter .tz{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--fg);transform:translateX(-50%)}
+.tneedle{position:absolute;left:50%;top:-6px;width:6px;height:42px;border-radius:3px;background:var(--fg);transform:translateX(-50%);box-shadow:0 0 0 2px var(--surface);transition:left .08s linear}
+.tdisp:not(.on) .tneedle{opacity:.25}
+.tl{position:absolute;bottom:-17px;transform:translateX(-50%);font:600 10px var(--mono);color:var(--muted)}
+.thint{font-weight:700;font-size:14px;min-height:20px}.tdisp.ok .thint{color:var(--c-E)}
+.tstrings{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.tstrings button{font:inherit;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:6px 0 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.tstrings button b{font-family:var(--display);font-size:20px}.tstrings button small{font-size:10px;color:var(--muted)}
+.tstrings button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.tstrings button.on small{color:inherit}
+#tuner{display:flex;flex-direction:column;gap:8px}#tuner>.libbtn{align-self:stretch}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -324,23 +352,28 @@ body.dash-on .dashtab{display:none}
 @media (prefers-reduced-motion:reduce){.ccard{transition:none}}
 </style></head><body>
 
-<aside class="dash" id="dash" aria-label="Guitar course"></aside>
-<button class="dashtab" id="dashTab" type="button" title="Show / hide the guitar course">🎓 Course</button>
+<aside class="dash" id="dash" aria-label="Songs, tuner and guitar course">
+  <div class="dhead"><h2>🎸 My guitar</h2><button class="dclose" id="dashClose" type="button" title="Hide this panel">✕</button></div>
+  <details class="dsec" id="secSongs"><summary>🎵 Songs</summary>
+    <div class="dsongtools"><input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off"><button id="newSong" type="button" class="libbtn primary" title="Build a new song">＋ New</button></div>
+    <nav class="shelf" id="shelf" aria-label="Songs"></nav>
+  </details>
+  <details class="dsec" id="secTuner"><summary>🎚️ Tuner</summary><div id="tuner"></div></details>
+  <details class="dsec" id="secCourse"><summary>🎓 Guitar course</summary><div id="dashCourse"></div></details>
+</aside>
+<button class="dashtab" id="dashTab" type="button" title="Show songs, tuner and guitar course">🎸 Songs · Tuner · Course</button>
 <div class="wrap">
   <header class="top">
     <h1>Songbook <span>Player</span></h1>
     <p class="sub">Pick a song, a version and a strum — then ▶ Play and lock on beat 1.</p>
   </header>
   <div class="lib">
-    <input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off">
-    <button id="newSong" type="button" class="libbtn primary">＋ New song</button>
     <button id="openSong" type="button" class="libbtn" title="Open a chord chart (.json) — or an MP3/M4A for the song that's open">⇧ Open chart or MP3</button>
     <button id="backupBtn" type="button" class="libbtn" title="Save all your settings, taps, lyrics and songs to a file — restore them on another computer or browser">⚙︎ Backup</button>
     <button id="restoreBtn" type="button" class="libbtn" title="Restore settings from a backup file">⚙︎ Restore</button>
     <input id="restoreInput" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
     <input id="openSongInput" type="file" accept=".json,application/json,audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.mp4" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
   </div>
-  <nav class="shelf" id="shelf" aria-label="Songs"></nav>
   <div id="main"><div class="card empty">Loading your songbook…</div></div>
 </div>
 
@@ -442,9 +475,9 @@ function patFor(sec){
 function renderShelf(){
   shelf.innerHTML="";const q=($("q").value||"").trim().toLowerCase();
   const list=songs.filter(s=>!q||(s.title+" "+(s.artist||"")+" "+(s.from||"")).toLowerCase().includes(q));
-  list.forEach(s=>{const b=el("button",s.custom?"mine":null);if(artistList(s).length)b.appendChild(artistStack(s,22,false));b.append(s.title);b.type="button";b.title=[s.artist,s.custom?"your song":""].filter(Boolean).join(" · ");
+  list.forEach(s=>{const b=el("button",s.custom?"mine":null);if(artistList(s).length)b.appendChild(artistStack(s,34,false));const tx=el("span","stx");tx.append(el("b",null,s.title),el("small",null,s.artist||""));b.appendChild(tx);b.type="button";b.title=[s.artist,s.custom?"your song":""].filter(Boolean).join(" · ");
     b.setAttribute("aria-pressed",cur&&cur.id===s.id&&!building?"true":"false");
-    b.addEventListener("click",()=>choose(s.id));shelf.appendChild(b);});
+    b.addEventListener("click",()=>{choose(s.id);if(innerWidth<1100)toggleDash(false);scrollTo({top:0,behavior:"smooth"});});shelf.appendChild(b);});
   if(!list.length){const n=el("span","none","No song matches “"+q+"”. ");const a=el("button","libbtn","＋ Build “"+$("q").value.trim()+"”");a.type="button";
     a.addEventListener("click",()=>openBuilder({title:$("q").value.trim()}));shelf.append(n,a);}
 }
@@ -1409,7 +1442,7 @@ async function renderSongbook(){
 
 
 // ---------- 👤 artist photos (Wikimedia Commons, see images/artists/CREDITS.json) · tap a photo to use your own ----------
-const ARTIST_IMG={"Lukas Graham": {"src": "images/artists/lukas-graham.jpg", "credit": "Tore Sætre, CC BY-SA 4.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Lukas_Graham_Stavernfestivalen_(181424).jpg"}, "Ed Sheeran": {"src": "images/artists/ed-sheeran.jpg", "credit": "Number 10, CC BY 2.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Ed_Sheeran_2022_(3x4_crop).jpg"}, "Post Malone": {"src": "images/artists/post-malone.jpg", "credit": "Chrisallmeid, CC BY-SA 4.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Post_Malone_July_2021_(cropped).jpg"}, "Swae Lee": {"src": "images/artists/swae-lee.png", "credit": "Icebox, CC BY 3.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Swae_Lee_(2019).png"}, "Bob Marley": {"src": "images/artists/bob-marley.jpg", "credit": "Public domain · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Bob_Marley_circa_1976_(cropped).jpg"}};
+const ARTIST_IMG={"Lukas Graham": {"src": "images/artists/lukas-graham.jpg", "credit": "Warner Music New Zealand, CC BY 3.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Lukas_Forchhammer.jpg"}, "Ed Sheeran": {"src": "images/artists/ed-sheeran.jpg", "credit": "Greg Williams, CC BY 3.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Ed_Sheeran_-_2017_Press_(cropped).jpg"}, "Post Malone": {"src": "images/artists/post-malone.jpg", "credit": "Toglenn, CC BY-SA 4.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Post_Malone_2018_(cropped).jpg"}, "Swae Lee": {"src": "images/artists/swae-lee.jpg", "credit": "Icebox, CC BY 3.0 · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Swae_Lee_(2019).png"}, "Bob Marley": {"src": "images/artists/bob-marley.jpg", "credit": "Public domain · Wikimedia Commons", "url": "https://commons.wikimedia.org/wiki/File:Bob_Marley_circa_1976_(cropped).jpg"}};
 const artistList=s=>String((s&&s.artist)||"").split(/\s*(?:,|&| and | feat\.? | ft\.? | x )\s*/i).map(x=>x.trim()).filter(Boolean);
 const artistSlug=n=>n.toLowerCase().replace(/[^a-z0-9]+/g,"-");
 function artistAvatar(name,size,editable){
@@ -1430,10 +1463,9 @@ function artistStack(s,size,editable){const st=el("span","avstack"),L=artistList
 const COURSE={"title": "JustinGuitar Beginner Course", "source": "Karthik Songbook · pages 4–11", "grades": [{"id": "g1", "name": "Grade 1", "sub": "Modules 0–7: the 8 open chords, core drills and strumming", "pages": [["Practice sheet", 5], ["Module cheat sheet", 6]], "modules": [{"n": 0, "skills": "Tune, read chord boxes, hold guitar and pick, finger placement", "practice": "Setup habits: tuning and posture every session", "next": "You can tune and read a chord box", "chords": []}, {"n": 1, "skills": "A, D; anchor fingers; one-minute changes; first song", "practice": "3 min Chord Perfect D, 3 min A, 2 min anchor fingers, 2 min A–D changes, 10 min song", "next": "A and D memorised; you tried a song", "chords": ["A", "D"]}, {"n": 2, "skills": "E chord; foot tapping; strumming on the beat; first riff (Peter Gunn)", "practice": "2 min E, 1 min D, 1 min A Chord Perfect; 2 min anchor fingers; songs. Target about 30 changes/min", "next": "E, A, D from memory; steady foot tap", "chords": ["E"]}, {"n": 3, "skills": "Am, Em; up strums; capo", "practice": "Chord Perfect Am and Em; OMC Am–Em, Em–D; air changes; up strums on their own; songs", "next": "Am and Em clean; down-up strums possible slowly", "chords": ["Am", "Em"]}, {"n": 4, "skills": "Metronome; finger stretches; THE pattern (Old Faithful); Dm; reading TAB; riff (Sunshine of Your Love)", "practice": "1 min Dm, 1 min hardest chord, 2 min Old Faithful, 2 min riff, stretches, songs with metronome", "next": "Dm playable; Old Faithful works slowly", "chords": ["Dm"]}, {"n": 5, "skills": "Basic theory (note names); C chord; strumming tips; riff (Come As You Are)", "practice": "1 min C, 1 min a weak chord, 2 min strumming (any pattern, focus on timing), songs", "next": "One C-chord song mostly through; about 30 changes/min", "chords": ["C"]}, {"n": 6, "skills": "G chord (hack); 6:8 time; alternate picking; forcing changes", "practice": "Chord Perfect G; OMC G–C and G–D; 6:8 pattern; alternate picking; mix old and new songs", "next": "All 8 chords playable; G–C and G–D smoothing out", "chords": ["G"]}, {"n": 7, "skills": "Air changes; best changes to work on; dynamics; feel; consolidation", "practice": "Build your own routine: weakest chords, air changes, dynamics (soft vs loud), your 5 songs", "next": "Passes the Grade 1 checklist", "chords": []}], "checklist": ["All 8 chords (A, D, E, Am, Em, Dm, C, G) ring cleanly at least half the time from memory", "One-minute changes at roughly 30 per minute on your main pairs", "5 songs you can play all the way through from memory, with a strumming pattern", "Old Faithful (THE pattern) at a comfortable ~80 BPM", "A consolidation pass done; air changes underway"], "strum": [["Down on every beat", "D D D D", "Mod 1–2"], ["Add up strums", "D U D U D U D U", "Mod 3"], ["THE pattern (Old Faithful)", "D · D U · U D U", "Mod 4 · aim ~80 BPM"], ["6:8 feel", "2 beats a bar, each split in 3", "Mod 6"]], "session": [["2–3 min", "Tune, posture, warm-up stretches"], ["6–8 min", "Chord Perfect + one-minute changes (weakest first)"], ["2–3 min", "Strumming with metronome or foot tap"], ["8–10 min", "Songs: a favourite, plus a new one"]], "pairs": ["A–D", "A–E", "D–E", "Am–Em", "Em–D", "Am–D", "G–C", "G–D", "C–Am"]}, {"id": "g2", "name": "Grade 2", "sub": "Module 8: your first scale, pick tricks & 8th-note strumming", "pages": [["Module 8 lesson guide", 8], ["Stuck 3 & 4 chords", 9], ["E minor pentatonic", 10], ["Notes in open position", 11]], "modules": [{"n": 8, "skills": "Stuck 3 & 4 chords (G, G5, Cadd9, Dsus4, A7sus4, Em7, Dadd11/F#); open E minor pentatonic; muting; all-down 8th-note strumming; pick manipulation; notes in open position", "practice": "Your own ~30 min routine: stuck 3 & 4 chords, the scale (muted, down picks), the riff, songs", "next": "At least two songs with the stuck 3 & 4 chords; ideally one all the way through", "chords": ["G", "Cadd9", "Dsus4", "Em7"], "lessons": [["The Stuck 3 & 4 Chords", 9], ["Perfect Fast Changes", 8], ["Open E Minor Pentatonic Scale", 10], ["Muting Strings Deliberately", 8], ["All Down 8th Note Strumming", 8], ["Pick Manipulation", 8], ["Songs For Module 8", 8], ["Wish You Were Here Riff For Beginners", 8], ["Notes In Open Position", 11], ["Module 8 Practice", 8]]}]}]};
 const courseState=()=>Object.assign({done:{},check:{},lesson:{},my5:["","","","",""]},store.get("sb-course",{}));
 async function renderDash(){
-  const host=$("dash");if(!host)return;const st=courseState(),save=()=>{store.set("sb-course",st);renderDash();};
+  const host=$("dashCourse");if(!host)return;const st=courseState(),save=()=>{store.set("sb-course",st);renderDash();};
   const book=(await loadBooks())[0]||null;const pg=(p,label)=>{if(!book)return null;const a=el("a","pglink","📄 "+(label||"p."+p));a.href=book.url+"#page="+p;a.target="_blank";a.rel="noopener";a.title="Open page "+p+" of "+book.name;return a;};
   host.innerHTML="";
-  const hd=el("div","dhead");hd.append(el("h2",null,"🎓 Guitar course"));const x=el("button","dclose","✕");x.type="button";x.title="Hide the course panel";x.addEventListener("click",()=>toggleDash(false));hd.appendChild(x);host.appendChild(hd);
   host.appendChild(el("p","dsub",COURSE.title+" · from "+COURSE.source));
   // progress
   const mods=COURSE.grades.flatMap(g=>g.modules);const nDone=mods.filter(m=>st.done["m"+m.n]).length;
@@ -1475,6 +1507,55 @@ async function renderDash(){
   const rs=el("button","dreset","Reset course progress");rs.type="button";rs.addEventListener("click",()=>{if(confirm("Clear all course ticks and your 5 songs?")){store.set("sb-course",{});renderDash();}});host.appendChild(rs);
 }
 function toggleDash(on){const open=on==null?!document.body.classList.contains("dash-on"):on;document.body.classList.toggle("dash-on",open);store.set("sb-dash-open",open);}
+
+
+// ---------- 🎚️ tuner: microphone pitch (autocorrelation), needle in cents, standard-tuning strings with reference tones ----------
+const TSTR=[["E",2,82.41],["A",2,110.00],["D",3,146.83],["G",3,196.00],["B",3,246.94],["E",4,329.63]];
+const TNOTE=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+let tun=null;
+function pitchOf(buf,sr){
+  let rms=0;for(let i=0;i<buf.length;i++)rms+=buf[i]*buf[i];rms=Math.sqrt(rms/buf.length);if(rms<0.008)return -1;
+  const minLag=Math.floor(sr/1100),maxLag=Math.min(Math.floor(sr/65),buf.length>>1),n=buf.length-maxLag,c=new Float32Array(maxLag+2);
+  for(let lag=minLag;lag<=maxLag+1;lag++){let s=0;for(let j=0;j<n;j++)s+=buf[j]*buf[j+lag];c[lag]=s;}
+  let e0=0;for(let j=0;j<n;j++)e0+=buf[j]*buf[j];
+  let best=-1,bv=0;for(let lag=minLag+1;lag<=maxLag;lag++){if(c[lag]>c[lag-1]&&c[lag]>=c[lag+1]&&c[lag]>0.5*e0){best=lag;bv=c[lag];break;}}
+  if(best<0){for(let lag=minLag+1;lag<=maxLag;lag++)if(c[lag]>bv){bv=c[lag];best=lag;}if(bv<0.3*e0)return -1;}
+  const a=c[best-1],b=c[best],d=c[best+1],den=a-2*b+d,sh=den?0.5*(a-d)/den:0;return sr/(best+sh);}
+function noteOf(f){const m=12*Math.log2(f/440)+69,r=Math.round(m);return {name:TNOTE[(r%12+12)%12],oct:Math.floor(r/12)-1,cents:Math.round((m-r)*100),midi:r};}
+function renderTuner(){
+  const host=$("tuner");if(!host)return;host.innerHTML="";
+  const disp=el("div","tdisp");const nm=el("div","tnote","–");const hz=el("div","thz","Play a string");
+  const meter=el("div","tmeter");const needle=el("i","tneedle");meter.append(el("span","tz"),needle);["-50","0","+50"].forEach((x,i)=>{const l=el("small","tl",x);l.style.left=(i*50)+"%";meter.appendChild(l);});
+  const hint=el("div","thint","");disp.append(nm,hz,meter,hint);host.appendChild(disp);
+  const strs=el("div","tstrings");const sbtn=TSTR.map(([n,o,f],i)=>{const b=el("button",null,"");b.type="button";b.title="Play reference "+n+o+" ("+f+" Hz)";b.append(el("b",null,n),el("small",null,String(6-i)));
+    b.addEventListener("click",()=>tone(f));strs.appendChild(b);return b;});host.appendChild(strs);
+  host.appendChild(el("p","dsub","Standard tuning E A D G B E · tap a string to hear it · capo goes on after tuning."));
+  const go=el("button","libbtn primary","🎤 Start tuner");go.type="button";host.appendChild(go);
+  go.addEventListener("click",()=>tun?tunerStop():tunerStart());
+  host._ui={nm,hz,needle,hint,sbtn,go,disp};
+}
+function tone(f){audio();if(!ctx)return;const t0=ctx.currentTime,o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();
+  o.type="triangle";o.frequency.value=f;o2.type="sine";o2.frequency.value=f*2;const g2=ctx.createGain();g2.gain.value=0.3;o2.connect(g2).connect(g);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.35,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+2.2);
+  o.connect(g).connect(ctx.destination);o.start(t0);o2.start(t0);o.stop(t0+2.3);o2.stop(t0+2.3);}
+async function tunerStart(){
+  const u=$("tuner")&&$("tuner")._ui;if(!u)return;audio();if(!ctx){toast("Audio isn't available in this browser");return;}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
+  catch(e){u.hint.textContent="Microphone blocked — allow it in the address bar (🔒 → Microphone) and try again.";return;}
+  const src=ctx.createMediaStreamSource(stream),an=ctx.createAnalyser();an.fftSize=4096;src.connect(an);
+  const buf=new Float32Array(an.fftSize),hist=[];tun={stream,src,an,raf:0};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");
+  const loop=()=>{if(!tun)return;an.getFloatTimeDomainData(buf);const f=pitchOf(buf,ctx.sampleRate);
+    if(f>60&&f<1100){hist.push(f);if(hist.length>5)hist.shift();const fm=[...hist].sort((a,b)=>a-b)[hist.length>>1],n=noteOf(fm);
+      // nearest open string
+      let si=0,bd=1e9;TSTR.forEach(([,,sf],i)=>{const d=Math.abs(1200*Math.log2(fm/sf));if(d<bd){bd=d;si=i;}});
+      const near=bd<300,c=near?Math.round(1200*Math.log2(fm/TSTR[si][2])):n.cents;
+      u.nm.textContent=near?TSTR[si][0]:n.name;u.nm.dataset.oct=near?TSTR[si][1]:n.oct;u.hz.textContent=fm.toFixed(1)+" Hz"+(near?" · string "+(6-si):"");
+      const cc=Math.max(-50,Math.min(50,c));u.needle.style.left=(50+cc)+"%";const ok=Math.abs(c)<=4;u.disp.classList.toggle("ok",ok);
+      u.hint.textContent=ok?"✓ In tune":(c<0?"▲ Tune up · "+(-c)+" cents flat":"▼ Tune down · "+c+" cents sharp");
+      u.sbtn.forEach((b,i)=>b.classList.toggle("on",near&&i===si));}
+    tun.raf=requestAnimationFrame(loop);};loop();}
+function tunerStop(){if(!tun)return;cancelAnimationFrame(tun.raf);try{tun.src.disconnect();}catch(e){}tun.stream.getTracks().forEach(x=>x.stop());tun=null;
+  const u=$("tuner")&&$("tuner")._ui;if(u){u.go.textContent="🎤 Start tuner";u.disp.classList.remove("on","ok");u.hint.textContent="";u.sbtn.forEach(b=>b.classList.remove("on"));}}
 
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){
@@ -1859,7 +1940,9 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 
 // ---------- start ----------
 refreshSongs();
-$("dashTab").addEventListener("click",()=>toggleDash(true));toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();
+$("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));
+[["secSongs",true],["secTuner",false],["secCourse",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});
+toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();renderTuner();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();
 </script>
 </body></html>

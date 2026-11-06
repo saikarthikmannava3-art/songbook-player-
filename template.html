@@ -235,11 +235,11 @@ details[open].card>summary::after{content:"－"}
   <div class="lib">
     <input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off">
     <button id="newSong" type="button" class="libbtn primary">＋ New song</button>
-    <button id="openSong" type="button" class="libbtn">⇧ Open song file</button>
+    <button id="openSong" type="button" class="libbtn" title="Open a chord chart (.json) — or an MP3/M4A for the song that's open">⇧ Open chart or MP3</button>
     <button id="backupBtn" type="button" class="libbtn" title="Save all your settings, taps, lyrics and songs to a file — restore them on another computer or browser">⚙︎ Backup</button>
     <button id="restoreBtn" type="button" class="libbtn" title="Restore settings from a backup file">⚙︎ Restore</button>
     <input id="restoreInput" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
-    <input id="openSongInput" type="file" accept=".json,application/json" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+    <input id="openSongInput" type="file" accept=".json,application/json,audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac,.mp4" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
   </div>
   <nav class="shelf" id="shelf" aria-label="Songs"></nav>
   <div id="main"><div class="card empty">Loading your songbook…</div></div>
@@ -389,7 +389,7 @@ function renderSong(){
     s.links.forEach(x=>{const a=el("a",null,x.label+" ↗");a.href=x.url;a.target="sb-youtube";a.rel="noopener";lk.appendChild(a);});lw.appendChild(lk);vc.appendChild(lw);}
 
   const fr=el("div","filerow");
-  const fb=el("button","filebtn","🎵 Load song file");fb.type="button";
+  const fb=el("button","filebtn","🎵 Load MP3 / M4A");fb.type="button";
   const fi=document.createElement("input");fi.type="file";
   fi.accept="audio/*,video/*,.mp3,.m4a,.aac,.wav,.ogg,.oga,.opus,.flac,.webm,.mp4,.m4v,.mov,.caf,.aiff";
   fi.style.cssText="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none";
@@ -701,7 +701,7 @@ const MIME={mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",mp4:"video/mp4",m4v
 function mimeFor(f){const ext=(String(f.name||"").match(/\.([a-z0-9]+)$/i)||[])[1];return MIME[(ext||"").toLowerCase()]||f.type||"audio/mpeg";}
 function loadSongFile(f,opt,attempt){
   opt=opt||{};attempt=attempt||0;const songId=cur&&cur.id;const fn=$("fname");
-  if(!/^(audio|video)\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|oga|opus|flac|webm|mp4|m4v|mov|caf|aiff?)$/i.test(f.name)){if(fn)fn.textContent="“"+f.name+"” isn't an audio or video file. Try an MP3, M4A or MP4.";return;}
+  if(!/^(audio|video)\//.test(f.type)&&!AUDIO_RE.test(f.name)){if(fn)fn.textContent="“"+f.name+"” isn't a song file (MP3, M4A, WAV…). Chord charts (.json) go in ⇧ Open chart or MP3.";return;}
   pause();dropAudio();
   // label the file with the right audio type from its extension (Safari and some pickers give an empty or wrong type)
   const mime=mimeFor(f),src=attempt===0&&f.type!==mime?new Blob([f],{type:mime}):f;
@@ -1161,7 +1161,7 @@ function importSongs(texts){
       o.order=o.order&&o.order>=1000?o.order:1000+list.length;
       const i=list.findIndex(x=>x.id===o.id);if(i>=0)list[i]=o;else list.push(o);added++;last=o.id;});});
   saveCustom(list);refreshSongs();
-  if(last){choose(last);const st=qaStatus(cur);if(!st.ok)toast("Imported as Draft — not yet verified: "+st.miss.join(", "));}else alert("That file doesn't look like a songbook song (.json).");
+  if(last){choose(last);const st=qaStatus(cur);if(!st.ok)toast("Imported as Draft — not yet verified: "+st.miss.join(", "));}else toast("That file isn't a chord chart (.json). To add the song's audio, use 🎵 Load MP3 / M4A.");
 }
 // chords: "G | Em | C D | D" → bars; without "|", every chord is one bar
 function textToBars(t){
@@ -1193,7 +1193,7 @@ function askClaude(title,artist,link,box,tut){
     (tut?"\nTutorial (take the chords, capo and strumming from here): "+tut:"")+(link?"\nPlay-along: "+link:"")+
     "\nFill everything automatically: Easy (open chords only), Intermediate and Band versions, 3 strumming patterns (Pattern 1 easiest), capo, BPM and sections — as a .json song file I can open in my Songbook Player.";
   box.innerHTML="";box.className="help";box.style.cssText="background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--fg);font-weight:400";
-  box.append(el("b",null,"Claude fills in the chords, capo, strumming and BPM for you."),el("br"),"1) Copy the request  2) paste it to Claude in chat  3) open the song file Claude sends back with ⇧ Open song file — everything is filled in for you.");
+  box.append(el("b",null,"Claude fills in the chords, capo, strumming and BPM for you."),el("br"),"1) Copy the request  2) paste it to Claude in chat  3) open the chart Claude sends back with ⇧ Open chart or MP3 — everything is filled in for you.");
   const r=el("div","actions");r.style.marginTop="10px";
   const cp=el("button","libbtn primary","📋 Copy request for Claude");cp.type="button";
   cp.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(msg);cp.textContent="✓ Copied — paste it to Claude";}catch(e){ta.hidden=false;ta.select();cp.textContent="Select-all & copy the text below";}});
@@ -1342,7 +1342,11 @@ $("restoreInput").addEventListener("change",async e=>{const f=e.target.files[0];
   Object.entries(d.data||{}).forEach(([k,v])=>{try{localStorage.setItem(k,v);}catch(x){}});toast("✓ Settings restored");setTimeout(()=>location.reload(),600);}catch(x){alert("That isn't a Songbook backup file.");}});
 $("newSong").addEventListener("click",()=>openBuilder({title:($("q").value||"").trim()}));
 $("openSong").addEventListener("click",()=>{const i=$("openSongInput");i.value="";i.click();});
-$("openSongInput").addEventListener("change",async e=>{const fs=[...e.target.files];if(!fs.length)return;importSongs(await Promise.all(fs.map(f=>f.text())));});
+$("openSongInput").addEventListener("change",async e=>{const fs=[...e.target.files];if(!fs.length)return;
+  // whichever button you use: charts (.json) are imported, audio goes to the song that's open
+  const audioF=fs.filter(f=>AUDIO_RE.test(f.name)||/^(audio|video)\//.test(f.type)),json=fs.filter(f=>!audioF.includes(f));
+  if(json.length)await importSongs(await Promise.all(json.map(f=>f.text())));
+  if(audioF.length){if(!cur){toast("Pick a song first, then load its MP3.");return;}building=false;if(!$("fname"))renderSong();loadSongFile(audioF[0]);}});
 
 // ---------- 👂 Auto-sync: listen to the YouTube tab (live, nothing recorded) ----------
 let listening=false;

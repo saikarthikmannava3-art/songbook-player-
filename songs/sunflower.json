@@ -1,0 +1,370 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "sunflower",
+   "order": 5,
+   "title": "Sunflower",
+   "artist": "Post Malone, Swae Lee",
+   "from": "Spider-Man: Into the Spider-Verse",
+   "key": "D (no capo)",
+   "capo": 0,
+   "bpm": 90,
+   "beatsPerBar": 4,
+   "subdiv": 2,
+   "timeLabel": "4/4",
+   "length": "2:38",
+   "firstBeat": 0,
+   "rev": 1,
+   "youtube": "https://www.youtube.com/watch?v=o-v5ltkpOZQ",
+   "links": [
+    {
+     "label": "Chord & lyric play-along (Skye C. Hale)",
+     "url": "https://www.youtube.com/watch?v=o-v5ltkpOZQ"
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Intro — one down per chord, let ring",
+     "s": "D......."
+    },
+    "mid": {
+     "label": "D D U U D U",
+     "s": "D.DU.UDU"
+    },
+    "full": {
+     "label": "D D U U D U",
+     "s": "D.DU.UDU"
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — one down per chord (intro)",
+     "s": "D......."
+    },
+    {
+     "label": "Pattern 2 — D D U U D U (rest of the song)",
+     "s": "D.DU.UDU"
+    },
+    {
+     "label": "Pattern 3 — D D U D U D U (busier, from your sheet's 2nd pattern)",
+     "s": "D.DUDUDU"
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Open chords only: D, G, Em — one per bar, as in your sheet.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "D",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "D",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "D"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Your sheet with the optional Dsus2 on every second D bar (one lesson uses it).",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "Dsus2",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "Dsus2",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "D",
+        "Dsus2",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "D",
+        "Dsus2",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "Dsus2",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "D",
+        "Dsus2",
+        "G",
+        "G",
+        "Em",
+        "Em",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "D",
+        "D",
+        "G",
+        "G",
+        "D"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Colour chords: Dmaj7, D → Dsus2 hammer-ons, G → Gmaj7, Em7.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Dmaj7",
+        "Dmaj7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Em7",
+        "Em7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Em7",
+        "Em7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Em7",
+        "Em7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Em7",
+        "Em7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2"
+       ]
+      },
+      {
+       "name": "Chorus",
+       "feel": "full",
+       "bars": [
+        "Dmaj7",
+        "D:2 Dsus2:2",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Em7",
+        "Em7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Dmaj7",
+        "Dmaj7",
+        "G:2 Gmaj7:2",
+        "G:2 Gmaj7:2",
+        "Dmaj7"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "From your own chord sheet: 90 BPM, 4/4, no capo, open D, G, Em (Dsus2 optional).",
+    "Intro: one down strum per chord, let it ring. Then D D U U D U for the rest of the song.",
+    "Draft until timed to an MP3 — send it and I'll run the pipeline."
+   ],
+   "sources": [
+    {
+     "label": "Your Sunflower chord sheets (PDF)",
+     "url": "#"
+    },
+    {
+     "label": "Ultimate Guitar (absolute beginner)",
+     "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2497134"
+    },
+    {
+     "label": "Ultimate Guitar ver 2 (Dsus2)",
+     "url": "https://tabs.ultimate-guitar.com/tab/post-malone/sunflower-chords-2496459"
+    },
+    {
+     "label": "Musicnotes (♩=90, key D)",
+     "url": "https://www.musicnotes.com/sheetmusic/post-malone-swae-lee/sunflower/MN0190311"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g7": true,
+    "disputed": "Your sheet and Ultimate Guitar agree on D G Em G; the real recording adds colour (maj7 chords) — that's the Band version."
+   }
+  }
+ ]
+}

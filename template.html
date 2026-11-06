@@ -141,25 +141,34 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .beats i.on.one{background:var(--now);box-shadow:0 0 0 2px var(--accent)}
 .hint{flex-basis:100%;font-size:13px;color:var(--muted);margin:0}
 .hint b{color:var(--fg)}
-/* lane */
-.lane{position:relative;height:262px;overflow:hidden;border-radius:16px;background:radial-gradient(120% 90% at 20% 0%,color-mix(in srgb,var(--accent) 16%,var(--stage)) 0%,var(--stage) 60%);border:1px solid var(--line)}
-.lane::after{content:"";position:absolute;top:0;bottom:0;left:var(--anchor,24px);width:3px;margin-left:-6px;background:var(--accent);opacity:.55;border-radius:2px}
-.track{position:absolute;top:22px;left:0;display:flex;gap:14px;will-change:transform}
-.ccard{flex:0 0 220px;height:200px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 12px 10px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 0 var(--line);transition:transform .2s, background .2s;cursor:pointer}
-.ccard.now{background:var(--now);color:var(--now-ink);border-color:var(--now);transform:translateY(-6px) scale(1.04);box-shadow:0 10px 30px color-mix(in srgb,var(--now) 45%,transparent)}
-.ccard.past{opacity:.3}
-.ccard .sec{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);min-height:14px}
-.ccard.now .sec{color:var(--now-ink)}
-.ccard .names{display:grid;font-family:var(--mono);font-weight:700}
-.ccard .names{font-family:var(--display)!important;font-weight:800}
-.ccard .names span{white-space:nowrap;font-size:36px;line-height:1;color:var(--chord)}
-.ccard.now .names span{color:var(--now-ink)}
-.ccard .names span.solo{font-size:72px}
-.ccard .st,.ccard .ct{display:grid;text-align:center;font-family:var(--mono)}
-.ccard .st i{font-style:normal;font-size:16px;border-radius:4px;line-height:24px}
+/* stage: chord sheet for the current section */
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.stagehd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.secname{font-family:var(--display);font-weight:900;font-size:clamp(26px,5vw,36px);letter-spacing:.03em;text-transform:uppercase;margin:0;color:var(--fg)}
+.nextup{display:flex;align-items:baseline;gap:8px;font-size:14px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 12px;transition:background .2s,color .2s}
+.nextup .nl{font-size:11px;letter-spacing:.12em;text-transform:uppercase}.nextup b{color:var(--fg)}.nextup .nc{font-family:var(--mono);font-size:12px}
+.nextup.soon{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.nextup.soon b{color:var(--accent-ink)}
+.blocks{display:flex;flex-direction:column;gap:14px}
+.blk{display:flex;flex-direction:column;gap:8px}
+.blk .blklab{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.blk.cur .blklab{display:none}
+.blk.next{opacity:.5}.blk.next .ccard{transform:none}
+.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ccard{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 10px 8px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;min-width:0}
+.ccard .ctop{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.ccard .names{display:flex;align-items:baseline;gap:4px;font-family:var(--display);font-weight:800;font-size:34px;line-height:1;color:var(--chord)}
+.ccard .names .arrow{font-size:20px;color:var(--muted)}
+.ccard .dgs{display:flex;gap:2px;flex-shrink:0}
+.ccard .st,.ccard .ct{display:grid;text-align:center;font-family:var(--mono);border-top:2px solid var(--line);padding-top:4px}
+.ccard .ct{border-top:0;padding-top:0}
+.ccard .st i{font-style:normal;font-size:17px;border-radius:4px;line-height:24px}
 .ccard .st i.acc{font-weight:700}
 .ccard .st i.on{background:var(--fg);color:var(--bg)}
 .ccard .ct{font-size:10px;opacity:.6}
+.ccard.now{border-color:var(--accent);background:color-mix(in srgb,var(--now) 30%,var(--surface));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
+.ccard.now .names{color:var(--fg)}
+.ccard.past{opacity:.45}
+@media (max-width:700px){.bars{grid-template-columns:repeat(2,minmax(0,1fr))}.ccard .names{font-size:28px}}
 /* lyrics */
 .lyr .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .lyr .tools button,.lyr .tools label{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:6px 10px;cursor:pointer}
@@ -182,7 +191,7 @@ button:focus-visible,a:focus-visible,.cell:focus-visible,input:focus-visible,sel
 .picker button.rm{color:var(--accent);font-family:var(--body)}
 .lhint{font-size:13px;color:var(--muted);margin:0}
 /* info */
-details.card>summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.card>summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
 details.card>summary::-webkit-details-marker{display:none}
 details.card>summary::after{content:"＋";color:var(--muted)}
 details[open].card>summary::after{content:"－"}
@@ -214,7 +223,7 @@ details[open].card>summary::after{content:"－"}
 .cell.now{background:var(--now);color:var(--now-ink);border-color:var(--now)}.cell.now .rep,.cell.now .arrow{color:var(--now-ink)}
 .cell.past{opacity:.45}
 .empty{text-align:center;padding:40px 16px;color:var(--muted)}
-@media (max-width:560px){.pickers{grid-template-columns:1fr}.chart section{grid-template-columns:1fr;gap:6px}.ccard{flex-basis:180px;height:190px}.ccard .names span{font-size:22px}.ccard .names span.solo{font-size:42px}.slots i{width:26px}#clock{font-size:16px}}
+@media (max-width:560px){.pickers{grid-template-columns:1fr}.chart section{grid-template-columns:1fr;gap:6px}.slots i{width:26px}#clock{font-size:16px}}
 @media (prefers-reduced-motion:reduce){.ccard{transition:none}}
 </style>
 
@@ -266,10 +275,10 @@ const SHAPES={
  A:[-1,0,2,2,2,0],Am:[-1,0,2,2,1,0],A7:[-1,0,2,0,2,0],Am7:[-1,0,2,0,1,0],Asus2:[-1,0,2,2,0,0],Asus4:[-1,0,2,2,3,0],
  B7:[-1,2,1,2,0,2],Bm:[-1,2,4,4,3,2],Bb:[-1,1,3,3,3,1],B:[-1,2,4,4,4,2],
  C:[-1,3,2,0,1,0],C7:[-1,3,2,3,1,0],Cadd9:[-1,3,2,0,3,0],Cmaj7:[-1,3,2,0,0,0],
- D:[-1,-1,0,2,3,2],Dm:[-1,-1,0,2,3,1],D7:[-1,-1,0,2,1,2],Dsus2:[-1,-1,0,2,3,0],Dsus4:[-1,-1,0,2,3,3],"D/F#":[2,-1,0,2,3,2],
+ D:[-1,-1,0,2,3,2],Dmaj7:[-1,-1,0,2,2,2],Dm:[-1,-1,0,2,3,1],D7:[-1,-1,0,2,1,2],Dsus2:[-1,-1,0,2,3,0],Dsus4:[-1,-1,0,2,3,3],"D/F#":[2,-1,0,2,3,2],
  E:[0,2,2,1,0,0],Em:[0,2,2,0,0,0],E7:[0,2,0,1,0,0],Em7:[0,2,2,0,3,0],
  F:[1,3,3,2,1,1],Fmaj7:[-1,-1,3,2,1,0],"F#m":[2,4,4,2,2,2],
- G:[3,2,0,0,0,3],Bm7:[-1,2,0,2,0,2],"F#m7":[2,-1,2,2,2,0],Bbmaj7:[-1,1,3,2,3,1],Ebmaj7:[-1,-1,1,3,3,3],Abmaj7:[-1,-1,1,1,1,3],Emaj7:[0,2,1,1,0,0],Eb:[-1,-1,1,3,4,3],Ab:[4,6,6,5,4,4],G7:[3,2,0,0,0,1],Gsus4:[3,3,0,0,1,3],"G/B":[-1,2,0,0,0,3],
+ G:[3,2,0,0,0,3],Gmaj7:[3,2,0,0,0,2],Bm7:[-1,2,0,2,0,2],"F#m7":[2,-1,2,2,2,0],Bbmaj7:[-1,1,3,2,3,1],Ebmaj7:[-1,-1,1,3,3,3],Abmaj7:[-1,-1,1,1,1,3],Emaj7:[0,2,1,1,0,0],Eb:[-1,-1,1,3,4,3],Ab:[4,6,6,5,4,4],G7:[3,2,0,0,0,1],Gsus4:[3,3,0,0,1,3],"G/B":[-1,2,0,0,0,3],
 };
 function diagram(name){
   const f=SHAPES[name];if(!f)return null;
@@ -301,7 +310,7 @@ function parseBar(str,bpb){
 }
 
 // ---------- state ----------
-let songs=[],cur=null,flat=[],cards=[],cells=[],cellGroups=[],lastBar=null,lastSlot=null,lastSec=null;
+let songs=[],cur=null,flat=[],cards=[],cells=[],cellGroups=[],secBlocks=[],stageSec=-2,lastBar=null,lastSlot=null,lastSec=null;
 let tune={bpm:90,nudge:0}, ver="simple", strum="auto";
 let mode="tab"; // tab | file | practice
 let speed=1, metOn=store.get("sb-met",true), metVol=store.get("sb-vol",0.7);
@@ -447,21 +456,28 @@ function renderSong(){
     flat.push({sec:i===0?sec.name:"",secName:sec.name,secIdx:null,nm,pat,toks});}));
   let si=-1;secFirst=[];flat.forEach((f,i)=>{if(f.sec){si++;secFirst.push(i);}f.secIdx=si;});loadMap();loadFine();barStat={};
 
-  // lane
-  const lane=el("div","lane");lane.setAttribute("aria-label","Moving chord cards");const track=el("div","track");lane.appendChild(track);
   const cols=`repeat(${n},1fr)`;
-  cards=flat.map((b,idx)=>{
-    const c=el("div","ccard");c.appendChild(el("div","sec",b.sec||""));
-    const nm=el("div","names");nm.style.gridTemplateColumns=cols;const solo=b.toks.length===1;
-    b.nm.forEach(x=>{if(solo&&!x)return;const sp=el("span",solo&&x?"solo":"",x);if(solo&&x)sp.style.gridColumn="1 / -1";nm.appendChild(sp);});
-    c.appendChild(nm);
-    const stt=el("div","st");stt.style.gridTemplateColumns=cols;b.pat.forEach(p=>stt.appendChild(el("i",p!=="."&&p===p.toUpperCase()?"acc":"",ARW[p.toLowerCase()]||"·")));
-    const ct=el("div","ct");ct.style.gridTemplateColumns=cols;cl.forEach(x=>ct.appendChild(el("span",null,x)));
-    c.append(stt,ct);c.addEventListener("click",()=>seekBar(idx));track.appendChild(c);return c;});
-  main.appendChild(lane);
-
-  renderLyrics();
-  renderTrainer();
+  // stage: the section you're in, laid out like a chord sheet — every bar with its chord shape and strum;
+  // the next section is previewed underneath, and the view turns over when the song gets there
+  const stage=el("section","stage");stage.setAttribute("aria-label","Chord sheet for the current section");
+  const sh=el("div","stagehd");const sn=el("h2","secname","");sn.id="secName";const nx=el("div","nextup","");nx.id="nextUp";sh.append(sn,nx);stage.appendChild(sh);
+  const blocks=el("div","blocks");stage.appendChild(blocks);
+  secBlocks=[];cards=[];stageSec=-2;
+  sections().forEach((sec,k)=>{
+    const blk=el("div","blk");blk.hidden=true;const lab=el("div","blklab",sec.name);blk.appendChild(lab);
+    const grid=el("div","bars");blk.appendChild(grid);
+    (sec.bars||[]).forEach((_,i)=>{const idx=secFirst[k]+i,b=flat[idx];
+      const c=el("div","ccard");c.tabIndex=0;c.setAttribute("role","button");
+      const top=el("div","ctop");const nm=el("div","names");
+      b.toks.forEach((x,q)=>{if(q)nm.appendChild(el("span","arrow","›"));nm.appendChild(el("span",null,x.c));});top.appendChild(nm);
+      const dg=el("div","dgs");[...new Set(b.toks.map(x=>x.c))].forEach(x=>{const d=diagram(x);if(d){d.setAttribute("width",b.toks.length>1?46:56);d.setAttribute("height",b.toks.length>1?55:66);dg.appendChild(d);}});top.appendChild(dg);
+      c.appendChild(top);
+      const stt=el("div","st");stt.style.gridTemplateColumns=cols;b.pat.forEach(p=>stt.appendChild(el("i",p!=="."&&p===p.toUpperCase()?"acc":"",ARW[p.toLowerCase()]||"·")));
+      const ct=el("div","ct");ct.style.gridTemplateColumns=cols;cl.forEach(x=>ct.appendChild(el("span",null,x)));
+      c.append(stt,ct);c.addEventListener("click",()=>seekBar(idx));c.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();seekBar(idx);}});
+      grid.appendChild(c);cards[idx]=c;});
+    blocks.appendChild(blk);secBlocks.push(blk);});
+  main.appendChild(stage);
 
   // chords + strumming + tips
   const info=document.createElement("details");info.className="card";info.open=store.get("sb-info-open",true);
@@ -484,10 +500,13 @@ function renderSong(){
   if(s.sources&&s.sources.length){const sp=el("p","sources");sp.append("Chord sources: ");s.sources.forEach((x,i)=>{if(!x.url||x.url==="#"){sp.appendChild(el("b",null,x.label));}else{const a=el("a",null,x.label);a.href=x.url;a.target="_blank";a.rel="noopener";sp.appendChild(a);}if(i<s.sources.length-1)sp.append(" · ");});info.appendChild(sp);}
   info.appendChild(el("p","sources","Your BPM, sync, version, strum and lyrics are remembered in this browser on this device."));
   main.appendChild(info);
+  renderLyrics();
+  renderTrainer();
 
   // song map: every section on one line — repeats collapsed (D ×11), its strum shown beside it; tap a chord to jump
-  const chart=el("div","card chart");
-  const ch=el("div","maphead");ch.append(el("p","label","Song map — tap a chord to jump"),el("span","maplegend","×N = repeat that bar"));chart.appendChild(ch);
+  const chart=document.createElement("details");chart.className="card chart";chart.open=store.get("sb-map-open",false);
+  chart.addEventListener("toggle",()=>store.set("sb-map-open",chart.open));
+  const ch=el("summary","maphead");ch.append(el("span",null,"Song map"),el("span","maplegend","tap a chord to jump · ×N = repeated bar"));chart.appendChild(ch);
   cells=[];cellGroups=[];let k=0;
   const cl2=countLabels();
   sections().forEach(sec=>{const se=el("section");
@@ -504,7 +523,7 @@ function renderSong(){
       ce.addEventListener("click",()=>seekBar(first));ce.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();seekBar(first);}});
       g.appendChild(ce);cellGroups.push({el:ce,first,last,n,prog});for(let q=first;q<=last;q++)cells[q]=ce;i=j+1;}
     k+=bars.length;se.appendChild(g);chart.appendChild(se);});
-  lane.after(chart);   // the map sits right under the moving cards
+  stage.after(chart);chart.after(info);
 
   // wire
   $("play").addEventListener("click",()=>isPlaying()?pause():play());
@@ -716,7 +735,7 @@ function buildLyricSync(sh){
   [...sh.children].forEach(n=>{if(n.classList.contains("h")){g={name:n.dataset.sec,spans:[]};groups.push(g);return;}
     if(!g){g={name:"",spans:[]};groups.push(g);}n.querySelectorAll(".c").forEach(c=>{if(c.textContent.trim())g.spans.push(c);});});
   const gs=groups.filter(x=>x.spans.length||x.name);
-  const vers=[sections()].concat(cur.versions&&cur.versions.intermediate?[cur.versions.intermediate.sections]:[]);
+  const vers=[sections()].concat(Object.values(cur.versions||{}).map(v=>v.sections));   // the lyrics may be written for any version
   let best=null;
   for(const secs of vers){const ch=chartChanges(secs);let used=0,okN=0;const map=[];
     secs.forEach((sec,k)=>{ // pair with the next sheet group of the same name (or the same position)
@@ -785,7 +804,8 @@ let counting=null;
 function play(){
   if(counting){cancelCount();return;}
   if(isPlaying())return;
-  if(mode==="file"&&!au){toast("The song file isn't loaded yet — tap 🎵 Load song file, or switch to Practice / With YouTube.");return;}
+  if(mode==="file"&&!au){mode=cur.youtube?"tab":"practice";const ms=$("mode");if(ms)ms.value=mode;
+    toast(cur.youtube?"No song file here — playing along with YouTube instead. Load the MP3 with 🎵 for exact sync.":"No song file here — Practice mode with the metronome. Load the MP3 with 🎵 to play with the song.");ui();}
   audio();
   if(mode==="tab"&&pOff===0&&cur.youtube){try{window.open(cur.youtube,"sb-youtube");}catch(e){}}
   const ov=el("div","countin");ov.setAttribute("role","status");ov.setAttribute("aria-live","assertive");const n=el("b","pop","3");ov.append(n,el("small",null,"Get ready… tap to cancel"));
@@ -832,16 +852,29 @@ function tap(){const n=performance.now();taps=taps.filter(x=>n-x<2500);taps.push
   if(taps.length>=4){const d=(taps[taps.length-1]-taps[0])/(taps.length-1);setBpm(Math.round(60000/d));}
   audio();click(ctx?ctx.currentTime:0,2);}
 
+// ---------- stage: show the current section + preview of the next ----------
+function updateStage(b,force){
+  if(!secBlocks.length)return;
+  const k=b<0?0:Math.min(secBlocks.length-1,(flat[b]||flat[flat.length-1]).secIdx);
+  const secs=sections(),last=secFirst[k]+secLen(k)-1,soon=b>=last-1&&k+1<secs.length;
+  if(k!==stageSec||force){stageSec=k;
+    secBlocks.forEach((blk,i)=>{blk.hidden=!(i===k||i===k+1);blk.classList.toggle("next",i===k+1);blk.classList.toggle("cur",i===k);});
+    const sn=$("secName");if(sn)sn.textContent=b<0?"Get ready · "+secs[0].name:secs[k].name;}
+  const nx=$("nextUp");if(nx){const ns=secs[k+1];nx.innerHTML="";if(ns){nx.append(el("span","nl","Next"),el("b",null,ns.name));
+      const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);nx.appendChild(el("span","nc",firsts.join(" · ")));}
+    else nx.append(el("span","nl","Last section"));nx.classList.toggle("soon",!!soon);}
+  const c=cards[b];if(c&&isPlaying()){const r=c.getBoundingClientRect(),top=(document.querySelector(".bar")||{}).getBoundingClientRect?document.querySelector(".bar").getBoundingClientRect().bottom:0;
+    if(r.top<top+8||r.bottom>innerHeight-8)window.scrollBy({top:r.top-top-24,behavior:"smooth"});}
+}
+
 // ---------- paint ----------
 function paint(force){
   if(!cur||!cards.length)return;const t=songT(),pos=posAt(t);
   const clock=$("clock");if(clock)clock.textContent=fmt(Math.max(0,t));
-  const lane=document.querySelector(".lane"),track=document.querySelector(".track");if(!lane||!track)return;
-  const pitch=cards[0].offsetWidth+14,anchor=Math.min(lane.clientWidth*0.22,260);lane.style.setProperty("--anchor",anchor+"px");
-  track.style.transform=`translateX(${anchor-Math.max(-2,pos)*pitch}px)`;
   const b=pos<0?-1:Math.floor(pos),n=slots(),frac=pos-Math.floor(pos),slot=Math.floor(frac*n),beat=Math.floor(frac*bpb());
   if(b!==lastBar||force){
     cards.forEach((c,i)=>{c.classList.toggle("now",i===b);c.classList.toggle("past",i<b);});
+    updateStage(b,force);
     cellGroups.forEach(G=>{const on=b>=G.first&&b<=G.last;G.el.classList.toggle("now",on);G.el.classList.toggle("past",b>G.last);G.prog.textContent=on&&G.n>1?(b-G.first+1)+"/"+G.n:"";});
     lastBar=b;
     // light the matching lyrics heading (nth occurrence of that section name)

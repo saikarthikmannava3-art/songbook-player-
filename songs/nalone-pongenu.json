@@ -22,26 +22,26 @@
      "s": "D......."
     },
     "mid": {
-     "label": "Verse — D DU UDU, soft",
-     "s": "d.du.udu"
+     "label": "Verse — straight 8ths, light (accents & of 1, 3, 4)",
+     "s": "dUduDuDu"
     },
     "full": {
-     "label": "Chorus/bridge — D DU UDU",
-     "s": "D.DU.UDU"
+     "label": "Chorus — straight 8ths, accents & of 1, 3, 4",
+     "s": "dUduDuDu"
     }
    },
    "strums": [
     {
-     "label": "Pattern 1 — 4 downs (easiest)",
+     "label": "Pattern 1 — 4 downs (easiest, start here)",
      "s": "D.D.D.D."
     },
     {
-     "label": "Pattern 2 — D DU UDU (the classic)",
-     "s": "D.DU.UDU"
+     "label": "Pattern 2 — straight 8ths D U D U D U D U, even (what the tutorials teach)",
+     "s": "DuDuDuDu"
     },
     {
-     "label": "Pattern 3 — sheet feel: D UDUD UDUD (straight 8ths)",
-     "s": "DuDuDuDu"
+     "label": "Pattern 3 — song feel: same 8ths, accents on the & of 1, on 3 and on 4 (measured from the recording)",
+     "s": "dUduDuDu"
     }
    ],
    "versions": {
@@ -849,6 +849,7 @@
    },
    "notes": [
     "Capo 2, G shapes (sounds in A). 115 BPM, timed to your MP3 (first beat 1.32 s).",
+    "Strumming: keep the hand moving down-up on every 8th (D U D U D U D U) — the recording's guitar never stops; lean on the & of 1, beat 3 and beat 4. Beginners: 4 downs first (Pattern 1).",
     "Intro lick on the B and G strings (capo 2): B 0-2-3-5-3/5p3-2-0, then G 2-2, B 5-5; second time end G 2-2-2, B 2-0.",
     "Intro strum: hold G, one up-stroke, then [G] D UDUD [Gsus2] UDUDDU — twice.",
     "'Oh shaanti' lines: Am (1 beat) G (2 beats) D (1 beat), then a full bar of D.",
@@ -866,6 +867,14 @@
     {
      "label": "Chordify (Bm A E D)",
      "url": "https://chordify.net/chords/harris-jayaraj-songs/nenjukkul-peidhidum-chords?version=youtube%3ALSZL8wsHaiY"
+    },
+    {
+     "label": "MJ Music Notes — Telugu version: capo 2, G Em D C Am, 115 BPM, strum D–DUDUD–DUDUDUDU",
+     "url": "https://mjmusicnotes.com/nalone-pongenu-narmada-guitar-chords/"
+    },
+    {
+     "label": "Indian Guitar Tabs forum — original key A, intro/strum notes",
+     "url": "https://www.indianguitartabs.com/chords/threads/naalone-pongenu-narmada-full-song-chords-in-orginal-scale.54697/"
     },
     {
      "label": "Your recording (Naalona Pongenu MP3)",

@@ -18,36 +18,36 @@
    "youtube": "https://www.youtube.com/watch?v=8HyuVJZe5Xk",
    "patterns": {
     "ring": {
-     "label": "Soft — one strum, let ring",
+     "label": "Intro — let it ring (Naadan: hold, one up-stroke)",
      "s": "D..............."
     },
     "mid": {
-     "label": "Verse — tutorial pattern, light",
+     "label": "Tutorial pattern (Hard), as the recording plays it",
      "s": "d.D.duduD.duD.du"
     },
     "full": {
-     "label": "Chorus — tutorial pattern",
+     "label": "Tutorial pattern (Hard), as the recording plays it",
      "s": "d.D.duduD.duD.du"
     }
    },
    "strums": [
     {
-     "label": "Pattern 1 — 4 downs (easiest, start here)",
-     "s": "D...D...D...D..."
-    },
-    {
-     "label": "Pattern 2 — straight 8ths D U D U D U D U (step up)",
+     "label": "Easy — straight 8ths D U D U D U D U (IndianGuitarTabs forum 'DUDU DUDU'; Naadan 'D UDUD')",
      "s": "D.U.D.U.D.U.D.U."
     },
     {
-     "label": "Pattern 3 — the tutorial pattern: D D U | D U D | D U D | D U D (16ths), accents on the 1st and 6th strokes and on beat 4",
+     "label": "Medium — D – DUDUD – DUDUDUDU (MJ Music Notes), 16ths, starts on the & of 1",
+     "s": "DUD.DUDUD.DUDUDU"
+    },
+    {
+     "label": "Hard — D D U | D U D | D U D | D U D (your YouTube tutorial; matches the recording), accents on part 1 first D, part 2 second D and beat 4",
      "s": "d.D.duduD.duD.du"
     }
    ],
    "versions": {
     "simple": {
      "label": "Easy",
-     "desc": "Capo 2, open chords only, one chord per bar: G Em D C Am, Bm7 (x20202) for the Bm and Fmaj7 (xx3210) for the F. The quick Am-G-D turnarounds are played as G then D.",
+     "desc": "From MJ Music Notes (written for this Telugu version): capo 2, five open chords G Em D C Am — no Bm, no F. Verse G · Em D · C · D; 'Oh shaanti' Am G D; 'Edho okati' G C G / Em C G then G D.",
      "sections": [
       {
        "name": "Intro",
@@ -59,7 +59,7 @@
         "D",
         "Am",
         "G",
-        "Am",
+        "D",
         "D"
        ]
       },
@@ -81,7 +81,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D",
@@ -89,7 +89,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D"
@@ -99,13 +99,13 @@
        "name": "Chorus 1",
        "feel": "full",
        "bars": [
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
         "D"
        ]
@@ -118,7 +118,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D"
@@ -132,7 +132,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D",
@@ -140,7 +140,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D"
@@ -151,13 +151,13 @@
        "feel": "full",
        "bars": [
         "G",
-        "C",
+        "C:2 G:2",
         "Em",
+        "C:2 G:2",
         "G",
-        "G",
-        "C",
+        "C:2 G:2",
         "Em",
-        "G",
+        "C:2 G:2",
         "G",
         "D",
         "G",
@@ -172,13 +172,13 @@
         "G",
         "Am",
         "G",
-        "Am",
-        "Fmaj7",
-        "Am",
+        "Am:1 G:2 D:1",
         "D",
-        "Am",
-        "Fmaj7",
-        "Am",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
         "D",
         "D"
        ]
@@ -191,7 +191,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D",
@@ -199,7 +199,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D"
@@ -209,11 +209,11 @@
        "name": "Interlude 2",
        "feel": "full",
        "bars": [
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
         "C",
         "G",
@@ -226,13 +226,13 @@
        "feel": "full",
        "bars": [
         "G",
-        "C",
+        "C:2 G:2",
         "Em",
+        "C:2 G:2",
         "G",
-        "G",
-        "C",
+        "C:2 G:2",
         "Em",
-        "G",
+        "C:2 G:2",
         "G",
         "D",
         "G",
@@ -247,13 +247,13 @@
         "G",
         "Am",
         "G",
-        "Am",
-        "Fmaj7",
-        "Am",
+        "Am:1 G:2 D:1",
         "D",
-        "Am",
-        "Bm7",
-        "Am",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
         "D",
         "D"
        ]
@@ -266,7 +266,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D",
@@ -274,7 +274,7 @@
         "G",
         "Em",
         "D",
-        "Bm7",
+        "C",
         "C",
         "D",
         "D"
@@ -284,13 +284,13 @@
        "name": "Chorus 2",
        "feel": "full",
        "bars": [
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D"
        ]
       },
@@ -298,11 +298,11 @@
        "name": "Outro",
        "feel": "ring",
        "bars": [
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
-        "G",
+        "Am:1 G:2 D:1",
         "D",
         "C",
         "G",
@@ -313,8 +313,8 @@
      ]
     },
     "intermediate": {
-     "label": "Intermediate",
-     "desc": "Capo 2, the chords as heard (Naadan Chords sheet, timed to your MP3): Am-G-D 'Oh shaanti' turnarounds, Bm in the verse, F in the bridge.",
+     "label": "Medium",
+     "desc": "From Naadan Chords (key A), confirmed by UG ver 2, IndianGuitarTabs and your recording: capo 2, verse G · Em D · Bm C · D, 'Oh shaanti' Am G D, bridge Am C G / Am G F / Am G D. Adds Bm and F.",
      "sections": [
       {
        "name": "Intro",
@@ -580,8 +580,8 @@
      ]
     },
     "band": {
-     "label": "Band",
-     "desc": "Capo 2, beat-accurate: intro riff changes and the G ↔ Gsus2 strum (3x0233 ↔ 320033).",
+     "label": "Hard",
+     "desc": "Naadan Chords plus the colour chords from UG ver 2 (G ↔ Gsus2 on the first verse line) and IndianGuitarTabs (Csus2, Dsus2 → D at the line ends), placed beat by beat to your recording. Gsus2 = 3x0233, Csus2 = x30033, Dsus2 = xx0230.",
      "sections": [
       {
        "name": "Intro",
@@ -611,21 +611,21 @@
        "name": "Verse 1",
        "feel": "mid",
        "bars": [
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D",
-        "D",
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
-        "D",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D"
        ]
       },
@@ -648,13 +648,13 @@
        "name": "Verse 2",
        "feel": "mid",
        "bars": [
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
-        "D",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D"
        ]
       },
@@ -662,21 +662,21 @@
        "name": "Interlude 1",
        "feel": "mid",
        "bars": [
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D",
-        "D",
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
-        "D",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D"
        ]
       },
@@ -721,21 +721,21 @@
        "name": "Verse 3",
        "feel": "mid",
        "bars": [
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D",
-        "D",
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
-        "D",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D"
        ]
       },
@@ -796,21 +796,21 @@
        "name": "Verse 4",
        "feel": "mid",
        "bars": [
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D",
-        "D",
-        "G",
-        "G",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
         "Em",
         "D",
         "Bm",
-        "C",
-        "D",
+        "Csus2",
+        "Dsus2:2 D:2",
         "D"
        ]
       },
@@ -877,6 +877,14 @@
      "url": "https://www.indianguitartabs.com/chords/threads/naalone-pongenu-narmada-full-song-chords-in-orginal-scale.54697/"
     },
     {
+     "label": "Ultimate Guitar ver 2 (key A, A↔Asus2, Telugu lyrics)",
+     "url": "https://tabs.ultimate-guitar.com/tab/surya-so-krishnan/naalone-pongenu-narmada-chords-3120929"
+    },
+    {
+     "label": "IndianGuitarTabs — Telugu thread ('DUDU DUDU DU')",
+     "url": "https://www.indianguitartabs.com/chords/threads/naalone-pongenu-narmada-chords-from-the-telugu-movie-surya-so-krishnan.48747/"
+    },
+    {
      "label": "Your recording (Naalona Pongenu MP3)",
      "url": "#"
     }
@@ -899,13 +907,13 @@
     "g4": true,
     "g5": true,
     "g6": true,
-    "g7": false,
+    "g7": true,
     "top1": 0.858,
     "top2": 0.977,
     "bpm_measured": 114.96,
-    "disputed": "Scored on the instruments only (Demucs stems, no vocals/drums): on the full mix the sung melody pulls the A chords towards Asus2 (top-1 75.7%). Lyrics not added yet (gate 7)."
+    "disputed": "Gate 6 scored on the instruments only (Demucs stems): on the full mix the sung melody pulls the A chords towards Asus2 (75.7%). Easy follows MJ Music Notes (no Bm/F); UG ver 2's F#m on chorus lines 2/4 and A–F#m–E in 'Edho okati' not used — the recording plays A and A–D–A."
    },
-   "rev": 2,
+   "rev": 3,
    "map": [
     1.3,
     18.135,

@@ -342,6 +342,8 @@ body.live-on .livetab{display:none}
 }
 .rgauto{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--fg);cursor:pointer;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}.rgauto input{accent-color:var(--accent);width:16px;height:16px;margin:0}
 .bld label.f .rgauto{margin-top:6px;align-self:flex-start}
+.srcl{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
+.stagehd .nextup.small{font-size:12px;padding:4px 10px}.stagehd .nextup.small .nch{font-size:14px}.stagehd .nextup.small .nch.first{font-size:18px}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -448,8 +450,20 @@ body.live-on .livetab{display:none}
            per-device BPM/sync settings are dropped.
    Tools: pipeline/songbook_pipeline.py runs gates 4–6 on an MP3/M4A and writes map + qa.
    ===================================================================================== */
-const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords cross-checked"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"],["g8","Play-along backing: guitar removed, quiet parts filled"]];
-function qaStatus(s){const q=Object.assign({},s.qa||{});if(!q.g8&&store.get("sb-backing-"+s.id,null))q.g8=true;const miss=QA_GATES.filter(([k])=>!q[k]).map(([,l])=>l);return {ok:!miss.length,miss,q};}
+const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords & strumming from sources (Easy = open chords)"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"],["g8","Play-along backing: guitar removed, quiet parts filled"]];
+
+// ---------- 📏 song rules (checked on every song, shown in the gate-3 badge; same checks in pipeline/songbook_pipeline.py) ----------
+// 1. Every strumming pattern names its source: a tutorial / chord site, the user, or a measurement of the recording. No generic defaults.
+// 2. Easy / Medium / Hard chord versions each name their source (tutorials first; the recording settles disagreements).
+// 3. Easy = open chords only (no barre): barre chords are swapped for open shapes (F→Fmaj7, Bm→Bm7 …).
+const OPEN_CHORDS=new Set(["A","Am","A7","Am7","Asus2","Asus4","Aadd9","B7","Bm7","C","C7","Cadd9","Cmaj7","Csus2","D","D7","Dm","Dm7","Dmaj7","Dsus2","Dsus4","D/F#","E","E7","Em","Em7","Esus4","Emaj7","Fmaj7","G","G7","Gmaj7","Gsus2","Gsus4","G/B","Em/G","C/G"]);
+function ruleIssues(s){const out=[];
+  (s.strums||[]).forEach((x,i)=>{if(!x.src)out.push("Pattern "+(i+1)+" ("+String(x.label||x.s).replace(/^Pattern \d+ — /,"").slice(0,40)+") has no source");});
+  [["simple","Easy"],["intermediate","Medium"],["band","Hard"]].forEach(([k,n])=>{const v=(s.versions||{})[k];if(v&&!v.src)out.push((v.label||n)+" chords have no source");});
+  const e=(s.versions||{}).simple;if(e){const bad=[...new Set(e.sections.flatMap(sec=>sec.bars.flatMap(b=>String(b).split(/\s+/).map(t=>t.split(":")[0]).filter(Boolean))))].filter(c=>!OPEN_CHORDS.has(c));if(bad.length)out.push("Easy uses barre chords: "+bad.join(", "));}
+  return out;}
+const srcText=x=>x&&x.src?(" · Source: "+(x.src.label||x.src)):"";
+function qaStatus(s){const q=Object.assign({},s.qa||{});if(!q.g8&&store.get("sb-backing-"+s.id,null))q.g8=true;const ri=ruleIssues(s);q.rules=ri;if(ri.length)q.g3=false;const miss=QA_GATES.filter(([k])=>!q[k]).map(([,l])=>l);return {ok:!miss.length,miss,q};}
 const SONGS=/*SONGS*/[];
 const SONG_AUDIO=/*AUDIO*/{};   // song files built into this copy (local copy only)
 // ---------- chord shapes (low E → high e; -1 muted, 0 open) ----------
@@ -564,14 +578,14 @@ function renderSong(){
    .forEach(([k,v])=>{if(!v)return;const p=el("span","pill");p.append(k+" ");p.appendChild(el("b",null,v));pills.appendChild(p);});
   {const st=qaStatus(s),qp=el("span","pill"+(st.ok?" qok":" qdraft"));
    qp.textContent=st.ok?("✓ Release quality · "+Math.round((st.q.top1||0)*100)+"% measured"):("⚠ Draft · missing: "+st.miss.join(", "));
-   qp.title=QA_GATES.map(([k,l])=>(st.q[k]?"✓ ":"✗ ")+l).join("\n")+(st.q.disputed?"\nDisputed: "+st.q.disputed:"");pills.appendChild(qp);}
+   qp.title=QA_GATES.map(([k,l])=>(st.q[k]?"✓ ":"✗ ")+l).join("\n")+((st.q.rules||[]).length?"\n\nRules:\n• "+st.q.rules.join("\n• "):"")+(st.q.disputed?"\nDisputed: "+st.q.disputed:"");pills.appendChild(qp);}
   vc.appendChild(pills);
 
   const pk=el("div","pickers");
   const vw=el("div");vw.appendChild(el("p","label","Chord version"));const vs=el("div","seg");
   Object.entries(s.versions||{}).forEach(([k,v])=>{const b=el("button",null,v.label||k);b.type="button";b.setAttribute("aria-pressed",k===ver?"true":"false");
     b.addEventListener("click",()=>{ver=k;store.set("sb-ver-"+s.id,k);renderSong();});vs.appendChild(b);});
-  vw.appendChild(vs);const vd=(s.versions||{})[ver];if(vd&&vd.desc){const p=el("p","vdesc note");p.appendChild(chordText(vd.desc,s));vw.appendChild(p);}pk.appendChild(vw);
+  vw.appendChild(vs);const vd=(s.versions||{})[ver];if(vd&&vd.desc){const p=el("p","vdesc note");p.appendChild(chordText(vd.desc,s));if(vd.src)p.appendChild(el("small","srcl",srcText(vd)));vw.appendChild(p);}pk.appendChild(vw);
   const sw=el("div");sw.appendChild(el("p","label","Strumming"));const ss=el("div","seg");
   [["auto","Auto"]].concat((s.strums||[]).map((x,i)=>[String(i),"Pattern "+(i+1)])).forEach(([k,lab])=>{
     const b=el("button",null,lab);b.type="button";b.setAttribute("aria-pressed",k===strum?"true":"false");
@@ -579,7 +593,7 @@ function renderSong(){
   sw.appendChild(ss);
   {const p=el("div","vdesc note");
    if(strum==="auto")p.append("Changes with the song: one let-ring strum per bar in soft intros, fuller patterns in verses and choruses. Pick a pattern to use it everywhere.");
-   else{const sp=s.strums[+strum],n=slots();p.append(String(sp.label)+" · used for the whole song, intro included.");
+   else{const sp=s.strums[+strum],n=slots();p.append(String(sp.label)+" · used for the whole song, intro included.");p.appendChild(el("small","srcl",sp.src?srcText(sp):" · ⚠ no source"));
      const sl=el("div","slots");sl.style.gridTemplateColumns=`repeat(${n},auto)`;[...String(sp.s).padEnd(n,".").slice(0,n)].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));countLabels().forEach(x=>sl.appendChild(el("small",null,x)));p.appendChild(sl);}
    sw.appendChild(p);}
   pk.appendChild(sw);vc.appendChild(pk);
@@ -665,7 +679,7 @@ function renderSong(){
   // stage: the section you're in, laid out like a chord sheet — every bar with its chord shape and strum;
   // the next section is previewed underneath, and the view turns over when the song gets there
   const stage=el("section","stage");stage.setAttribute("aria-label","Chord sheet for the current section");
-  const sh=el("div","stagehd");const sn=el("h2","secname","");sn.id="secName";const nx=el("div","nextup","");nx.id="nextUp";sh.append(sn,nx);stage.appendChild(sh);
+  const sh=el("div","stagehd");const sn=el("h2","secname","");sn.id="secName";const nx=el("div","nextup","");nx.id="nextUp";const nx2=el("div","nextup small","");nx2.id="nextUpTop";sh.append(sn,nx2,nx);stage.appendChild(sh);
   const blocks=el("div","blocks");stage.appendChild(blocks);
   secBlocks=[];cards=[];cardIdx=[];stageSec=-2;
   sections().forEach((sec,k)=>{
@@ -1108,6 +1122,7 @@ function updateStage(b,force){
   const nx=$("nextUp");if(nx){const ns=secs[k+1];nx.innerHTML="";if(ns){nx.append(el("span","nl","Next"),el("b",null,ns.name));
       const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);const nc=el("span","nc");firsts.forEach((c,q)=>{if(q)nc.append(" · ");const s=el("span",q?"nch":"nch first",c);s.style.color=chordColor(c);nc.appendChild(s);});nx.appendChild(nc);}
     else nx.append(el("span","nl","Last section"));nx.classList.toggle("soon",!!soon);}
+  {const top=$("nextUpTop"),nx=$("nextUp");if(top&&nx){top.innerHTML=nx.innerHTML;top.className="nextup small"+(nx.classList.contains("soon")?" soon":"");}}
   const c=cards[b];if(c&&isPlaying()){const r=c.getBoundingClientRect(),top=(document.querySelector(".bar")||{}).getBoundingClientRect?document.querySelector(".bar").getBoundingClientRect().bottom:0;
     if(r.top<top+8||r.bottom>innerHeight-8)window.scrollBy({top:r.top-top-24,behavior:"smooth"});}
 }
@@ -1816,13 +1831,15 @@ function songToForm(s){
   const v=(s.versions||{}).intermediate||Object.values(s.versions||{})[0]||{sections:s.sections||[]};
   const pre=PRESETS[time].map(p=>p[0]);
   return {title:s.title+(s.custom?"":" (my copy)"),artist:s.artist||"",youtube:s.youtube||"",tutorial:((s.links||[]).find(l=>/tutorial|lesson/i.test(l.label))||{}).url||"",bpm:s.bpm||90,time,capo:s.capo||0,key:s.key||"",
-    strums:(s.strums||[]).map(x=>pre.includes(x.s)?x.s:pre[0]).concat(pre).slice(0,3),
+    strums:(s.strums||[]).map(x=>pre.includes(x.s)?x.s:"").concat(["","",""]).slice(0,3),
     sections:v.sections.map(x=>({name:x.name,chords:barsToText(x.bars),times:1,feel:x.feel||"full"})),notes:(s.notes||[]).join("\n")};
 }
 function askClaude(title,artist,link,box,tut){
   const msg="Songbook: build a play-along song file for “"+(title||"this song")+"”"+(artist?" by "+artist:"")+"."+
     (tut?"\nTutorial (take the chords, capo and strumming from here): "+tut:"")+(link?"\nPlay-along: "+link:"")+
-    "\nFill everything automatically: Easy (open chords only), Intermediate and Band versions, 3 strumming patterns (Pattern 1 easiest), capo, BPM and sections — as a .json song file I can open in my Songbook Player.";
+    "\nFill everything automatically as a .json song file I can open in my Songbook Player: capo, BPM, sections, Easy / Medium / Hard chord versions and 3 strumming patterns (Easy → Hard)."+
+    "\nRules: research the song's tutorials and chord sites (Ultimate Guitar, YouTube lessons, chord blogs) first; take Easy / Medium / Hard chords and every strumming pattern ONLY from those sources or from my recording — no generic default patterns."+
+    "\nEasy = open chords only. Give each version and each pattern its source, show me the patterns and chords you found in text with your reasons, then build the file.";
   box.innerHTML="";box.className="help";box.style.cssText="background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--fg);font-weight:400";
   box.append(el("b",null,"Claude fills in the chords, capo, strumming and BPM for you."),el("br"),"1) Copy the request  2) paste it to Claude in chat  3) open the chart Claude sends back with ⇧ Open chart or MP3 — everything is filled in for you.");
   const r=el("div","actions");r.style.marginTop="10px";
@@ -1881,8 +1898,9 @@ function openBuilder(form,editId){
   const sw=el("div");sw.appendChild(el("p","label","Strumming patterns (Pattern 1 should be the easiest)"));const sg=el("div","grid");
   const strumSel=[];
   function fillStrums(){const pre=PRESETS[fM.value];strumSel.forEach((sel,i)=>{const keep=sel.value;sel.innerHTML="";
+    {const o=el("option",null,"— not set — (pick what your tutorial teaches)");o.value="";sel.appendChild(o);}
     pre.forEach(([pt,lab])=>{const o=el("option",null,lab+"   "+pt.replace(/\./g,"·"));o.value=pt;sel.appendChild(o);});
-    sel.value=pre.some(p=>p[0]===keep)?keep:pre[Math.min(i,pre.length-1)][0];});}
+    sel.value=pre.some(p=>p[0]===keep)?keep:"";});}
   for(let i=0;i<3;i++){const sel=document.createElement("select");strumSel.push(sel);sg.appendChild(field("Pattern "+(i+1),sel));}
   fillStrums();if(f.strums)f.strums.forEach((v,i)=>{if(strumSel[i]&&[...strumSel[i].options].some(o=>o.value===v))strumSel[i].value=v;});
   fM.addEventListener("change",fillStrums);
@@ -1949,7 +1967,8 @@ function openBuilder(form,editId){
     if(bad.length){err.textContent="These don't look like chords: "+[...new Set(bad)].join(", ")+". Chords start with A–G (e.g. G, Em, Cadd9, D/F#).";return;}
     const yt=fY.value.trim();if(yt&&!ytId(yt)){err.textContent="That YouTube link doesn't look right — paste the video's address (youtube.com/watch?v=… or youtu.be/…).";fY.focus();return;}
     const pre=Object.fromEntries(PRESETS[fM.value]);
-    const strums=strumSel.map((sel,i)=>({label:"Pattern "+(i+1)+" — "+(pre[sel.value]||sel.value),s:sel.value}));
+    const tutSrc=fTut.value.trim()?{label:"Your tutorial (picked in the song builder)",url:fTut.value.trim()}:{label:"You (picked in the song builder)"};
+    const strums=strumSel.filter(sel=>sel.value).map((sel,i)=>({label:"Pattern "+(i+1)+" — "+(pre[sel.value]||sel.value),s:sel.value,src:tutSrc}));
     const ringP=PRESETS[fM.value].find(p=>/let ring/.test(p[1]))[0];
     const simple=sections.map(x=>({name:x.name,feel:x.feel,bars:x.bars.map(b=>{const t=parseBar(b,time.bpb);const m=Math.max(...t.map(y=>y.b));return simplifyChord(t.find(y=>y.b===m).c);})}));
     const id=editId||("c-"+Date.now().toString(36));
@@ -1957,11 +1976,11 @@ function openBuilder(form,editId){
     const song={id,edited:true,order:prevOrder||1000+old.length,title,artist:fA.value.trim(),key:fK.value.trim(),capo:+fC.value,bpm:Math.max(30,Math.min(240,+fB.value||90)),
       beatsPerBar:time.bpb,subdiv:time.sub,timeLabel:time.label,firstBeat:0,youtube:yt,
       links:(yt?[{label:"Play-along video",url:yt}]:[]).concat(fTut.value.trim()?[{label:"Tutorial",url:fTut.value.trim()}]:[]),
-      patterns:{ring:{label:"Soft — one strum, let ring",s:ringP},mid:{label:strums[0].label,s:strums[0].s},full:{label:strums[1].label,s:strums[1].s}},
+      patterns:{ring:{label:"Soft — one strum, let ring",s:ringP},mid:strums[0]?{label:strums[0].label,s:strums[0].s}:{label:"One strum per chord (no pattern picked yet)",s:ringP},full:(strums[1]||strums[0])?{label:(strums[1]||strums[0]).label,s:(strums[1]||strums[0]).s}:{label:"One strum per chord (no pattern picked yet)",s:ringP}},
       strums,
-      versions:{simple:{label:"Easy",desc:"Auto-made from your chords: open chords only (barre chords swapped for open versions like Fmaj7, Bm7, B7), one chord per bar, no mid-bar changes.",sections:simple},
-                intermediate:{label:"Intermediate",desc:"Exactly the chords you entered.",sections},
-                band:{label:"Band",desc:"Your chords — edit the song to add colour chords (Cadd9, Dsus4, D/F#…).",sections}},
+      versions:{simple:{label:"Easy",desc:"Auto-made from your chords: open chords only (barre chords swapped for open versions like Fmaj7, Bm7, B7), one chord per bar, no mid-bar changes.",sections:simple,src:{label:"Your chords → open-chord swaps (Easy rule)"}},
+                intermediate:{label:"Medium",desc:"Exactly the chords you entered.",sections,src:tutSrc},
+                band:{label:"Hard",desc:"Your chords — edit the song to add colour chords from your tutorial (Cadd9, Dsus4, D/F#…).",sections,src:tutSrc}},
       notes:fN.value.split("\n").map(x=>x.trim()).filter(Boolean)};
     const list=old.filter(x=>x.id!==id);list.push(song);saveCustom(list);
     store.set("sb-tune-"+id,null);refreshSongs();choose(id);

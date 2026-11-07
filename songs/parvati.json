@@ -18,20 +18,33 @@
    ],
    "order": 1,
    "patterns": {
-    "full": {
-     "label": "Main — ↓ ↓ ↑ ✕ ↓",
-     "s": "D.DuX.D."
+    "ring": {
+     "label": "One strum, let ring",
+     "s": "D...............",
+     "src": {
+      "label": "Measured: intro/outro guitar holds the chord"
+     }
     },
     "mid": {
-     "label": "Lighter — same pattern, soft",
-     "s": "d.dux.d."
+     "label": "Recording feel (Hard pattern)",
+     "s": "..d..u..D..uD..u",
+     "src": {
+      "label": "Measured from your recording"
+     }
     },
-    "ring": {
-     "label": "Soft — one strum, let ring",
-     "s": "D......."
+    "full": {
+     "label": "Recording feel (Hard pattern)",
+     "s": "..d..u..D..uD..u",
+     "src": {
+      "label": "Measured from your recording"
+     }
     }
    },
    "sources": [
+    {
+     "label": "ChordsFactory / Sagar Roy (capo 1, D C Am A Em F G, strum D UUD UUD DU)",
+     "url": "https://chordsfactory.com/parvati-guitar-chords-hanuman-ansh/"
+    },
     {
      "label": "Your Ultimate Guitar sheet (abhishekyadav123)",
      "url": "#"
@@ -39,24 +52,16 @@
     {
      "label": "Your recording (Parvati MP3)",
      "url": "#"
-    },
-    {
-     "label": "bibekac lesson",
-     "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"
-    },
-    {
-     "label": "Sagar Roy lesson",
-     "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"
     }
    ],
    "title": "Parvati",
    "youtube": "https://www.youtube.com/watch?v=nJlbqQEFYaE",
    "id": "parvati",
-   "subdiv": 2,
+   "subdiv": 4,
    "versions": {
     "simple": {
      "label": "Easy",
-     "desc": "Just three open chords, one per bar: D, C, G. Quick Am and F moments are skipped (the F → G on “Bholenath” is played as G).",
+     "desc": "bibekac's Easy Guitar Lesson chord set (capo 1: D, Am, C, G, F) on your UG sheet's progression, with F played as open Fmaj7 (xx3210) — Easy is open chords only.",
      "sections": [
       {
        "name": "Intro",
@@ -85,23 +90,23 @@
        "name": "Chorus 1",
        "feel": "full",
        "bars": [
+        "Am:1 C:3",
         "C",
-        "C",
-        "C",
+        "Am:1 C:3",
         "D",
-        "C",
-        "D",
-        "D",
-        "C",
-        "D",
-        "C",
-        "D",
-        "G",
+        "Am:1 C:3",
         "D",
         "D",
-        "C",
+        "C Am",
         "D",
-        "G",
+        "C Am",
+        "D",
+        "Fmaj7:2 G:2",
+        "D",
+        "D",
+        "C Am",
+        "D",
+        "Fmaj7:2 G:2",
         "D"
        ]
       },
@@ -132,22 +137,22 @@
        "name": "Chorus 2",
        "feel": "full",
        "bars": [
+        "Am:1 C:3",
         "C",
-        "C",
-        "C",
+        "Am:1 C:3",
         "D",
         "D",
         "D",
-        "C",
+        "C Am",
         "D",
-        "C",
+        "C Am",
         "D",
-        "G",
+        "Fmaj7:2 G:2",
         "D",
         "D",
-        "C",
+        "C Am",
         "D",
-        "G",
+        "Fmaj7:2 G:2",
         "D"
        ]
       },
@@ -170,7 +175,7 @@
         "D",
         "C",
         "G",
-        "G",
+        "G:2 D:2",
         "D"
        ]
       },
@@ -178,22 +183,22 @@
        "name": "Chorus 3",
        "feel": "full",
        "bars": [
+        "Am:1 C:3",
         "C",
-        "C",
-        "C",
+        "Am:1 C:3",
         "D",
         "D",
         "D",
-        "C",
+        "C Am",
         "D",
-        "C",
+        "C Am",
         "D",
-        "G",
+        "Fmaj7:2 G:2",
         "D",
         "D",
-        "C",
+        "C Am",
         "D",
-        "G",
+        "Fmaj7:2 G:2",
         "D"
        ]
       },
@@ -208,11 +213,15 @@
         "D"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "bibekac — Easy Guitar Lesson (chords) + your UG sheet (progression)",
+      "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"
+     }
     },
     "intermediate": {
-     "label": "Intermediate",
-     "desc": "Your Ultimate Guitar sheet, timed to the recording: Am → C, and F → G on “Bholenath”.",
+     "label": "Medium",
+     "desc": "Your Ultimate Guitar sheet, timed to the recording: Am → C, and F → G on “Bholenath” (capo 1).",
      "sections": [
       {
        "name": "Intro",
@@ -364,55 +373,59 @@
         "D"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Your Ultimate Guitar sheet",
+      "url": "https://tabs.ultimate-guitar.com/tab/misc-soundtrack/hanuman-ansh-parvati-chords-6580607"
+     }
     },
     "band": {
-     "label": "Band",
-     "desc": "Sheet + colour: Cadd9, and Dsus2 / Dsus4 movement on the long D stretches.",
+     "label": "Hard",
+     "desc": "ChordsFactory adds Em on “Itne seedhe” (D Em F G D) and A major on “saanp” (both heard in the recording); bibekac's Dsus2 for the long D stretches.",
      "sections": [
       {
        "name": "Intro",
        "feel": "ring",
        "bars": [
-        "D",
-        "D",
-        "D",
-        "D"
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2"
        ]
       },
       {
        "name": "Opening verse",
        "feel": "mid",
        "bars": [
-        "D",
-        "D",
-        "D",
-        "D",
-        "D",
-        "D",
-        "D"
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2"
        ]
       },
       {
        "name": "Chorus 1",
        "feel": "full",
        "bars": [
-        "Am:1 Cadd9:3",
-        "Cadd9",
-        "Am:1 Cadd9:3",
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
         "D",
-        "Am:1 Cadd9:3",
+        "Am:1 C:3",
         "D",
         "D",
-        "Cadd9 Am",
+        "C:2 A:2",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D"
        ]
@@ -421,44 +434,44 @@
        "name": "Verse 1",
        "feel": "mid",
        "bars": [
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2"
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2"
        ]
       },
       {
        "name": "Chorus 2",
        "feel": "full",
        "bars": [
-        "Am:1 Cadd9:3",
-        "Cadd9",
-        "Am:1 Cadd9:3",
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
         "D",
         "D",
         "D",
-        "Cadd9 Am",
+        "C:2 A:2",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D"
        ]
@@ -467,44 +480,44 @@
        "name": "Verse 2",
        "feel": "mid",
        "bars": [
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "D:2 Dsus2:2",
-        "Cadd9",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "C",
         "G",
         "G:2 D:2",
-        "D:2 Dsus2:2"
+        "Dsus2"
        ]
       },
       {
        "name": "Chorus 3",
        "feel": "full",
        "bars": [
-        "Am:1 Cadd9:3",
-        "Cadd9",
-        "Am:1 Cadd9:3",
+        "Am:1 C:3",
+        "C",
+        "Am:1 C:3",
         "D",
         "D",
         "D",
-        "Cadd9 Am",
+        "C:2 A:2",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D",
         "D",
-        "Cadd9 Am",
-        "D",
+        "C:2 A:2",
+        "D:2 Em:2",
         "F:2 G:2",
         "D"
        ]
@@ -513,28 +526,43 @@
        "name": "Outro",
        "feel": "ring",
        "bars": [
-        "D:2 Dsus4:1 D:1",
-        "D:2 Dsus4:1 D:1",
-        "D:2 Dsus4:1 D:1",
-        "D:2 Dsus4:1 D:1",
-        "D:2 Dsus4:1 D:1"
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2",
+        "Dsus2"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Sagar Roy / ChordsFactory + bibekac",
+      "url": "https://chordsfactory.com/parvati-guitar-chords-hanuman-ansh/"
+     }
     }
    },
    "strums": [
     {
-     "label": "Pattern 1 — 4 downs (beginner)",
-     "s": "D.D.D.D."
+     "label": "Easy — DDU CU DU (C = chuck, mute with the palm)",
+     "s": "D...D.U.X.U.D.U.",
+     "src": {
+      "label": "bibekac — Easy Guitar Lesson",
+      "url": "https://www.youtube.com/watch?v=s5DazZFfeFU"
+     }
     },
     {
-     "label": "Pattern 2 — D DU UDU (the classic)",
-     "s": "D.DU.UDU"
+     "label": "Medium — D UUD UUD DU, read on 16ths as D · UUD · UUD · DU",
+     "s": "D..U.UD..U.UD.DU",
+     "src": {
+      "label": "Sagar Roy lesson / ChordsFactory",
+      "url": "https://chordsfactory.com/parvati-guitar-chords-hanuman-ansh/"
+     }
     },
     {
-     "label": "Pattern 3 — song feel ↓ ↓↑ ✕ ↓",
-     "s": "D.DuX.D."
+     "label": "Hard — the recording's guitar: & of 1, e of 2, 3, a of 3, 4, a of 4 (accents on 3 and 4)",
+     "s": "..d..u..D..uD..u",
+     "src": {
+      "label": "Measured from your recording (guitar stem, Verse 2 / Chorus 2)"
+     }
     }
    ],
    "links": [
@@ -551,7 +579,7 @@
      "url": "https://www.youtube.com/watch?v=5EgAqxpCixg"
     }
    ],
-   "timeLabel": "4/4",
+   "timeLabel": "4/4 · 16ths",
    "qa": {
     "g1": true,
     "g2": true,
@@ -575,7 +603,7 @@
     224.189,
     271.441
    ],
-   "rev": 3
+   "rev": 4
   }
  ]
 }

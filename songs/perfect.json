@@ -47,15 +47,24 @@
    "strums": [
     {
      "label": "Pattern 1 — Four downs (one per main beat)",
-     "s": "D..D.."
+     "s": "D..D..",
+     "src": {
+      "label": "Karthik Songbook p.1 (strumming patterns)"
+     }
     },
     {
      "label": "Pattern 2 — Six beats (loud on 1 and 4)",
-     "s": "DddDdd"
+     "s": "DddDdd",
+     "src": {
+      "label": "Karthik Songbook p.1 (strumming patterns)"
+     }
     },
     {
      "label": "Pattern 3 — Usual 12:8 (count 1–12 over two cards)",
-     "s": "DddDdd"
+     "s": "DddDdd",
+     "src": {
+      "label": "Karthik Songbook p.1 (strumming patterns)"
+     }
     },
     {
      "label": "Pattern 4 — D · D U D U",
@@ -204,7 +213,10 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Karthik Songbook p.1"
+     }
     },
     "intermediate": {
      "label": "Intermediate",
@@ -347,7 +359,10 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Karthik Songbook p.1"
+     }
     },
     "band": {
      "label": "Band",
@@ -490,7 +505,10 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Karthik Songbook p.1 (chords incl. Cadd9, Cmaj7, D/F#)"
+     }
     }
    },
    "notes": [

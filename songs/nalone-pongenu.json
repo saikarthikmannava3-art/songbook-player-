@@ -19,29 +19,50 @@
    "patterns": {
     "ring": {
      "label": "Intro — let it ring (Naadan: hold, one up-stroke)",
-     "s": "D..............."
+     "s": "D...............",
+     "src": {
+      "label": "Naadan intro (hold, one up-stroke)",
+      "url": "https://www.naadanchords.com/nenjukkul-peidhidum-vaaranam-aayiram"
+     }
     },
     "mid": {
      "label": "Tutorial pattern (Hard), as the recording plays it",
-     "s": "d.D.duduD.duD.du"
+     "s": "d.D.duduD.duD.du",
+     "src": {
+      "label": "Your YouTube tutorial / recording"
+     }
     },
     "full": {
      "label": "Tutorial pattern (Hard), as the recording plays it",
-     "s": "d.D.duduD.duD.du"
+     "s": "d.D.duduD.duD.du",
+     "src": {
+      "label": "Your YouTube tutorial / recording"
+     }
     }
    },
    "strums": [
     {
      "label": "Easy — straight 8ths D U D U D U D U (IndianGuitarTabs forum 'DUDU DUDU'; Naadan 'D UDUD')",
-     "s": "D.U.D.U.D.U.D.U."
+     "s": "D.U.D.U.D.U.D.U.",
+     "src": {
+      "label": "IndianGuitarTabs 'DUDU DUDU' + Naadan 'D UDUD'",
+      "url": "https://www.indianguitartabs.com/chords/threads/naalone-pongenu-narmada-chords-from-the-telugu-movie-surya-so-krishnan.48747/"
+     }
     },
     {
      "label": "Medium — D – DUDUD – DUDUDUDU (MJ Music Notes), 16ths, starts on the & of 1",
-     "s": "DUD.DUDUD.DUDUDU"
+     "s": "DUD.DUDUD.DUDUDU",
+     "src": {
+      "label": "MJ Music Notes",
+      "url": "https://mjmusicnotes.com/nalone-pongenu-narmada-guitar-chords/"
+     }
     },
     {
      "label": "Hard — D D U | D U D | D U D | D U D (your YouTube tutorial; matches the recording), accents on part 1 first D, part 2 second D and beat 4",
-     "s": "d.D.duduD.duD.du"
+     "s": "d.D.duduD.duD.du",
+     "src": {
+      "label": "Your YouTube tutorial (confirmed by the recording)"
+     }
     }
    ],
    "versions": {
@@ -310,7 +331,11 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "MJ Music Notes",
+      "url": "https://mjmusicnotes.com/nalone-pongenu-narmada-guitar-chords/"
+     }
     },
     "intermediate": {
      "label": "Medium",
@@ -577,7 +602,11 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Naadan Chords",
+      "url": "https://www.naadanchords.com/nenjukkul-peidhidum-vaaranam-aayiram"
+     }
     },
     "band": {
      "label": "Hard",
@@ -844,7 +873,11 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Naadan + Ultimate Guitar ver 2 + IndianGuitarTabs",
+      "url": "https://tabs.ultimate-guitar.com/tab/surya-so-krishnan/naalone-pongenu-narmada-chords-3120929"
+     }
     }
    },
    "notes": [

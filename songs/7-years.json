@@ -71,15 +71,27 @@
    "strums": [
     {
      "label": "Pattern 1 — one down per chord change (Ellen: intro & outro)",
-     "s": "D......."
+     "s": "D.......",
+     "src": {
+      "label": "Ellen's YouTube tutorial",
+      "url": "https://www.youtube.com/watch?v=aBVpjcATYOI"
+     }
     },
     {
      "label": "Pattern 2 — D D U U D U (Ellen's main pattern)",
-     "s": "D.DU.UDU"
+     "s": "D.DU.UDU",
+     "src": {
+      "label": "Ellen's YouTube tutorial",
+      "url": "https://www.youtube.com/watch?v=aBVpjcATYOI"
+     }
     },
     {
      "label": "Pattern 3 — D D U U D · (last up dropped to make quick changes)",
-     "s": "D.DU.UD."
+     "s": "D.DU.UD.",
+     "src": {
+      "label": "Ellen's YouTube tutorial",
+      "url": "https://www.youtube.com/watch?v=aBVpjcATYOI"
+     }
     }
    ],
    "versions": {
@@ -291,7 +303,11 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Ellen's YouTube tutorial (Em G C D, capo 3)",
+      "url": "https://www.youtube.com/watch?v=aBVpjcATYOI"
+     }
     },
     "intermediate": {
      "label": "Intermediate",
@@ -501,7 +517,11 @@
         "G"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Your Ultimate Guitar sheet",
+      "url": "https://tabs.ultimate-guitar.com/tab/lukas-graham/7-years-chords-1803179"
+     }
     },
     "band": {
      "label": "Band",

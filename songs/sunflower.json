@@ -48,7 +48,10 @@
     },
     {
      "label": "Pattern 3 — D D U D U D U (busier, from your sheet's 2nd pattern)",
-     "s": "D.DUDUDU"
+     "s": "D.DUDUDU",
+     "src": {
+      "label": "Your Sunflower chord sheet (2nd pattern)"
+     }
     }
    ],
    "versions": {
@@ -144,7 +147,10 @@
         "D"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Your Sunflower chord sheets"
+     }
     },
     "intermediate": {
      "label": "Intermediate",
@@ -238,7 +244,10 @@
         "D"
        ]
       }
-     ]
+     ],
+     "src": {
+      "label": "Your Sunflower chord sheets + Ultimate Guitar ver 2 (Dsus2)"
+     }
     },
     "band": {
      "label": "Band",

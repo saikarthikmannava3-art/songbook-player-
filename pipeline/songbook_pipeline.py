@@ -10,9 +10,12 @@ with web sources); gates 4–7 are run by this script against the user's own aud
                        plus the user's sheet if given. Record every URL in song["sources"].
   GATE 2  KEY/TEMPO    Key, capo and BPM confirmed by an authoritative source
                        (Wikipedia / Musicnotes official sheet / Songbpm) — never guessed.
-  GATE 3  CHORDS       Section-by-section comparison of the sources; disagreements resolved
-                       (prefer the user's sheet, then the majority), and listed in qa["disputed"].
-                       Easy = open chords only, one chord per bar (barre → open substitute).
+  GATE 3  CHORDS &     Research the song's tutorials / chord sites first. Easy, Medium and Hard chord versions
+          STRUMMING    and every strumming pattern come ONLY from those sources, the user, or a measurement of
+                       the recording — never a generic default (e.g. "D DU UDU"). Each version and each strum
+                       carries "src": {"label", "url"}. Disagreements: the recording decides; list them in
+                       qa["disputed"]. Easy = open chords only (barre → open shape: F→Fmaj7, Bm→Bm7 …).
+                       check_rules() below enforces this; any problem sets qa["g3"] = false.
   GATE 4  BEATS        Beat-track the recording; tempo from the AVERAGE beat interval
                        (the median is quantised by the analysis hop and can be off by 2–3 BPM).
   GATE 5  ALIGN        Align the chart's chord changes to beat-synchronous chroma
@@ -68,6 +71,24 @@ def parse_bar(bar, bpb):
     fixed = sum(d for _, d in toks if d); free = [t for t in toks if t[1] is None]
     for t in free: t[1] = (bpb - fixed) / max(len(free), 1)
     return toks
+
+OPEN_CHORDS = {"A","Am","A7","Am7","Asus2","Asus4","Aadd9","B7","Bm7","C","C7","Cadd9","Cmaj7","Csus2","D","D7","Dm","Dm7",
+               "Dmaj7","Dsus2","Dsus4","D/F#","E","E7","Em","Em7","Esus4","Emaj7","Fmaj7","G","G7","Gmaj7","Gsus2","Gsus4",
+               "G/B","Em/G","C/G"}
+
+def check_rules(song):
+    """Gate 3 rules — same checks as ruleIssues() in index.html."""
+    out = []
+    for i, s in enumerate(song.get('strums', [])):
+        if not s.get('src'): out.append(f"Pattern {i+1} ({s.get('label', s.get('s'))[:40]}) has no source")
+    for k, n in (('simple', 'Easy'), ('intermediate', 'Medium'), ('band', 'Hard')):
+        v = song.get('versions', {}).get(k)
+        if v is not None and not v.get('src'): out.append(f"{v.get('label', n)} chords have no source")
+    e = song.get('versions', {}).get('simple')
+    if e:
+        bad = sorted({t.split(':')[0] for sec in e['sections'] for b in sec['bars'] for t in b.split()} - OPEN_CHORDS)
+        if bad: out.append('Easy uses barre chords: ' + ', '.join(bad))
+    return out
 
 def load_audio(path, sr=22050):
     import librosa
@@ -155,7 +176,8 @@ def main():
             beat += bpb
     acc1, acc2 = (top1 / tot if tot else 0), (top2 / tot if tot else 0)
 
-    report = {'bpm_measured': round(bpm, 2), 'first_downbeat_s': sec_map[0] if sec_map else None,
+    rules = check_rules(song)
+    report = {'rules_ok': not rules, 'rules_issues': rules, 'bpm_measured': round(bpm, 2), 'first_downbeat_s': sec_map[0] if sec_map else None,
               'section_starts_s': sec_map, 'section_bars_in_audio': lengths,
               'chart_bars': [len(s['bars']) for s in secs], 'top1': round(acc1, 3), 'top2': round(acc2, 3),
               'release_ok': acc1 >= RELEASE_TOP1 and acc2 >= RELEASE_TOP2, 'grid_overrode': overridden}
@@ -166,6 +188,7 @@ def main():
         song['map'] = sec_map; song['firstBeat'] = sec_map[0]; song['rev'] = int(song.get('rev', 0)) + 1
         qa = song.setdefault('qa', {}); qa.update({'gate4_bpm': report['bpm_measured'], 'gate5_map': True,
             'gate6_top1': report['top1'], 'gate6_top2': report['top2'], 'release_ok': report['release_ok']})
+        if rules: qa['g3'] = False
         json.dump({'songbook': 1, 'songs': [song]}, open(a.out, 'w'), ensure_ascii=False, indent=1)
         print('wrote', a.out)
 

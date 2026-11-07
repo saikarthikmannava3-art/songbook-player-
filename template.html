@@ -333,6 +333,13 @@ body.live-on .livetab{display:none}
 .llyr .sg.on .c{color:var(--accent)}
 .llyr .w{cursor:default}
 @media (min-width:1100px){body.dash-on{padding-left:336px}body.live-on{padding-right:356px}body.live-on .livepanel,body.dash-on .dash{box-shadow:none}}
+@media (max-width:1099px){
+ .dash{width:min(330px,88vw)}.livepanel{width:min(350px,92vw)}
+ .dashtab,.livetab{writing-mode:horizontal-tb;transform:none;top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));border-radius:99px;padding:12px 16px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+ .dashtab{left:12px}.livetab{right:12px}
+ .dashtab .tabtxt{display:none}.livetab .tabtxt{display:inline}
+ .wrap{padding-bottom:calc(30vh + 70px)}
+}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -400,8 +407,8 @@ body.live-on .livetab{display:none}
   </details>
 </aside>
 <aside class="livepanel" id="live" aria-label="Live: chords and lyrics"></aside>
-<button class="livetab" id="liveTab" type="button" title="Show the live chords and lyrics">🎤 Live</button>
-<button class="dashtab" id="dashTab" type="button" title="Show songs, tuner and guitar course">🎸 Songs · Tuner · Course</button>
+<button class="livetab" id="liveTab" type="button" title="Show the live chords and lyrics">🎤 <span class="tabtxt">Live</span></button>
+<button class="dashtab" id="dashTab" type="button" title="Show songs, tuner and guitar course">🎸 <span class="tabtxt">Songs · Tuner · Course</span></button>
 <div class="wrap">
   <header class="top">
     <h1>Songbook <span>Player</span></h1>
@@ -2056,7 +2063,7 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 
 // ---------- start ----------
 refreshSongs();
-$("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));$("liveTab").addEventListener("click",()=>toggleLive(true));toggleLive(store.get("sb-live-open",innerWidth>=1500));
+$("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));$("liveTab").addEventListener("click",()=>toggleLive(true));document.addEventListener("pointerdown",e=>{if(innerWidth>=1100)return;const tg=e.target;if(document.body.classList.contains("dash-on")&&!tg.closest("#dash,#dashTab"))toggleDash(false);if(document.body.classList.contains("live-on")&&!tg.closest("#live,#liveTab"))toggleLive(false);},true);toggleLive(store.get("sb-live-open",innerWidth>=1500));
 [["secTuner",true],["secCourse",true],["secSongs",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});
 toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();renderTuner();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();

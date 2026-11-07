@@ -2,7 +2,7 @@
 
 Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-1 count-in, a warm-up plan per song, lyrics with chords that light up, and chord charts timed to your own recording.
 
-**Run it:** open `index.html` in Chrome — or turn on GitHub Pages (Settings → Pages → Deploy from branch → `main` / root) and open the page on any phone or computer.
+**Run it:** open **https://saikarthikmannava3-art.github.io/songbook-player-/** on any phone or computer (GitHub Pages, updates a minute after each push). On iPhone: Safari → Share → **Add to Home Screen** for a full-screen app. Or open `index.html` locally in Chrome.
 
 **Run it with the extras (🎸 Remove guitar, auto-loaded lyrics/PDFs):**
 ```bash

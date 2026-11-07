@@ -240,7 +240,7 @@ details[open].card>summary::after{content:"－"}
 /* 🎓 side dashboard */
 .dash{position:fixed;top:0;left:0;bottom:0;width:320px;z-index:25;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:16px 14px 40px;display:flex;flex-direction:column;gap:10px;transform:translateX(-100%);transition:transform .2s ease;box-shadow:0 0 30px rgba(0,0,0,.25)}
 body.dash-on .dash{transform:none}
-@media (min-width:1100px){body.dash-on .dash{box-shadow:none}body.dash-on .wrap{margin-left:max(340px,calc((100vw - 1040px)/2))}}
+@media (min-width:1100px){body.dash-on .dash{box-shadow:none}}
 .dashtab{position:fixed;left:0;top:96px;z-index:24;writing-mode:vertical-rl;transform:rotate(180deg);font:inherit;font-weight:800;font-size:14px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:0 10px 10px 0;padding:12px 7px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
 body.dash-on .dashtab{display:none}
 .dhead{display:flex;align-items:center;justify-content:space-between}.dhead h2{margin:0;font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;color:var(--accent);letter-spacing:.02em}
@@ -282,12 +282,11 @@ body.dash-on .dashtab{display:none}
 .dash .shelf button[aria-pressed="true"] .stx small{color:inherit;opacity:.8}
 .tdisp{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
 .tnote{font-family:var(--display);font-weight:900;font-size:56px;line-height:1;color:var(--muted)}.tnote[data-oct]::after{content:attr(data-oct);font-size:20px;vertical-align:sub;margin-left:2px}
-.tdisp.on .tnote{color:var(--fg)}.tdisp.ok .tnote{color:var(--c-E)}
+
 .thz{font:600 13px var(--mono);color:var(--muted)}
 .tmeter{position:relative;width:100%;height:30px;margin:6px 0 12px;border-radius:99px;background:linear-gradient(90deg,var(--c-A) 0%,var(--c-D) 30%,var(--c-E) 46%,var(--c-E) 54%,var(--c-D) 70%,var(--c-A) 100%);opacity:.9}
 .tmeter .tz{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--fg);transform:translateX(-50%)}
 .tneedle{position:absolute;left:50%;top:-6px;width:6px;height:42px;border-radius:3px;background:var(--fg);transform:translateX(-50%);box-shadow:0 0 0 2px var(--surface);transition:left .08s linear}
-.tdisp:not(.on) .tneedle{opacity:.25}
 .tl{position:absolute;bottom:-17px;transform:translateX(-50%);font:600 10px var(--mono);color:var(--muted)}
 .thint{font-weight:700;font-size:14px;min-height:20px}.tdisp.ok .thint{color:var(--c-E)}
 .tstrings{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
@@ -295,6 +294,45 @@ body.dash-on .dashtab{display:none}
 .tstrings button b{font-family:var(--display);font-size:20px}.tstrings button small{font-size:10px;color:var(--muted)}
 .tstrings button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.tstrings button.on small{color:inherit}
 #tuner{display:flex;flex-direction:column;gap:8px}#tuner>.libbtn{align-self:stretch}
+
+
+.ttop{display:flex;gap:6px;align-items:center}.ttop select{flex:1;min-width:0;font:inherit;font-size:13px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px}
+.ta4l{font:700 12px var(--mono);color:var(--muted)}.ttop input{width:58px;font:700 13px var(--mono);text-align:center;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 2px}
+.tdisp.live .tnote{color:var(--fg)}.tdisp.ok .tnote{color:var(--c-E)}.tdisp:not(.live) .tneedle{opacity:.25}
+.tlvl{width:100%;height:4px;border-radius:99px;background:var(--sunk);overflow:hidden;margin-top:2px}.tlvl i{display:block;height:100%;width:0;background:var(--muted);transition:width .08s}.tlvl i.hot{background:var(--c-E)}
+.tstrings button.lock{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.tstrings button.done b::after{content:"✓";font-size:11px;color:var(--c-E);vertical-align:super;margin-left:1px}
+.tstrings button.on.done b::after{color:inherit}
+.tmode{display:flex;align-items:center;gap:8px}.tmode .libbtn{padding:5px 12px;font-size:13px}
+.tmic{font:inherit;font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px}
+#sheet{max-height:min(62vh,560px);overflow-y:auto;position:relative;scroll-behavior:smooth;padding-right:6px}
+#lyrBox>.nextup{align-self:flex-start;position:sticky;top:0;z-index:1;background:var(--surface);font-size:15px;padding:6px 14px}
+.nextup .nc{display:inline-flex;align-items:baseline;gap:6px;font-size:14px}.nextup .nch{font-family:var(--display);font-weight:800;font-size:18px}.nextup .nch.first{font-size:28px;line-height:1}
+.nextup.soon .nch{color:var(--accent-ink)!important}
+/* 🎤 live panel (right) */
+.livepanel{position:fixed;top:0;right:0;bottom:0;width:340px;z-index:25;background:var(--surface);border-left:1px solid var(--line);padding:16px 14px 16px;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);transition:transform .2s ease;box-shadow:0 0 30px rgba(0,0,0,.25)}
+body.live-on .livepanel{transform:none}
+.livetab{position:fixed;right:0;top:96px;z-index:24;writing-mode:vertical-rl;font:inherit;font-weight:800;font-size:14px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px 0 0 10px;padding:12px 7px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+body.live-on .livetab{display:none}
+.lhead{display:flex;align-items:center;justify-content:space-between}.lhead h2{margin:0;font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;color:var(--accent);letter-spacing:.02em}
+.livepanel .label{margin:4px 0 0}
+.lnow{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.lsec{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;min-height:15px}
+.lrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lchord{font-family:var(--display);font-weight:900;font-size:64px;line-height:1}
+.lcnt{font:700 14px var(--mono);color:var(--muted)}.lcnt.soon{color:var(--accent)}
+.lnext{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lnc{font-family:var(--display);font-weight:800;font-size:20px;color:var(--cc);border:2px solid var(--cc);background:color-mix(in srgb,var(--cc) 12%,transparent);border-radius:10px;padding:2px 10px;line-height:1.2}
+.lnc.first{font-size:26px;padding:3px 12px}
+.lnsec{flex-basis:100%;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:2px}
+.llyr{flex:1;min-height:120px;overflow-y:auto;position:relative;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;scroll-behavior:smooth;mask-image:linear-gradient(transparent,#000 10%,#000 88%,transparent)}
+.llyr .sheet{font-size:17px;line-height:1.5}
+.llyr .ln{color:var(--muted);opacity:.55;transition:opacity .2s}.llyr .ln.cur{opacity:1;color:var(--fg)}
+.llyr .h{opacity:.8}
+.llyr .sg.on .t{background:var(--accent);color:var(--accent-ink);border-radius:4px;box-shadow:0 0 0 2px var(--accent)}
+.llyr .sg.on .c{color:var(--accent)}
+.llyr .w{cursor:default}
+@media (min-width:1100px){body.dash-on{padding-left:336px}body.live-on{padding-right:356px}body.live-on .livepanel,body.dash-on .dash{box-shadow:none}}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -354,13 +392,15 @@ body.dash-on .dashtab{display:none}
 
 <aside class="dash" id="dash" aria-label="Songs, tuner and guitar course">
   <div class="dhead"><h2>🎸 My guitar</h2><button class="dclose" id="dashClose" type="button" title="Hide this panel">✕</button></div>
+  <details class="dsec" id="secTuner"><summary>🎚️ Tuner</summary><div id="tuner"></div></details>
+  <details class="dsec" id="secCourse"><summary>🎓 Guitar course</summary><div id="dashCourse"></div></details>
   <details class="dsec" id="secSongs"><summary>🎵 Songs</summary>
     <div class="dsongtools"><input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off"><button id="newSong" type="button" class="libbtn primary" title="Build a new song">＋ New</button></div>
     <nav class="shelf" id="shelf" aria-label="Songs"></nav>
   </details>
-  <details class="dsec" id="secTuner"><summary>🎚️ Tuner</summary><div id="tuner"></div></details>
-  <details class="dsec" id="secCourse"><summary>🎓 Guitar course</summary><div id="dashCourse"></div></details>
 </aside>
+<aside class="livepanel" id="live" aria-label="Live: chords and lyrics"></aside>
+<button class="livetab" id="liveTab" type="button" title="Show the live chords and lyrics">🎤 Live</button>
 <button class="dashtab" id="dashTab" type="button" title="Show songs, tuner and guitar course">🎸 Songs · Tuner · Course</button>
 <div class="wrap">
   <header class="top">
@@ -814,7 +854,9 @@ function renderLyrics(){
     box.appendChild(sh);sh.querySelectorAll(".c").forEach(c=>{if(c.textContent.trim())c.style.borderBottomColor=chordColor(c.textContent);});
     box.insertBefore(buildLyricSync(sh),sh);
   }
+  {const nu=$("nextUp");if(nu)box.insertBefore(nu,box.children[1]||null);}
   const lb=$("lyrBox");if(lb)lb.replaceWith(box);else main.appendChild(box);
+  renderLive();
 }
 function rerenderLyrics(){renderLyrics();lastSec=null;paint(true);}
 function pickChord(e,li,at,hasChord){
@@ -950,7 +992,7 @@ function followLyrics(pos){
   if(lyrLive)lyrLive.els.forEach(e=>{e.classList.remove("live");const l=e.closest(".ln");if(l)l.classList.remove("liveLine");});
   lyrLive=it;if(!it)return;
   it.els.forEach(e=>e.classList.add("live"));const ln=it.els[0].closest(".ln");if(ln)ln.classList.add("liveLine");
-  if(isPlaying()&&store.get("sb-lfollow",true)&&ln&&!lyrEdit){const r=ln.getBoundingClientRect();if(r.top<innerHeight*0.25||r.bottom>innerHeight*0.85)ln.scrollIntoView({block:"center",behavior:"smooth"});}
+  if(store.get("sb-lfollow",true)&&ln&&!lyrEdit){const sh=$("sheet");if(sh&&sh.scrollHeight>sh.clientHeight+4)sh.scrollTo({top:Math.max(0,ln.offsetTop-sh.clientHeight*0.35),behavior:isPlaying()?"smooth":"auto"});}
 }
 
 // ---------- clock ----------
@@ -1052,7 +1094,7 @@ function updateStage(b,force){
     const sn=$("secName");if(sn)sn.textContent=b<0?"Get ready · "+secs[0].name:secs[k].name;}
   {const blk=secBlocks[k],tag=blk&&blk.querySelector(".looptag");if(tag&&b>=0){const p=+blk.dataset.p,pass=Math.floor((b-secFirst[k])/p)+1;tag.textContent=p===1?"Bar "+Math.min(b-secFirst[k]+1,+blk.dataset.reps)+" of "+blk.dataset.reps:"Time "+Math.min(pass,+blk.dataset.reps)+" of "+blk.dataset.reps;}}
   const nx=$("nextUp");if(nx){const ns=secs[k+1];nx.innerHTML="";if(ns){nx.append(el("span","nl","Next"),el("b",null,ns.name));
-      const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);nx.appendChild(el("span","nc",firsts.join(" · ")));}
+      const firsts=[...new Set((ns.bars||[]).slice(0,4).flatMap(x=>parseBar(x,bpb()).map(q=>q.c)))].slice(0,4);const nc=el("span","nc");firsts.forEach((c,q)=>{if(q)nc.append(" · ");const s=el("span",q?"nch":"nch first",c);s.style.color=chordColor(c);nc.appendChild(s);});nx.appendChild(nc);}
     else nx.append(el("span","nl","Last section"));nx.classList.toggle("soon",!!soon);}
   const c=cards[b];if(c&&isPlaying()){const r=c.getBoundingClientRect(),top=(document.querySelector(".bar")||{}).getBoundingClientRect?document.querySelector(".bar").getBoundingClientRect().bottom:0;
     if(r.top<top+8||r.bottom>innerHeight-8)window.scrollBy({top:r.top-top-24,behavior:"smooth"});}
@@ -1077,7 +1119,7 @@ function paint(force){
         const h=m[occ-1]||m[m.length-1];if(h)h.classList.add("now");}}
   }
   if(force)cards.forEach((c,i)=>{const st=barStat[i];c.classList.remove("ok","meh","bad");if(st&&st.n>=4){const r=st.hit/st.n;c.classList.add(r>=0.6?"ok":r>=0.3?"meh":"bad");}});
-  followLyrics(pos);
+  followLyrics(pos);livePaint(force);
   if(lastSlot)lastSlot.classList.remove("on");lastSlot=null;
   if(b>=0&&cards[b]){lastSlot=cards[b].querySelector(".st").children[slot];if(lastSlot)lastSlot.classList.add("on");}
   const bs=$("beats");if(bs){const k=sub()===3?slot:beat;[...bs.children].forEach((d,i)=>d.classList.toggle("on",isPlaying()&&i===k));}
@@ -1509,53 +1551,127 @@ async function renderDash(){
 function toggleDash(on){const open=on==null?!document.body.classList.contains("dash-on"):on;document.body.classList.toggle("dash-on",open);store.set("sb-dash-open",open);}
 
 
-// ---------- 🎚️ tuner: microphone pitch (autocorrelation), needle in cents, standard-tuning strings with reference tones ----------
-const TSTR=[["E",2,82.41],["A",2,110.00],["D",3,146.83],["G",3,196.00],["B",3,246.94],["E",4,329.63]];
-const TNOTE=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+// ---------- 🎚️ tuner: YIN pitch detection behind high/low-pass filters, adaptive noise gate, median + eased needle,
+//            alternate tunings, A4 calibration, auto or locked string, mic picker, ✓ per string once it holds in tune ----------
+const TNOTE=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"],TFLAT=["C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"];
+const TUNINGS={std:["Standard",[40,45,50,55,59,64]],dropd:["Drop D",[38,45,50,55,59,64]],half:["Half step down (E♭)",[39,44,49,54,58,63]],full:["Whole step down (D)",[38,43,48,53,57,62]],openg:["Open G",[38,43,50,55,59,62]],opend:["Open D",[38,45,50,54,57,62]],dadgad:["DADGAD",[38,45,50,55,57,62]]};
 let tun=null;
-function pitchOf(buf,sr){
-  let rms=0;for(let i=0;i<buf.length;i++)rms+=buf[i]*buf[i];rms=Math.sqrt(rms/buf.length);if(rms<0.008)return -1;
-  const minLag=Math.floor(sr/1100),maxLag=Math.min(Math.floor(sr/65),buf.length>>1),n=buf.length-maxLag,c=new Float32Array(maxLag+2);
-  for(let lag=minLag;lag<=maxLag+1;lag++){let s=0;for(let j=0;j<n;j++)s+=buf[j]*buf[j+lag];c[lag]=s;}
-  let e0=0;for(let j=0;j<n;j++)e0+=buf[j]*buf[j];
-  let best=-1,bv=0;for(let lag=minLag+1;lag<=maxLag;lag++){if(c[lag]>c[lag-1]&&c[lag]>=c[lag+1]&&c[lag]>0.5*e0){best=lag;bv=c[lag];break;}}
-  if(best<0){for(let lag=minLag+1;lag<=maxLag;lag++)if(c[lag]>bv){bv=c[lag];best=lag;}if(bv<0.3*e0)return -1;}
-  const a=c[best-1],b=c[best],d=c[best+1],den=a-2*b+d,sh=den?0.5*(a-d)/den:0;return sr/(best+sh);}
-function noteOf(f){const m=12*Math.log2(f/440)+69,r=Math.round(m);return {name:TNOTE[(r%12+12)%12],oct:Math.floor(r/12)-1,cents:Math.round((m-r)*100),midi:r};}
+const tset=()=>Object.assign({tuning:"std",a4:440,lock:null,dev:""},store.get("sb-tuner",{}));
+const mfreq=(m,a4)=>a4*Math.pow(2,(m-69)/12);
+const mname=(m,flat)=>(flat?TFLAT:TNOTE)[(m%12+12)%12];
+function yin(buf,sr){const minF=60,maxF=1100,thr=0.12;
+  const maxLag=Math.min(Math.floor(sr/minF),buf.length>>1),minLag=Math.max(2,Math.floor(sr/maxF)),W=buf.length-maxLag,d=new Float32Array(maxLag+2);
+  for(let tau=1;tau<=maxLag+1;tau++){let s=0;for(let j=0;j<W;j++){const x=buf[j]-buf[j+tau];s+=x*x;}d[tau]=s;}
+  const cm=new Float32Array(maxLag+2);cm[0]=1;let run=0;for(let tau=1;tau<=maxLag+1;tau++){run+=d[tau];cm[tau]=run?d[tau]*tau/run:1;}
+  let tau=-1;for(let q=minLag;q<maxLag;q++){if(cm[q]<thr){while(q+1<maxLag&&cm[q+1]<cm[q])q++;tau=q;break;}}
+  if(tau<0){let bv=1,bt=-1;for(let q=minLag;q<maxLag;q++)if(cm[q]<bv){bv=cm[q];bt=q;}if(bv>0.35||bt<0)return {f:-1,conf:0};tau=bt;}
+  const a=cm[tau-1],b=cm[tau],c=cm[tau+1],den=a-2*b+c,sh=den?0.5*(a-c)/den:0;return {f:sr/(tau+sh),conf:1-b};}
 function renderTuner(){
-  const host=$("tuner");if(!host)return;host.innerHTML="";
-  const disp=el("div","tdisp");const nm=el("div","tnote","–");const hz=el("div","thz","Play a string");
-  const meter=el("div","tmeter");const needle=el("i","tneedle");meter.append(el("span","tz"),needle);["-50","0","+50"].forEach((x,i)=>{const l=el("small","tl",x);l.style.left=(i*50)+"%";meter.appendChild(l);});
-  const hint=el("div","thint","");disp.append(nm,hz,meter,hint);host.appendChild(disp);
-  const strs=el("div","tstrings");const sbtn=TSTR.map(([n,o,f],i)=>{const b=el("button",null,"");b.type="button";b.title="Play reference "+n+o+" ("+f+" Hz)";b.append(el("b",null,n),el("small",null,String(6-i)));
-    b.addEventListener("click",()=>tone(f));strs.appendChild(b);return b;});host.appendChild(strs);
-  host.appendChild(el("p","dsub","Standard tuning E A D G B E · tap a string to hear it · capo goes on after tuning."));
+  const host=$("tuner");if(!host)return;host.innerHTML="";const S=tset();
+  const top=el("div","ttop");const sel=document.createElement("select");sel.setAttribute("aria-label","Tuning");
+  Object.entries(TUNINGS).forEach(([k,[n,ms]])=>{const o=el("option",null,n+" · "+ms.map(m=>mname(m,k==="half"||k==="full")).join(" "));o.value=k;sel.appendChild(o);});sel.value=S.tuning;
+  const a4=document.createElement("input");a4.type="number";a4.min=430;a4.max=450;a4.step=1;a4.value=S.a4;a4.title="Reference pitch A4 (Hz)";a4.setAttribute("aria-label","A4 reference in Hz");
+  top.append(sel,el("span","ta4l","A4"),a4);host.appendChild(top);
+  const disp=el("div","tdisp");const nm=el("div","tnote","–");const hz=el("div","thz","Play one string at a time");
+  const meter=el("div","tmeter");const needle=el("i","tneedle");meter.append(el("span","tz"),needle);["-50","-25","0","+25","+50"].forEach((x,i)=>{const l=el("small","tl",x);l.style.left=(i*25)+"%";meter.appendChild(l);});
+  const hint=el("div","thint","");const lvl=el("div","tlvl");const lvf=el("i");lvl.appendChild(lvf);disp.append(nm,hz,meter,hint,lvl);host.appendChild(disp);
+  const strs=el("div","tstrings");host.appendChild(strs);
+  const modeRow=el("div","tmode");const auto=el("button","libbtn","Auto");auto.type="button";auto.title="Detect the string automatically";const mtx=el("span","dsub","");modeRow.append(auto,mtx);host.appendChild(modeRow);
   const go=el("button","libbtn primary","🎤 Start tuner");go.type="button";host.appendChild(go);
+  const mic=document.createElement("select");mic.className="tmic";mic.hidden=true;mic.setAttribute("aria-label","Microphone");host.appendChild(mic);
+  host.appendChild(el("p","dsub","Pluck one string, let it ring. Tap a string to lock onto it and hear its note; tap again for Auto. Tune up to the note from below. Capo goes on after tuning."));
+  const u={nm,hz,needle,hint,lvf,go,disp,strs,auto,mtx,mic,sel,a4,btns:[],tuned:new Set()};host._ui=u;
+  const drawStrings=()=>{const s=tset(),ms=TUNINGS[s.tuning][1],flat=s.tuning==="half"||s.tuning==="full";strs.innerHTML="";u.btns=ms.map((m,i)=>{const b=el("button",null,"");b.type="button";
+      b.title=(s.lock===i?"Unlock (back to Auto)":"Lock onto string "+(6-i))+" · plays "+mname(m,flat)+(Math.floor(m/12)-1)+" ("+mfreq(m,s.a4).toFixed(1)+" Hz)";
+      b.append(el("b",null,mname(m,flat)),el("small",null,String(6-i)));if(s.lock===i)b.classList.add("lock");if(u.tuned.has(i))b.classList.add("done");
+      b.addEventListener("click",()=>{const z=tset();z.lock=z.lock===i?null:i;store.set("sb-tuner",z);tone(mfreq(m,z.a4));drawStrings();});strs.appendChild(b);return b;});
+    auto.classList.toggle("primary",s.lock==null);mtx.textContent=s.lock==null?"Auto: finds the nearest string":"Locked on string "+(6-s.lock)+" ("+mname(ms[s.lock],flat)+")";};
+  u.drawStrings=drawStrings;drawStrings();
+  auto.addEventListener("click",()=>{const z=tset();z.lock=null;store.set("sb-tuner",z);drawStrings();});
+  sel.addEventListener("change",()=>{const z=tset();z.tuning=sel.value;z.lock=null;store.set("sb-tuner",z);u.tuned.clear();drawStrings();});
+  a4.addEventListener("change",()=>{const z=tset();z.a4=Math.max(430,Math.min(450,+a4.value||440));a4.value=z.a4;store.set("sb-tuner",z);u.tuned.clear();drawStrings();});
+  mic.addEventListener("change",()=>{const z=tset();z.dev=mic.value;store.set("sb-tuner",z);if(tun){tunerStop();tunerStart();}});
   go.addEventListener("click",()=>tun?tunerStop():tunerStart());
-  host._ui={nm,hz,needle,hint,sbtn,go,disp};
 }
-function tone(f){audio();if(!ctx)return;const t0=ctx.currentTime,o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();
-  o.type="triangle";o.frequency.value=f;o2.type="sine";o2.frequency.value=f*2;const g2=ctx.createGain();g2.gain.value=0.3;o2.connect(g2).connect(g);
+function tone(f){audio();if(!ctx)return;const t0=ctx.currentTime,o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();
+  o.type="triangle";o.frequency.value=f;o2.type="sine";o2.frequency.value=f*2;g2.gain.value=0.3;o2.connect(g2).connect(g);
   g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.35,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+2.2);
   o.connect(g).connect(ctx.destination);o.start(t0);o2.start(t0);o.stop(t0+2.3);o2.stop(t0+2.3);}
 async function tunerStart(){
   const u=$("tuner")&&$("tuner")._ui;if(!u)return;audio();if(!ctx){toast("Audio isn't available in this browser");return;}
-  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
-  catch(e){u.hint.textContent="Microphone blocked — allow it in the address bar (🔒 → Microphone) and try again.";return;}
-  const src=ctx.createMediaStreamSource(stream),an=ctx.createAnalyser();an.fftSize=4096;src.connect(an);
-  const buf=new Float32Array(an.fftSize),hist=[];tun={stream,src,an,raf:0};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");
-  const loop=()=>{if(!tun)return;an.getFloatTimeDomainData(buf);const f=pitchOf(buf,ctx.sampleRate);
-    if(f>60&&f<1100){hist.push(f);if(hist.length>5)hist.shift();const fm=[...hist].sort((a,b)=>a-b)[hist.length>>1],n=noteOf(fm);
-      // nearest open string
-      let si=0,bd=1e9;TSTR.forEach(([,,sf],i)=>{const d=Math.abs(1200*Math.log2(fm/sf));if(d<bd){bd=d;si=i;}});
-      const near=bd<300,c=near?Math.round(1200*Math.log2(fm/TSTR[si][2])):n.cents;
-      u.nm.textContent=near?TSTR[si][0]:n.name;u.nm.dataset.oct=near?TSTR[si][1]:n.oct;u.hz.textContent=fm.toFixed(1)+" Hz"+(near?" · string "+(6-si):"");
-      const cc=Math.max(-50,Math.min(50,c));u.needle.style.left=(50+cc)+"%";const ok=Math.abs(c)<=4;u.disp.classList.toggle("ok",ok);
-      u.hint.textContent=ok?"✓ In tune":(c<0?"▲ Tune up · "+(-c)+" cents flat":"▼ Tune down · "+c+" cents sharp");
-      u.sbtn.forEach((b,i)=>b.classList.toggle("on",near&&i===si));}
-    tun.raf=requestAnimationFrame(loop);};loop();}
-function tunerStop(){if(!tun)return;cancelAnimationFrame(tun.raf);try{tun.src.disconnect();}catch(e){}tun.stream.getTracks().forEach(x=>x.stop());tun=null;
-  const u=$("tuner")&&$("tuner")._ui;if(u){u.go.textContent="🎤 Start tuner";u.disp.classList.remove("on","ok");u.hint.textContent="";u.sbtn.forEach(b=>b.classList.remove("on"));}}
+  const S=tset();let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:{deviceId:S.dev?{ideal:S.dev}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
+  catch(e){u.hint.textContent="Microphone blocked — allow it in the address bar (🔒 → Microphone), then try again.";return;}
+  try{const devs=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="audioinput");u.mic.innerHTML="";devs.forEach((d,i)=>{const o=el("option",null,"🎙 "+(d.label||"Microphone "+(i+1)));o.value=d.deviceId;u.mic.appendChild(o);});
+    const cur0=stream.getAudioTracks()[0];const id=cur0&&cur0.getSettings&&cur0.getSettings().deviceId;if(id)u.mic.value=id;u.mic.hidden=devs.length<2;}catch(e){}
+  const src=ctx.createMediaStreamSource(stream),hp=ctx.createBiquadFilter(),lp1=ctx.createBiquadFilter(),lp2=ctx.createBiquadFilter(),an=ctx.createAnalyser();
+  hp.type="highpass";hp.frequency.value=55;lp1.type=lp2.type="lowpass";lp1.frequency.value=lp2.frequency.value=1000;lp1.Q.value=lp2.Q.value=0.5;an.fftSize=4096;
+  src.connect(hp).connect(lp1).connect(lp2).connect(an);
+  const buf=new Float32Array(an.fftSize),sr=ctx.sampleRate,hist=[];let floor=-70,lastOk=0,disp=0,okSince=0,pend=null,pendN=0,frame=0;
+  tun={stream,nodes:[src,hp,lp1,lp2,an],raf:0};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");u.hint.textContent="Listening…";
+  const loop=()=>{if(!tun)return;tun.raf=requestAnimationFrame(loop);if((frame++&1))return;            // analyse every other frame (~30/s)
+    an.getFloatTimeDomainData(buf);let r=0;for(let i=0;i<buf.length;i++)r+=buf[i]*buf[i];const db=10*Math.log10(r/buf.length+1e-12);
+    floor=db<floor?db:floor+0.03;const gate=Math.max(-62,floor+9);u.lvf.style.width=Math.max(0,Math.min(100,(db+70)*1.6))+"%";u.lvf.classList.toggle("hot",db>gate);
+    const now=performance.now(),s=tset(),ms=TUNINGS[s.tuning][1],flat=s.tuning==="half"||s.tuning==="full";
+    let f=-1;if(db>gate){const y=yin(buf,sr);if(y.f>60&&y.f<1100&&y.conf>0.85)f=y.f;}
+    if(f>0){const med=hist.length?[...hist].sort((a,b)=>a-b)[hist.length>>1]:f;
+      if(Math.abs(1200*Math.log2(f/med))>45){if(pend&&Math.abs(1200*Math.log2(f/pend))<45)pendN++;else{pend=f;pendN=1;}if(pendN>=3){hist.length=0;hist.push(f);pend=null;}}
+      else{hist.push(f);if(hist.length>7)hist.shift();pend=null;}lastOk=now;}
+    if(!hist.length||now-lastOk>1500){if(now-lastOk>1500){hist.length=0;u.disp.classList.remove("live","ok");u.hint.textContent="Listening…";u.btns.forEach(b=>b.classList.remove("on"));okSince=0;}return;}
+    const fm=[...hist].sort((a,b)=>a-b)[hist.length>>1];
+    let si=s.lock;if(si==null){let bd=1e9;ms.forEach((m,i)=>{const d=Math.abs(1200*Math.log2(fm/mfreq(m,s.a4)));if(d<bd){bd=d;si=i;}});if(bd>350)si=null;}
+    let c,label,oct;if(si!=null){const tf=mfreq(ms[si],s.a4);c=1200*Math.log2(fm/tf);label=mname(ms[si],flat);oct=Math.floor(ms[si]/12)-1;}
+    else{const m=12*Math.log2(fm/s.a4)+69,rm=Math.round(m);c=(m-rm)*100;label=mname(rm,flat);oct=Math.floor(rm/12)-1;}
+    disp=u.disp.classList.contains("live")?disp*0.55+c*0.45:c;u.disp.classList.add("live");
+    u.nm.textContent=label;u.nm.dataset.oct=oct;u.hz.textContent=fm.toFixed(1)+" Hz"+(si!=null?" · string "+(6-si):"")+(Math.abs(c)>100&&si!=null?" · "+(c<0?"way flat":"way sharp"):"");
+    const cc=Math.max(-50,Math.min(50,disp));u.needle.style.left=(50+cc)+"%";const ok=Math.abs(disp)<=4&&Math.abs(c)<=6;u.disp.classList.toggle("ok",ok);
+    const rc=Math.round(disp);u.hint.textContent=ok?"✓ In tune":(rc<0?"▲ Tighten (tune up) · "+(-rc)+"¢ flat":"▼ Loosen (tune down) · "+rc+"¢ sharp");
+    u.btns.forEach((b,i)=>b.classList.toggle("on",i===si));
+    if(ok&&si!=null){if(!okSince)okSince=now;else if(now-okSince>800&&!u.tuned.has(si)){u.tuned.add(si);u.btns[si].classList.add("done");}}else okSince=0;};
+  loop();}
+function tunerStop(){if(!tun)return;cancelAnimationFrame(tun.raf);tun.nodes.forEach(n=>{try{n.disconnect();}catch(e){}});tun.stream.getTracks().forEach(x=>x.stop());tun=null;
+  const u=$("tuner")&&$("tuner")._ui;if(u){u.go.textContent="🎤 Start tuner";u.disp.classList.remove("on","live","ok");u.hint.textContent="";u.lvf.style.width="0";u.btns.forEach(b=>b.classList.remove("on"));}}
+
+// ---------- 🎤 live panel (right): now / next chords / lyrics that highlight only the words of the current chord ----------
+let LV=null;
+function buildChanges(){const out=[];let prev=null;flat.forEach((f,b)=>{let acc=0;f.toks.forEach(t=>{if(t.c!==prev)out.push({pos:b+acc/bpb(),c:t.c,sec:f.secName,bar:b});prev=t.c;acc+=t.b;});});return out;}
+function renderLive(){
+  const host=$("live");if(!host||!cur)return;host.innerHTML="";
+  const hd=el("div","lhead");hd.append(el("h2",null,"🎤 Live"));const x=el("button","dclose","✕");x.type="button";x.title="Hide the live panel";x.addEventListener("click",()=>toggleLive(false));hd.appendChild(x);host.appendChild(hd);
+  const now=el("div","lnow");const sec=el("div","lsec","");const row=el("div","lrow");const ch=el("div","lchord","–");const dg=el("div","ldg");row.append(ch,dg);const cnt=el("div","lcnt","Press ▶ Play");now.append(sec,row,cnt);host.appendChild(now);
+  host.appendChild(el("p","label","Next chords"));const nx=el("div","lnext");host.appendChild(nx);
+  host.appendChild(el("p","label","Lyrics"));const ly=el("div","llyr");host.appendChild(ly);
+  // copy of the lyric sheet; chord spans keep an index so the live highlight can find them
+  const sh=$("sheet");let map=[];
+  if(sh){sh.querySelectorAll(".c").forEach((c,i)=>c.dataset.k=i);const cl=sh.cloneNode(true);cl.removeAttribute("id");cl.querySelectorAll("[tabindex]").forEach(e=>e.removeAttribute("tabindex"));ly.appendChild(cl);
+    const sgs=[...cl.querySelectorAll(".sg")];const idx=new Map(sgs.map((g,i)=>[g,i]));
+    (lyrMap||[]).forEach((m,i)=>{const c=cl.querySelector('.c[data-k="'+m.els[0].dataset.k+'"]');if(c)map.push({pos:m.pos,start:idx.get(c.parentElement)});});
+    map.forEach((m,i)=>{const nxt=map[i+1];let end=nxt&&nxt.start>m.start?nxt.start:sgs.length;
+      // stop at the next section heading
+      for(let j=m.start+1;j<end;j++){const ln=sgs[j].parentElement,prevLn=sgs[j-1].parentElement;if(ln!==prevLn){let n=prevLn.nextElementSibling;while(n&&n!==ln){if(n.classList.contains("h")){end=j;break;}n=n.nextElementSibling;}if(end===j)break;}}
+      m.els=sgs.slice(m.start,end);});
+    if(!map.length)ly.appendChild(el("p","dsub","These lyrics don't line up with the chart yet, so they won't highlight."));}
+  else ly.appendChild(el("p","dsub",lyrEdit?"Editing lyrics…":"No lyrics yet — add them in Lyrics with chords."));
+  LV={host,sec,ch,dg,cnt,nx,ly,map,chg:buildChanges(),ci:-2,mi:-2,beat:-1};livePaint(true);
+}
+function livePaint(force){
+  if(!LV||!cur||!document.body.classList.contains("live-on"))return;
+  const pos=posAt(songT()),C=LV.chg;let lo=0,hi=C.length-1,i=-1;while(lo<=hi){const m=(lo+hi)>>1;if(C[m].pos<=pos+1e-6){i=m;lo=m+1;}else hi=m-1;}
+  const nxt=C[i+1],beats=nxt?Math.max(0,Math.ceil((nxt.pos-pos)*bpb()-1e-6)):0;
+  if(i!==LV.ci||force){LV.ci=i;const c=i>=0?C[i]:null;
+    LV.ch.textContent=c?c.c:(C[0]?C[0].c:"–");LV.ch.style.color=chordColor(LV.ch.textContent);LV.sec.textContent=c?c.sec:(pos<0?"Get ready":"");
+    LV.dg.innerHTML="";const g=diagram(LV.ch.textContent);if(g){g.setAttribute("width",78);g.setAttribute("height",94);LV.dg.appendChild(g);}
+    LV.nx.innerHTML="";let lastSec=c?c.sec:null;C.slice(i+1,i+7).forEach((n,k)=>{if(n.sec!==lastSec){LV.nx.appendChild(el("span","lnsec",n.sec));lastSec=n.sec;}
+      const b=el("span","lnc"+(k===0?" first":""),n.c);b.style.setProperty("--cc",chordColor(n.c));LV.nx.appendChild(b);});
+    if(!nxt)LV.nx.appendChild(el("span","dsub","End of song"));}
+  if(beats!==LV.beat||force){LV.beat=beats;LV.cnt.textContent=nxt?(pos<0?"Starts in "+Math.max(1,Math.ceil(-pos*bpb()))+" beats":"→ "+nxt.c+" in "+beats+" beat"+(beats===1?"":"s")):"";LV.cnt.classList.toggle("soon",!!nxt&&beats<=1&&pos>=0);}
+  // lyrics
+  const M=LV.map;if(!M.length)return;let a=-1;lo=0;hi=M.length-1;while(lo<=hi){const m=(lo+hi)>>1;if(M[m].pos<=pos+1e-6){a=m;lo=m+1;}else hi=m-1;}
+  if(a===LV.mi&&!force)return;const old=M[LV.mi];if(old)old.els.forEach(e=>e.classList.remove("on"));LV.ly.querySelectorAll(".ln.cur").forEach(l=>l.classList.remove("cur"));LV.mi=a;
+  const it=M[a];if(!it)return;it.els.forEach(e=>{e.classList.add("on");e.parentElement.classList.add("cur");});
+  const ln=it.els[0].parentElement,box=LV.ly;box.scrollTo({top:Math.max(0,ln.offsetTop-box.clientHeight*0.35),behavior:force?"auto":"smooth"});
+}
+function toggleLive(on){const open=on==null?!document.body.classList.contains("live-on"):on;document.body.classList.toggle("live-on",open);store.set("sb-live-open",open);if(open)livePaint(true);}
 
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){
@@ -1940,8 +2056,8 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 
 // ---------- start ----------
 refreshSongs();
-$("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));
-[["secSongs",true],["secTuner",false],["secCourse",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});
+$("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));$("liveTab").addEventListener("click",()=>toggleLive(true));toggleLive(store.get("sb-live-open",innerWidth>=1500));
+[["secTuner",true],["secCourse",true],["secSongs",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});
 toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();renderTuner();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();
 </script>

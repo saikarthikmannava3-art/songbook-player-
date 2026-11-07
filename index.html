@@ -529,7 +529,7 @@ function renderSong(){
   sw.appendChild(ss);
   {const p=el("div","vdesc note");
    if(strum==="auto")p.append("Changes with the song: one let-ring strum per bar in soft intros, fuller patterns in verses and choruses. Pick a pattern to use it everywhere.");
-   else{const sp=s.strums[+strum],n=slots();p.append(String(sp.label).replace(/\s*[—-]\s*[DUXB.](\s+[DUXB.])+\s*/i," ").trim()+" · used for the whole song, intro included.");
+   else{const sp=s.strums[+strum],n=slots();p.append(String(sp.label)+" · used for the whole song, intro included.");
      const sl=el("div","slots");sl.style.gridTemplateColumns=`repeat(${n},auto)`;[...String(sp.s).padEnd(n,".").slice(0,n)].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));countLabels().forEach(x=>sl.appendChild(el("small",null,x)));p.appendChild(sl);}
    sw.appendChild(p);}
   pk.appendChild(sw);vc.appendChild(pk);

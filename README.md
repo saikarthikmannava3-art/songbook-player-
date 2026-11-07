@@ -43,7 +43,7 @@ Demucs splits the song into 6 stems; the guitar is removed, everything else stay
 Song MP3s and lyrics `.txt` files are copyrighted, so `.gitignore` keeps them out. The same goes for `audio/` (backing tracks, stems), `songs/<id>-lyrics.txt` (lyrics the app loads automatically when present) and `songbook/` (your songbook PDFs and their page index). Load them in the app with **🎵 Load song file** / **📁 Connect my music folder** and **⇧ Open .txt** — the app remembers them on each device.
 
 ## Mandatory song pipeline
-1. Sources (≥2) · 2. Key/capo/tempo verified · 3. Chords cross-checked · 4. Beats from the recording · 5. Sections aligned · 6. Measured accuracy ≥ 80% · 7. Lyrics match the chart.
+1. Sources (≥2) · 2. Key/capo/tempo verified · 3. Chords cross-checked · 4. Beats from the recording · 5. Sections aligned · 6. Measured accuracy ≥ 80% · 7. Lyrics match the chart · 8. **Play-along backing**: guitar removed from the song's MP3, soft guide guitar only where the accompaniment drops out (`pipeline/make_backing.py`, or 🎸 Remove guitar / the MP3 field in ＋ New song).
 Songs that miss a gate show as **Draft** in the app.
 
 ```bash

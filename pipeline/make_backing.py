@@ -5,8 +5,10 @@ make_backing.py: turn a song (MP3/M4A/WAV…) into a guitar play-along backing t
 What it does (same recipe as the 7 Years and Parvati backings):
   1. Splits the song into 6 stems with Demucs (htdemucs_6s): vocals, drums, bass, guitar, piano, other.
   2. Rebuilds the mix WITHOUT the guitar: vocals + drums + bass + piano + other at full level.
-  3. Where the band drops out (intros, breaks, endings: drums quiet), it brings back a soft
-     guide guitar (default 50 %) with ~1 s fades, so those parts don't go silent or bare.
+  3. Where the accompaniment drops out (drums + bass + piano + other all quiet: guitar-only intros,
+     breaks, endings), it brings back a soft guide guitar (default 50 %) with ~1 s fades, so those
+     parts don't go silent or bare. Piano/keys intros stay as they are. Guitar-and-voice songs with
+     no band at all get the guide guitar at 35 % throughout.
   4. Writes an AAC .m4a named "<Title> - <Artist> (backing, no guitar, soft guitar intro).m4a"
      (the player's 📁 Connect my music folder matches it to the song by that name).
 
@@ -56,17 +58,22 @@ def separate(src, work):
     return d
 
 
-def guide_gain(drums, sr, guide):
-    """Per-sample guitar gain: `guide` where the drums are quiet, 0 where the band plays, ~1 s fades."""
+def guide_gain(accomp, sr, guide):
+    """Per-sample guitar gain: `guide` where the accompaniment (drums+bass+piano+other) is bare, 0 elsewhere.
+    Bare = quieter than -45 dBFS or 20 dB under the song's typical accompaniment level, held >= ~1.5 s, ~1 s fades.
+    Songs with almost no accompaniment at all (guitar + voice) get a lower guide level so the backing isn't just vocals."""
     np = _need("numpy")
     hop = sr // 4                                   # 0.25 s steps, 1 s RMS window
-    dm = drums.mean(1) if drums.ndim > 1 else drums
-    rms = np.array([np.sqrt(np.mean(dm[i:i + sr] ** 2)) for i in range(0, len(dm), hop)])
+    a = accomp.mean(1) if accomp.ndim > 1 else accomp
+    rms = np.array([np.sqrt(np.mean(a[i:i + sr] ** 2)) for i in range(0, len(a), hop)])
     db = 20 * np.log10(rms + 1e-9)
-    sparse = (db < -38).astype(float)
-    k = 6                                           # ignore drum gaps shorter than ~1.5 s
+    typical = float(np.percentile(db, 75))
+    sparse = ((db < -45) | (db < typical - 20)).astype(float)
+    k = 6                                           # ignore gaps shorter than ~1.5 s
     sp = np.array([sparse[max(0, i - k // 2):i + k // 2 + 1].min() for i in range(len(sparse))])
-    g = sp * guide
+    frac = float(sp.mean())
+    level = guide if frac < 0.6 else min(guide, 0.35)
+    g = sp * level
     ker = np.ones(4) / 4
     g = np.convolve(np.convolve(g, ker, "same"), ker, "same")
     segs, st = [], None
@@ -74,7 +81,7 @@ def guide_gain(drums, sr, guide):
         if v and st is None: st = i
         if not v and st is not None: segs.append((st * 0.25, i * 0.25)); st = None
     if st is not None: segs.append((st * 0.25, len(g) * 0.25))
-    return np.interp(np.arange(len(dm)), np.arange(len(g)) * hop, g), segs
+    return np.interp(np.arange(len(a)), np.arange(len(g)) * hop, g), segs, frac, level
 
 
 def make_backing(src, outdir=DEFAULT_OUT, title=None, artist=None, guide=0.5, keep_stems=False, log=print):
@@ -89,7 +96,7 @@ def make_backing(src, outdir=DEFAULT_OUT, title=None, artist=None, guide=0.5, ke
         d = separate(src, work)
         S = {n: sf.read(os.path.join(d, n + ".wav"))[0] for n in ["vocals", "drums", "bass", "guitar", "piano", "other"]}
         sr = sf.info(os.path.join(d, "drums.wav")).samplerate
-        g, segs = guide_gain(S["drums"], sr, guide)
+        g, segs, frac, level = guide_gain(S["drums"] + S["bass"] + S["piano"] + S["other"], sr, guide)
         mix = S["vocals"] + S["drums"] + S["bass"] + S["piano"] + S["other"] + S["guitar"] * g[:, None]
         pk = float(np.abs(mix).max())
         if pk > 0.95: mix = mix / pk * 0.95
@@ -102,7 +109,8 @@ def make_backing(src, outdir=DEFAULT_OUT, title=None, artist=None, guide=0.5, ke
         if keep_stems:
             shutil.copytree(d, os.path.splitext(out)[0] + " stems", dirs_exist_ok=True)
         fmt = lambda t: f"{int(t // 60)}:{t % 60:04.1f}"
-        info = {"output": out, "duration": round(len(mix) / sr, 2), "guide": guide,
+        info = {"output": out, "duration": round(len(mix) / sr, 2), "guide": level, "bare_fraction": round(frac, 2),
+                "acoustic": frac >= 0.6,
                 "guide_guitar_at": [[fmt(a), fmt(b)] for a, b in segs] if guide > 0 else []}
         log(f"✓ {os.path.basename(out)}" + (f" · soft guitar at {', '.join(a + '–' + b for a, b in info['guide_guitar_at'])}" if info["guide_guitar_at"] else ""))
         return info

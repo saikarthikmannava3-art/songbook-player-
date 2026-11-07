@@ -441,12 +441,13 @@ body.live-on .livetab{display:none}
    GATE 6  SCORE      measure beats where the chart chord is the best match; release ≥80% top-1, ≥85% top-2;
                       only ever quote measured numbers
    GATE 7  LYRICS     lyrics .txt chords must match the chart section by section (re-checked on load)
+   GATE 8  BACKING    a play-along backing exists: guitar removed (Demucs), soft guide guitar only where the accompaniment drops out
    AFTER   the user's ✋ taps override measured timing; bump song.rev on every re-release so stale
            per-device BPM/sync settings are dropped.
    Tools: pipeline/songbook_pipeline.py runs gates 4–6 on an MP3/M4A and writes map + qa.
    ===================================================================================== */
-const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords cross-checked"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"]];
-function qaStatus(s){const q=s.qa||{};const miss=QA_GATES.filter(([k])=>!q[k]).map(([,l])=>l);return {ok:!miss.length,miss,q};}
+const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords cross-checked"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"],["g8","Play-along backing: guitar removed, quiet parts filled"]];
+function qaStatus(s){const q=Object.assign({},s.qa||{});if(!q.g8&&store.get("sb-backing-"+s.id,null))q.g8=true;const miss=QA_GATES.filter(([k])=>!q[k]).map(([,l])=>l);return {ok:!miss.length,miss,q};}
 const SONGS=/*SONGS*/[];
 const SONG_AUDIO=/*AUDIO*/{};   // song files built into this copy (local copy only)
 // ---------- chord shapes (low E → high e; -1 muted, 0 open) ----------
@@ -1684,6 +1685,7 @@ function toggleLive(on){const open=on==null?!document.body.classList.contains("l
 async function removeGuitar(btn,picker,file){
   const s=cur,say=m=>{const fn=$("fname");if(fn&&cur===s)fn.textContent=m;};
   let h=null;try{const r=await fetch("api/health",{cache:"no-store"});if(r.ok)h=await r.json();}catch(e){}
+  if((!h||!h.ok||!h.demucs||!h.ffmpeg)&&file&&btn&&btn.dataset.fromBuilder){await loadSongFile(file);toast("Loaded your MP3. To take the guitar out, start the app with ~/.venvs/demucs/bin/python pipeline/serve.py and press 🎸 Remove guitar.");return;}
   if(!h||!h.ok){alert("🎸 Remove guitar needs the Songbook server.\n\nStop the current server (Ctrl+C in its terminal), then start the app with:\n\n  ~/.venvs/demucs/bin/python pipeline/serve.py\n\nand reload this page. It works the same as python3 -m http.server, plus this button.");return;}
   if(!h.demucs||!h.ffmpeg){alert("The server is running but is missing "+(!h.demucs?"Demucs":"ffmpeg")+".\nStart it with ~/.venvs/demucs/bin/python pipeline/serve.py (see the top of pipeline/make_backing.py).");return;}
   if(!file){let rec=null;if(SONG_AUDIO[s.id]){try{const bl=await (await fetch(SONG_AUDIO[s.id].data)).blob();rec={name:SONG_AUDIO[s.id].name,blob:bl};}catch(e){}}
@@ -1697,7 +1699,8 @@ async function removeGuitar(btn,picker,file){
     const name=decodeURIComponent(r.headers.get("X-Filename")||(s.title+" (backing, no guitar).m4a"));let info={};try{info=JSON.parse(decodeURIComponent(r.headers.get("X-Info")||"{}"));}catch(e){}
     const out=new File([await r.blob()],name,{type:"audio/mp4"});clearInterval(tick);
     if(cur!==s){toast("✓ Backing for "+s.title+" saved to Downloads › Songbook Backing Tracks");return;}
-    await loadSongFile(out);
+    store.set("sb-backing-"+s.id,{name,at:Date.now(),guide:info.guide,bare:info.bare_fraction});
+    await loadSongFile(out);if(cur===s){const st=qaStatus(s);if(st.ok)toast("✓ All 8 gates pass for "+s.title);}
     toast("✓ Guitar removed — playing “"+name+"”. Also saved to Downloads › Songbook Backing Tracks"+(info.guide_guitar_at&&info.guide_guitar_at.length?" · soft guitar at "+info.guide_guitar_at.map(x=>x.join("–")).join(", "):""));
   }catch(e){clearInterval(tick);say("🎸 Couldn't make the backing: "+e.message);}
   finally{btn.disabled=false;}
@@ -1910,6 +1913,8 @@ function openBuilder(form,editId){
 
   const fN=document.createElement("textarea");fN.value=f.notes||"";fN.placeholder="Tips for yourself, one per line";
   man.appendChild(field("Notes (optional)",fN));
+  const fMp=document.createElement("input");fMp.type="file";fMp.accept="audio/*,.mp3,.m4a,.wav,.aac,.flac,.ogg";
+  const mpw=el("label","f","Song MP3 (optional) — the guitar is taken out automatically and quiet intros get a soft guide guitar (gate 8)");mpw.appendChild(fMp);mpw.style.gridColumn="1 / -1";c.insertBefore(mpw,man);
   const err=el("p","err","");c.appendChild(err);
   const act=el("div","actions");
   const save=el("button","libbtn primary","✨ Fill everything from the tutorial");save.type="button";
@@ -1950,6 +1955,7 @@ function openBuilder(form,editId){
       notes:fN.value.split("\n").map(x=>x.trim()).filter(Boolean)};
     const list=old.filter(x=>x.id!==id);list.push(song);saveCustom(list);
     store.set("sb-tune-"+id,null);refreshSongs();choose(id);
+    const mp=fMp.files&&fMp.files[0];if(mp){const b=document.createElement("button");b.dataset.fromBuilder="1";setTimeout(()=>removeGuitar(b,document.createElement("input"),mp),300);}
   });
 }
 $("q").addEventListener("input",renderShelf);

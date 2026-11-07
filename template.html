@@ -524,7 +524,9 @@ let mode="tab"; // tab | file | practice
 let speed=1, metOn=store.get("sb-met",true), metVol=store.get("sb-vol",0.7);
 let pOn=false,pStart=0,pOff=0, au=null, auName="";
 const main=$("main"),shelf=$("shelf");
-const bpb=()=>cur.beatsPerBar||4, sub=()=>cur.subdiv||2, slots=()=>bpb()*sub();
+const bpb=()=>cur.beatsPerBar||4, slots=()=>bpb()*sub();
+// each strumming pattern keeps its own grid: an 8-box pattern shows 1 & 2 & …, a 16-box one 1 e & a … (song default = cur.subdiv)
+function sub(){const b=cur.beatsPerBar||4,p=strum!=="auto"&&cur.strums&&cur.strums[+strum];if(p){const n=String(p.s).length;if(n===b*2)return 2;if(n===b*3)return 3;if(n===b*4)return 4;}return cur.subdiv||2;}
 function countLabels(){const n=bpb(),s=sub(),o=[];
   if(s===3&&n===2)return ["1","2","3","4","5","6"];
   for(let b=1;b<=n;b++){o.push(String(b));if(s===2)o.push("&");if(s===3)o.push("&","a");if(s===4)o.push("e","&","a");}return o;}

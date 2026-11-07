@@ -18,7 +18,7 @@ Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-
 - **🎸 Song practice**: Play along on YouTube, 📄 Song sheet (the song's page from your songbook PDF), chord shapes & tips, warm-up plan, chord & strumming drill with a moving strum marker, one-minute chord changes.
 - **Song map**, sticky **player** (Practice / YouTube / your file), moving **chord lane** with section headings on the left, **lyrics with chords** that follow the song (collapsible).
 - **📚 Songbook**: upload PDFs (kept in the browser), ★ link a page to a song; books listed in `songbook/songbook.json` load automatically.
-- **🎸 Remove guitar**: turns the song's MP3 into a play-along backing (needs `serve.py`).
+- **🎸 Remove guitar** / **Remove guitar on upload** (checkbox next to 🎵 Load, on by default): any song file you upload, drop or add in ＋ New song comes back as a play-along backing (needs `serve.py`; files already named *backing / no guitar / karaoke / instrumental* load as they are).
 
 ## Make a no-guitar backing track
 ```bash

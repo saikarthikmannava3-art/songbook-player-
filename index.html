@@ -340,6 +340,8 @@ body.live-on .livetab{display:none}
  .dashtab .tabtxt{display:none}.livetab .tabtxt{display:inline}
  .wrap{padding-bottom:calc(30vh + 70px)}
 }
+.rgauto{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--fg);cursor:pointer;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}.rgauto input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.bld label.f .rgauto{margin-top:6px;align-self:flex-start}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -604,8 +606,10 @@ function renderSong(){
   const rg=el("button","filebtn","🎸 Remove guitar");rg.type="button";rg.title="Make a play-along backing from this song's MP3: guitar taken out, soft guide guitar only where the band drops out (needs pipeline/serve.py)";
   const rgi=document.createElement("input");rgi.type="file";rgi.accept=fi.accept;rgi.style.cssText=fi.style.cssText;
   rg.addEventListener("click",()=>removeGuitar(rg,rgi));rgi.addEventListener("change",()=>{const f=rgi.files&&rgi.files[0];if(f)removeGuitar(rg,rgi,f);});
-  fr.append(fb,fi,fdb,fdi,rg,rgi,buy,fg,fn);vc.appendChild(fr);
-  fi.addEventListener("change",()=>{const f=fi.files&&fi.files[0];if(f)loadSongFile(f);});
+  const ar=el("label","rgauto");const arc=document.createElement("input");arc.type="checkbox";arc.checked=store.get("sb-rg-auto",true);arc.addEventListener("change",()=>store.set("sb-rg-auto",arc.checked));
+  ar.title="When on, any song you upload (🎵 Load, drag-and-drop, ⇧ Open) comes back with the guitar taken out and quiet intros filled with a soft guide guitar";ar.append(arc,"🎸 Remove guitar on upload");
+  fr.append(fb,fi,ar,fdb,fdi,rg,rgi,buy,fg,fn);vc.appendChild(fr);
+  fi.addEventListener("change",()=>{const f=fi.files&&fi.files[0];if(f)uploadSong(f);});
   main.appendChild(vc);
 
   renderWarmup();
@@ -961,7 +965,7 @@ addEventListener("dragleave",e=>{if(!e.relatedTarget)document.body.style.outline
 addEventListener("drop",e=>{document.body.style.outline="";const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(!f)return;e.preventDefault();
   if(/\.json$/i.test(f.name)){Promise.all([...e.dataTransfer.files].map(x=>x.text())).then(importSongs);return;}
   if(/\.(txt|cho|chopro)$/i.test(f.name)){f.text().then(t=>{store.set(lyrKey(),t);lyrEdit=false;rerenderLyrics();});return;}
-  loadSongFile(f);});
+  uploadSong(f);});
 
 // ---------- lyrics ↔ chart: each chord above a word is tied to the matching chord change in the song ----------
 let lyrMap=null,lyrLive=null;
@@ -1681,6 +1685,12 @@ function livePaint(force){
 }
 function toggleLive(on){const open=on==null?!document.body.classList.contains("live-on"):on;document.body.classList.toggle("live-on",open);store.set("sb-live-open",open);if(open)livePaint(true);}
 
+// ---------- 🎸 upload with "Remove guitar on upload": song files become play-along backings automatically ----------
+const BACKING_RE=/backing|no guitar|karaoke|instrumental|minus ?one/i;
+function uploadSong(f,force){
+  if(!(force||store.get("sb-rg-auto",true))||BACKING_RE.test(f.name||"")){loadSongFile(f);return;}
+  const b=document.createElement("button");b.dataset.fromBuilder="1";removeGuitar(b,document.createElement("input"),f);}
+
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){
   const s=cur,say=m=>{const fn=$("fname");if(fn&&cur===s)fn.textContent=m;};
@@ -1914,7 +1924,7 @@ function openBuilder(form,editId){
   const fN=document.createElement("textarea");fN.value=f.notes||"";fN.placeholder="Tips for yourself, one per line";
   man.appendChild(field("Notes (optional)",fN));
   const fMp=document.createElement("input");fMp.type="file";fMp.accept="audio/*,.mp3,.m4a,.wav,.aac,.flac,.ogg";
-  const mpw=el("label","f","Song MP3 (optional) — the guitar is taken out automatically and quiet intros get a soft guide guitar (gate 8)");mpw.appendChild(fMp);mpw.style.gridColumn="1 / -1";c.insertBefore(mpw,man);
+  const mpw=el("label","f","Song MP3 (optional) — the guitar is taken out automatically and quiet intros get a soft guide guitar (gate 8)");mpw.appendChild(fMp);const mpc=document.createElement("input");mpc.type="checkbox";mpc.checked=store.get("sb-rg-auto",true);const mpl=el("label","rgauto");mpl.append(mpc,"🎸 Remove guitar from this MP3");mpw.appendChild(mpl);mpw.style.gridColumn="1 / -1";c.insertBefore(mpw,man);
   const err=el("p","err","");c.appendChild(err);
   const act=el("div","actions");
   const save=el("button","libbtn primary","✨ Fill everything from the tutorial");save.type="button";
@@ -1955,7 +1965,7 @@ function openBuilder(form,editId){
       notes:fN.value.split("\n").map(x=>x.trim()).filter(Boolean)};
     const list=old.filter(x=>x.id!==id);list.push(song);saveCustom(list);
     store.set("sb-tune-"+id,null);refreshSongs();choose(id);
-    const mp=fMp.files&&fMp.files[0];if(mp){const b=document.createElement("button");b.dataset.fromBuilder="1";setTimeout(()=>removeGuitar(b,document.createElement("input"),mp),300);}
+    const mp=fMp.files&&fMp.files[0];if(mp)setTimeout(()=>mpc.checked?uploadSong(mp,true):loadSongFile(mp),300);
   });
 }
 $("q").addEventListener("input",renderShelf);
@@ -1970,7 +1980,7 @@ $("openSongInput").addEventListener("change",async e=>{const fs=[...e.target.fil
   // whichever button you use: charts (.json) are imported, audio goes to the song that's open
   const audioF=fs.filter(f=>AUDIO_RE.test(f.name)||/^(audio|video)\//.test(f.type)),json=fs.filter(f=>!audioF.includes(f));
   if(json.length)await importSongs(await Promise.all(json.map(f=>f.text())));
-  if(audioF.length){if(!cur){toast("Pick a song first, then load its MP3.");return;}building=false;if(!$("fname"))renderSong();loadSongFile(audioF[0]);}});
+  if(audioF.length){if(!cur){toast("Pick a song first, then load its MP3.");return;}building=false;if(!$("fname"))renderSong();uploadSong(audioF[0]);}});
 
 // ---------- 👂 Auto-sync: listen to the YouTube tab (live, nothing recorded) ----------
 let listening=false;

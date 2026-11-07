@@ -1,0 +1,919 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "nalone-pongenu",
+   "order": 6,
+   "title": "Nalone Pongenu Narmada",
+   "artist": "Harris Jayaraj",
+   "from": "Surya S/o Krishnan (Telugu) · Vaaranam Aayiram",
+   "key": "A (G shapes, capo 2)",
+   "capo": 2,
+   "bpm": 115,
+   "beatsPerBar": 4,
+   "subdiv": 2,
+   "timeLabel": "4/4",
+   "length": "6:15",
+   "firstBeat": 1.3,
+   "youtube": "https://www.youtube.com/watch?v=8HyuVJZe5Xk",
+   "patterns": {
+    "ring": {
+     "label": "Soft — one strum, let ring",
+     "s": "D......."
+    },
+    "mid": {
+     "label": "Verse — D DU UDU, soft",
+     "s": "d.du.udu"
+    },
+    "full": {
+     "label": "Chorus/bridge — D DU UDU",
+     "s": "D.DU.UDU"
+    }
+   },
+   "strums": [
+    {
+     "label": "Pattern 1 — 4 downs (easiest)",
+     "s": "D.D.D.D."
+    },
+    {
+     "label": "Pattern 2 — D DU UDU (the classic)",
+     "s": "D.DU.UDU"
+    },
+    {
+     "label": "Pattern 3 — sheet feel: D UDUD UDUD (straight 8ths)",
+     "s": "DuDuDuDu"
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Capo 2, open chords only, one chord per bar: G Em D C Am, Bm7 (x20202) for the Bm and Fmaj7 (xx3210) for the F. The quick Am-G-D turnarounds are played as G then D.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am",
+        "G",
+        "D",
+        "D",
+        "Am",
+        "G",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Intro strum",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C",
+        "Em",
+        "G",
+        "G",
+        "C",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Bridge 1",
+       "feel": "full",
+       "bars": [
+        "Am",
+        "G",
+        "Am",
+        "G",
+        "Am",
+        "Fmaj7",
+        "Am",
+        "D",
+        "Am",
+        "Fmaj7",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C",
+        "Em",
+        "G",
+        "G",
+        "C",
+        "Em",
+        "G",
+        "G",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Bridge 2",
+       "feel": "full",
+       "bars": [
+        "Am",
+        "G",
+        "Am",
+        "G",
+        "Am",
+        "Fmaj7",
+        "Am",
+        "D",
+        "Am",
+        "Bm7",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 4",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm7",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "G",
+        "D",
+        "G",
+        "D",
+        "G",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Intermediate",
+     "desc": "Capo 2, the chords as heard (Naadan Chords sheet, timed to your MP3): Am-G-D 'Oh shaanti' turnarounds, Bm in the verse, F in the bridge.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am",
+        "G:2 D:2",
+        "D",
+        "D",
+        "Am:2 G:2",
+        "G:2 Am:2",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Intro strum",
+       "feel": "mid",
+       "bars": [
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2",
+        "G:2 Gsus2:2"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "A:2 D:2",
+        "G",
+        "A:2 D:2"
+       ]
+      },
+      {
+       "name": "Bridge 1",
+       "feel": "full",
+       "bars": [
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "A:2 D:2",
+        "G",
+        "A:2 D:2"
+       ]
+      },
+      {
+       "name": "Bridge 2",
+       "feel": "full",
+       "bars": [
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "Am:2 G:1 Bm:1",
+        "Bm",
+        "Am:2 G:1 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 4",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Band",
+     "desc": "Capo 2, beat-accurate: intro riff changes and the G ↔ Gsus2 strum (3x0233 ↔ 320033).",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am:3 D:1",
+        "G:2 Am:1 D:1",
+        "D",
+        "D",
+        "Am:1 D:1 G:2",
+        "G:1 Bm:1 Am:2",
+        "Am",
+        "D:3 G:1"
+       ]
+      },
+      {
+       "name": "Intro strum",
+       "feel": "mid",
+       "bars": [
+        "G:2 Gsus2:1 G:1",
+        "G:2 Gsus2:1 G:1",
+        "G:2 Gsus2:1 G:1",
+        "G:2 Gsus2:1 G:1"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "A:2 D:2",
+        "G",
+        "A:2 D:2"
+       ]
+      },
+      {
+       "name": "Bridge 1",
+       "feel": "full",
+       "bars": [
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 3",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "C:2 G:2",
+        "Em",
+        "C:2 G:2",
+        "G",
+        "A:2 D:2",
+        "G",
+        "A:2 D:2"
+       ]
+      },
+      {
+       "name": "Bridge 2",
+       "feel": "full",
+       "bars": [
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:3 C:1",
+        "C:1 G:3",
+        "Am:2 G:1 F:1",
+        "F",
+        "Am:2 G:1 D:1",
+        "D",
+        "Am:2 G:1 Bm:1",
+        "Bm",
+        "Am:2 G:1 D:1",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Verse 4",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D",
+        "G",
+        "G",
+        "Em",
+        "D",
+        "Bm",
+        "C",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "full",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "ring",
+       "bars": [
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "Am:1 G:2 D:1",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "Capo 2, G shapes (sounds in A). 115 BPM, timed to your MP3 (first beat 1.32 s).",
+    "Intro lick on the B and G strings (capo 2): B 0-2-3-5-3/5p3-2-0, then G 2-2, B 5-5; second time end G 2-2-2, B 2-0.",
+    "Intro strum: hold G, one up-stroke, then [G] D UDUD [Gsus2] UDUDDU — twice.",
+    "'Oh shaanti' lines: Am (1 beat) G (2 beats) D (1 beat), then a full bar of D.",
+    "Hard chords: Bm → Bm7 (x20202) or D/F#; F → Fmaj7 (xx3210)."
+   ],
+   "sources": [
+    {
+     "label": "Naadan Chords (key A, 115 BPM)",
+     "url": "https://www.naadanchords.com/nenjukkul-peidhidum-vaaranam-aayiram"
+    },
+    {
+     "label": "ChordU lesson (A E Bm D F#m)",
+     "url": "https://chordu.com/chords-tabs-nalone-pongenu-nenjukkul-peidhidum-guitar-lead-lesson-surya-son-of-krishnan-vaaranam-aayiram-id_aJZIq3_nkoE"
+    },
+    {
+     "label": "Chordify (Bm A E D)",
+     "url": "https://chordify.net/chords/harris-jayaraj-songs/nenjukkul-peidhidum-chords?version=youtube%3ALSZL8wsHaiY"
+    },
+    {
+     "label": "Your recording (Naalona Pongenu MP3)",
+     "url": "#"
+    }
+   ],
+   "links": [
+    {
+     "label": "Telugu video (Sony Music South)",
+     "url": "https://www.youtube.com/watch?v=8HyuVJZe5Xk"
+    },
+    {
+     "label": "Lead riff lesson",
+     "url": "https://www.youtube.com/watch?v=aJZIq3_nkoE"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g8": true,
+    "g4": true,
+    "g5": true,
+    "g6": true,
+    "g7": false,
+    "top1": 0.858,
+    "top2": 0.977,
+    "bpm_measured": 114.96,
+    "disputed": "Scored on the instruments only (Demucs stems, no vocals/drums): on the full mix the sung melody pulls the A chords towards Asus2 (top-1 75.7%). Lyrics not added yet (gate 7)."
+   },
+   "rev": 2,
+   "map": [
+    1.3,
+    18.135,
+    26.494,
+    59.907,
+    78.669,
+    95.364,
+    128.778,
+    153.809,
+    180.953,
+    214.32,
+    235.218,
+    260.249,
+    287.37,
+    320.76,
+    337.456
+   ]
+  }
+ ]
+}

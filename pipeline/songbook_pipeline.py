@@ -31,7 +31,9 @@ measured timing for the changes they tapped. Bump song["rev"] on every re-releas
 per-device settings (old BPM / sync) are discarded automatically.
 
 Usage:
-  python3 songbook_pipeline.py SONG.json AUDIO.(mp3|m4a|wav) [--out SONG_fitted.json]
+  python3 songbook_pipeline.py SONG.json AUDIO.(mp3|m4a|wav) [--out SONG_fitted.json] [--chroma-audio HARMONY.wav]
+  (HARMONY.wav = the song without vocals and drums, e.g. from Demucs stems — chords are then scored on what the
+   instruments play, not on the sung melody. make_backing.py --keep-stems gives you the stems.)
 Needs: librosa, numpy (pip install librosa), ffmpeg for m4a/mp3.
 """
 import sys, json, argparse, subprocess, tempfile, os
@@ -77,6 +79,7 @@ def load_audio(path, sr=22050):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('song'); ap.add_argument('audio'); ap.add_argument('--out')
+    ap.add_argument('--chroma-audio', help='harmony-only audio for gates 5-6 (e.g. guitar+piano+other+bass stems, no vocals/drums); beats still come from AUDIO')
     a = ap.parse_args()
     import librosa
     doc = json.load(open(a.song)); song = doc['songs'][0] if 'songs' in doc else doc
@@ -88,7 +91,9 @@ def main():
     _, beats = librosa.beat.beat_track(y=y, sr=sr, start_bpm=song.get('bpm', 120), tightness=200, units='frames')
     bt = librosa.frames_to_time(beats, sr=sr)
     bpm = 60.0 / float(np.mean(np.diff(bt)))
-    C = librosa.util.sync(librosa.feature.chroma_cqt(y=librosa.effects.harmonic(y), sr=sr, bins_per_octave=36), beats, aggregate=np.median)
+    yh = load_audio(a.chroma_audio, sr)[0] if a.chroma_audio else librosa.effects.harmonic(y)   # sung melody notes skew chord chroma
+    if len(yh) < len(y): yh = np.pad(yh, (0, len(y) - len(yh)))
+    C = librosa.util.sync(librosa.feature.chroma_cqt(y=yh[:len(y)], sr=sr, bins_per_octave=36), beats, aggregate=np.median)
     NB = min(C.shape[1], len(bt)); C = C[:, :NB]
     X = C - C.mean(axis=0, keepdims=True); X /= np.linalg.norm(X, axis=0, keepdims=True) + 1e-9
 

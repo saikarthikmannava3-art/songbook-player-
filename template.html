@@ -513,7 +513,7 @@ const main=$("main"),shelf=$("shelf");
 const bpb=()=>cur.beatsPerBar||4, sub=()=>cur.subdiv||2, slots=()=>bpb()*sub();
 function countLabels(){const n=bpb(),s=sub(),o=[];
   if(s===3&&n===2)return ["1","2","3","4","5","6"];
-  for(let b=1;b<=n;b++){o.push(String(b));if(s===2)o.push("&");if(s===3)o.push("&","a");}return o;}
+  for(let b=1;b<=n;b++){o.push(String(b));if(s===2)o.push("&");if(s===3)o.push("&","a");if(s===4)o.push("e","&","a");}return o;}
 function sections(){const v=(cur.versions||{})[ver]||(cur.versions||{}).intermediate;return v?v.sections:(cur.sections||[]);}
 function patFor(sec){
   const n=slots();let p;
@@ -1402,7 +1402,7 @@ function renderDrill(d){
     drill={btn:go,iv:0,raf:0};go.textContent="■ Stop";go.classList.add("on");
     const sched=()=>{if(!box.isConnected){stopDrill();return;}
       while(t0+k*spb<ctx.currentTime+0.12){const at=t0+k*spb,s=k%n,bar=Math.floor(k/n);
-        click(at,s===0?2:s%sub()===0?1:0);q.push({at,s,ci:Math.floor(bar/bars),bar});k++;}};
+        if(!(sub()===4&&s%2))click(at,s===0?2:s%sub()===0?1:0);q.push({at,s,ci:Math.floor(bar/bars),bar});k++;}};
     const paint=()=>{if(!drill)return;const now=ctx.currentTime;let e=null;while(q.length&&q[0].at<=now)e=q.shift();
       if(e){[...sl.querySelectorAll("i")].forEach((x,j)=>x.classList.toggle("now",j===e.s));
         if(e.s===0){showChord(e.ci);info.textContent="bar "+((e.bar%bars)+1)+" of "+bars+" · "+bpm+" BPM";}}

@@ -11,37 +11,37 @@
    "capo": 2,
    "bpm": 115,
    "beatsPerBar": 4,
-   "subdiv": 2,
-   "timeLabel": "4/4",
+   "subdiv": 4,
+   "timeLabel": "4/4 · 16ths",
    "length": "6:15",
    "firstBeat": 1.3,
    "youtube": "https://www.youtube.com/watch?v=8HyuVJZe5Xk",
    "patterns": {
     "ring": {
      "label": "Soft — one strum, let ring",
-     "s": "D......."
+     "s": "D..............."
     },
     "mid": {
-     "label": "Verse — straight 8ths, light (accents & of 1, 3, 4)",
-     "s": "dUduDuDu"
+     "label": "Verse — tutorial pattern, light",
+     "s": "d.D.duduD.duD.du"
     },
     "full": {
-     "label": "Chorus — straight 8ths, accents & of 1, 3, 4",
-     "s": "dUduDuDu"
+     "label": "Chorus — tutorial pattern",
+     "s": "d.D.duduD.duD.du"
     }
    },
    "strums": [
     {
      "label": "Pattern 1 — 4 downs (easiest, start here)",
-     "s": "D.D.D.D."
+     "s": "D...D...D...D..."
     },
     {
-     "label": "Pattern 2 — straight 8ths D U D U D U D U, even (what the tutorials teach)",
-     "s": "DuDuDuDu"
+     "label": "Pattern 2 — straight 8ths D U D U D U D U (step up)",
+     "s": "D.U.D.U.D.U.D.U."
     },
     {
-     "label": "Pattern 3 — song feel: same 8ths, accents on the & of 1, on 3 and on 4 (measured from the recording)",
-     "s": "dUduDuDu"
+     "label": "Pattern 3 — the tutorial pattern: D D U | D U D | D U D | D U D (16ths), accents on the 1st and 6th strokes and on beat 4",
+     "s": "d.D.duduD.duD.du"
     }
    ],
    "versions": {
@@ -849,9 +849,9 @@
    },
    "notes": [
     "Capo 2, G shapes (sounds in A). 115 BPM, timed to your MP3 (first beat 1.32 s).",
-    "Strumming: keep the hand moving down-up on every 8th (D U D U D U D U) — the recording's guitar never stops; lean on the & of 1, beat 3 and beat 4. Beginners: 4 downs first (Pattern 1).",
+    "Strumming (your tutorial): keep the hand moving in 16ths and play D D U | D U D | D U D | D U D — 12 strokes, 4 misses. In this recording the cycle starts on the & of beat 1 (count '1-and' then go). Accent the 1st stroke and the 2nd down of part 2; the recording also leans on beat 4.",
+    "Intro strum G ↔ Gsus2 (capo 2; A ↔ Asus2 in the tutorial): keep strumming and lift your index finger on the first up-stroke of part 3, put it back on the last up-stroke of part 4. Gsus2 = 3x0233.",
     "Intro lick on the B and G strings (capo 2): B 0-2-3-5-3/5p3-2-0, then G 2-2, B 5-5; second time end G 2-2-2, B 2-0.",
-    "Intro strum: hold G, one up-stroke, then [G] D UDUD [Gsus2] UDUDDU — twice.",
     "'Oh shaanti' lines: Am (1 beat) G (2 beats) D (1 beat), then a full bar of D.",
     "Hard chords: Bm → Bm7 (x20202) or D/F#; F → Fmaj7 (xx3210)."
    ],

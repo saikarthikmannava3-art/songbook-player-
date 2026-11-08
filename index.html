@@ -889,8 +889,10 @@ function renderLyrics(){
   box.addEventListener("toggle",()=>store.set("sb-lyr-open",box.open));
   const text=store.get(lyrKey(),null);
   // no lyrics saved in this browser yet → load songs/<id>-lyrics.txt if it sits beside the app (kept local, never committed)
-  if(text==null&&!lyrTried[s.id]){lyrTried[s.id]=1;fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null)
-    .then(t=>{if(t&&t.trim()&&cur===s&&store.get(lyrKey(),null)==null){store.set(lyrKey(),t);rerenderLyrics();}}).catch(()=>{});}
+  if(text==null&&!lyrTried[s.id]){lyrTried[s.id]=1;fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null).catch(()=>null)
+    .then(async t=>{let from="file";if(!(t&&t.trim())){t=await cloudLyricsGet(s.id);from="cloud";}
+      if(t&&t.trim()&&cur===s&&store.get(lyrKey(),null)==null){store.set(lyrKey(),t);rerenderLyrics();if(from==="cloud")toast("☁️ Lyrics for "+s.title+" loaded from your cloud");else cloudLyricsSave(s.id,1500);}});}
+  else if(text!=null&&cloudKey()&&!store.get("sb-lyr-cloud-"+s.id,null))cloudLyricsSave(s.id,2500);
   box.appendChild(el("summary",null,"Lyrics with chords"));
   const tools=el("div","tools");
   const eb=el("button",null,lyrEdit?"✓ Done editing":"✎ Paste / edit lyrics");eb.type="button";eb.setAttribute("aria-pressed",lyrEdit?"true":"false");
@@ -908,7 +910,7 @@ function renderLyrics(){
   if(lyrEdit){
     box.appendChild(el("p","lhint","Paste your lyrics. Put a chord in brackets right before the word where it changes — [C]Bholenath. Lines like “Chorus:” become section headings that light up as the song plays. Or press Done, then tap any word to place a chord on it."));
     const ta=document.createElement("textarea");ta.id="lyrTa";ta.value=text!=null?text:skeleton();ta.spellcheck=false;
-    ta.addEventListener("input",()=>store.set(lyrKey(),ta.value));box.appendChild(ta);
+    ta.addEventListener("input",()=>{store.set(lyrKey(),ta.value);cloudLyricsSave(cur.id);});box.appendChild(ta);
   }else if(!text||!text.trim()){
     box.appendChild(el("p","lhint","No lyrics yet. Tap “Paste / edit lyrics”, paste the words from your website or file, then tap any word to drop the chord exactly on it. Start from the chord skeleton to see where each change falls, line by line."));
   }else{
@@ -936,7 +938,7 @@ function renderLyrics(){
   const lb=$("lyrBox");if(lb)lb.replaceWith(box);else main.appendChild(box);
   renderLive();
 }
-function rerenderLyrics(){renderLyrics();lastSec=null;paint(true);}
+function rerenderLyrics(){renderLyrics();lastSec=null;paint(true);if(cur)cloudLyricsSave(cur.id);}
 function pickChord(e,li,at,hasChord){
   closePicker();const used=[...new Set(flat.flatMap(b=>b.toks.map(t=>t.c)))];
   const pk=el("div","picker");pk.id="picker";
@@ -1971,6 +1973,13 @@ async function cloudSaveCurrent(){const s=cur;let rec=null;if(SONG_AUDIO[s.id]){
   if(!rec)rec=await idb("get",s.id);if(!rec){toast("Load this song's MP3 or backing first");return;}
   const name=String(rec.name||s.title+".m4a").replace(/[\\/:*?"<>|]+/g," ");toast("☁️ Uploading “"+name+"”…");
   if(await cloudUpload(rec.blob instanceof File?rec.blob:new File([rec.blob],name,{type:rec.blob.type||mimeFor({name})}),name))toast("☁️ Saved to your cloud — open it on any device");}
+
+// ☁️ lyrics in the cloud: load when this device has none, save edits a few seconds after you stop typing
+const CLOUD_LYR=CLOUD_API.replace(/tracks$/,"lyrics");
+async function cloudLyricsGet(id){if(!cloudKey())return null;try{const r=await fetch(CLOUD_LYR+"?id="+encodeURIComponent(id),{headers:{"X-Songbook-Key":cloudKey()},cache:"no-store"});return r.ok?await r.text():null;}catch(e){return null;}}
+let lyrSaveT={};
+function cloudLyricsSave(id,delay){if(!cloudKey())return;clearTimeout(lyrSaveT[id]);lyrSaveT[id]=setTimeout(async()=>{const text=store.get("sb-lyrics-"+id,"");if(!text||!text.trim())return;
+  try{const r=await fetch(CLOUD_LYR+"?id="+encodeURIComponent(id),{method:"PUT",headers:{"X-Songbook-Key":cloudKey(),"Content-Type":"text/plain; charset=utf-8"},body:text});if(r.ok)store.set("sb-lyr-cloud-"+id,Date.now());}catch(e){}},delay==null?4000:delay);}
 
 async function cloudAutoSync(id,f){const s=songs.find(x=>x.id===id);if(!s||!cloudKey()||!f)return;const tr=await cloudList();if(!tr||cloudMatch(s,tr))return;
   const name=String(f.name||s.title+".m4a").replace(/[\\/:*?"<>|]+/g," ");if(scoreFile(s,name)<=0)return;     // only files named after this song

@@ -372,7 +372,7 @@ body.live-on .livetab{display:none}
 .takebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .takelist{display:flex;flex-direction:column;gap:8px}.take{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
 .takehd{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}.takehd small{color:var(--muted)}.take audio{width:100%;height:36px}
-.takeacts{display:flex;flex-wrap:wrap;gap:6px}.takeacts .libbtn{padding:6px 10px;font-size:13px;text-decoration:none}
+.takeacts{display:flex;flex-wrap:wrap;gap:6px}.takevid{width:100%;max-height:60vh;border-radius:10px;background:#000}.recpv canvas{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000;display:block}.takeacts .libbtn{padding:6px 10px;font-size:13px;text-decoration:none}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -1814,65 +1814,132 @@ function uploadSong(f,force){
   if(!(force||store.get("sb-rg-auto",true))||BACKING_RE.test(f.name||"")){loadSongFile(f);return;}
   const b=document.createElement("button");b.dataset.fromBuilder="1";removeGuitar(b,document.createElement("input"),f);}
 
-// ---------- 🎙️ record yourself: mic (+ optional backing mix) while the song plays → takes saved per song (IndexedDB) ----------
+// ---------- 🎙️ record yourself: mic through a "clear sound" chain (+ optional backing mix); optional 🎥 camera video with the
+//            song's lyrics, chord and section drawn in as you play; takes saved per song (IndexedDB), ✨ clean-up for old takes ----------
 function tdb(op,val){return new Promise(res=>{try{const r=indexedDB.open("songbook-takes",1);
   r.onupgradeneeded=()=>r.result.createObjectStore("takes",{keyPath:"id",autoIncrement:true});r.onerror=()=>res(null);
   r.onsuccess=()=>{const tx=r.result.transaction("takes",op==="all"?"readonly":"readwrite"),st=tx.objectStore("takes");
     const q=op==="all"?st.getAll():op==="put"?st.put(val):st.delete(val);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);};}catch(e){res(null);}});}
 let rec=null;
-const recMime=()=>["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||"";
+const recSet=()=>Object.assign({video:false,clean:true,mix:true,nr:false},store.get("sb-rec",{}),{mix:store.get("sb-rec-mix",true)});
+const firstMime=list=>list.find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||"";
+const AUDIO_MIMES=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"];
+const VIDEO_MIMES=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
 const fmtDur=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+// "clear sound": rumble cut → less mud → presence → air → compressor → make-up → limiter
+function clearChain(c,input){const hp=c.createBiquadFilter();hp.type="highpass";hp.frequency.value=90;hp.Q.value=0.7;
+  const mud=c.createBiquadFilter();mud.type="peaking";mud.frequency.value=300;mud.Q.value=1;mud.gain.value=-3;
+  const pres=c.createBiquadFilter();pres.type="peaking";pres.frequency.value=3500;pres.Q.value=0.9;pres.gain.value=3;
+  const air=c.createBiquadFilter();air.type="highshelf";air.frequency.value=10000;air.gain.value=2;
+  const comp=c.createDynamicsCompressor();comp.threshold.value=-24;comp.knee.value=10;comp.ratio.value=3;comp.attack.value=0.005;comp.release.value=0.15;
+  const mk=c.createGain();mk.gain.value=1.8;const lim=c.createDynamicsCompressor();lim.threshold.value=-3;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=0.001;lim.release.value=0.05;
+  input.connect(hp).connect(mud).connect(pres).connect(air).connect(comp).connect(mk).connect(lim);return lim;}
+// what to show in the video right now: section, chord, current lyric line (words of this chord lit), next line
+function lyricNow(){const pos=posAt(songT()),b=Math.floor(pos),f=flat[Math.max(0,Math.min(flat.length-1,b))];
+  const o={sec:pos<0?"Get ready":(f?f.secName:""),chord:pos<0?"":(chordAtPos(pos)||""),words:[],lit:new Set(),next:""};
+  const M=LV&&LV.map||[];if(!M.length)return o;let lo=0,hi=M.length-1,a=-1;while(lo<=hi){const m=(lo+hi)>>1;if(M[m].pos<=pos+1e-6){a=m;lo=m+1;}else hi=m-1;}
+  const it=M[Math.max(0,a)];if(!it||!it.els.length)return o;const ln=it.els[0].parentElement;
+  [...ln.querySelectorAll(".sg")].forEach(sg=>{const w=(sg.querySelector(".t")||{}).textContent||"";if(w.trim()){o.words.push(w);if(a>=0&&it.els.includes(sg))o.lit.add(o.words.length-1);}});
+  let n=ln.nextElementSibling;while(n&&(!n.classList.contains("ln")||!n.textContent.trim()||n.querySelectorAll(".t").length===0||![...n.querySelectorAll(".t")].some(x=>x.textContent.trim())))n=n.nextElementSibling;
+  if(n)o.next=[...n.querySelectorAll(".t")].map(x=>x.textContent).join(" ").replace(/\s+/g," ").trim();return o;}
+function drawFrame(r){const c=r.cv,x=c.getContext("2d"),W=c.width,H=c.height,cs=getComputedStyle(document.documentElement),v=r.vid;
+  x.fillStyle="#000";x.fillRect(0,0,W,H);
+  if(v&&v.videoWidth){const s=Math.max(W/v.videoWidth,H/v.videoHeight),w=v.videoWidth*s,h=v.videoHeight*s;x.drawImage(v,(W-w)/2,(H-h)/2,w,h);}
+  const u=Math.min(W,H)/720,g=x.createLinearGradient(0,H*0.55,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(0.45,"rgba(0,0,0,.6)");g.addColorStop(1,"rgba(0,0,0,.85)");x.fillStyle=g;x.fillRect(0,H*0.55,W,H*0.45);
+  const tg=x.createLinearGradient(0,0,0,H*0.14);tg.addColorStop(0,"rgba(0,0,0,.6)");tg.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=tg;x.fillRect(0,0,W,H*0.14);
+  const font=(wt,px)=>wt+" "+Math.round(px*u)+"px 'Atkinson Hyperlegible',system-ui,sans-serif";
+  x.textBaseline="top";x.fillStyle="#fff";x.font=font(800,30);x.fillText(r.s.title,24*u,22*u);x.font=font(400,20);x.fillStyle="rgba(255,255,255,.75)";x.fillText(r.s.artist||"",24*u,58*u);
+  x.textAlign="right";x.fillStyle="#ff4d4d";x.font=font(800,22);x.fillText("● "+fmtDur((Date.now()-r.t0)/1000),W-24*u,24*u);x.textAlign="left";
+  const L=lyricNow(),pad=28*u;let y=H-40*u;
+  if(L.next){x.font=font(600,28);x.fillStyle="rgba(255,255,255,.55)";const nt=fitText(x,L.next,W-2*pad,28*u,u);x.font=font(600,nt.px/u);y-=nt.px*1.3;x.fillText(nt.t,pad,y);}
+  if(L.words.length){let px=46;x.font=font(800,px);const sp=x.measureText(" ").width;let tot=L.words.reduce((s,w)=>s+x.measureText(w).width+sp,0);
+    while(tot>W-2*pad&&px>22){px-=2;x.font=font(800,px);tot=L.words.reduce((s,w)=>s+x.measureText(w).width+x.measureText(" ").width,0);}
+    y-=px*u*1.45;let cx=pad;const acc=cs.getPropertyValue("--accent").trim()||"#f2a24a";
+    L.words.forEach((w,i)=>{const ww=x.measureText(w).width;if(L.lit.has(i)){x.fillStyle=acc;x.beginPath();x.roundRect?x.roundRect(cx-6*u,y-4*u,ww+12*u,px*u*1.25,8*u):x.rect(cx-6*u,y-4*u,ww+12*u,px*u*1.25);x.fill();x.fillStyle="#1a1205";}else x.fillStyle="#fff";
+      x.fillText(w,cx,y);cx+=ww+x.measureText(" ").width;});}
+  if(L.chord){const col=cs.getPropertyValue("--c-"+chordRoot(L.chord)).trim()||"#fff";x.font=font(900,64);y-=78*u;x.fillStyle=col;x.fillText(L.chord,pad,y);
+    x.font=font(700,20);x.fillStyle="rgba(255,255,255,.7)";x.fillText((L.sec||"").toUpperCase(),pad+x.measureText(L.chord).width*0+0,y-26*u);}
+  else if(L.sec){x.font=font(700,22);x.fillStyle="rgba(255,255,255,.8)";x.fillText(L.sec.toUpperCase(),pad,y-60*u);}}
+function fitText(x,t,maxW,px,u){let p=px;x.font="600 "+Math.round(p)+"px system-ui";while(x.measureText(t).width>maxW&&p>14*u){p-=2;x.font="600 "+Math.round(p)+"px system-ui";}
+  if(x.measureText(t).width>maxW){while(t.length>4&&x.measureText(t+"…").width>maxW)t=t.slice(0,-1);t+="…";}return {t,px:p};}
 async function recStart(){
-  if(!window.MediaRecorder){alert("This browser can't record audio. Try Chrome or Safari (iOS 14.3+).");return;}
-  audio();if(!ctx){toast("Audio isn't available in this browser");return;}
-  let mic;try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
-  catch(e){toast("Microphone blocked — allow it in the address bar (🔒 → Microphone)");return;}
-  const s=cur,dest=ctx.createMediaStreamDestination(),ms=ctx.createMediaStreamSource(mic),mg=ctx.createGain();mg.gain.value=1;ms.connect(mg).connect(dest);
-  const withBacking=store.get("sb-rec-mix",true)&&mode==="file"&&!!au;let bg=null;
-  if(withBacking){try{if(!au._src){au._src=ctx.createMediaElementSource(au);au._src.connect(ctx.destination);}bg=ctx.createGain();bg.gain.value=0.8;au._src.connect(bg).connect(dest);}catch(e){bg=null;}}
-  const mime=recMime(),mr=new MediaRecorder(dest.stream,mime?{mimeType:mime}:undefined),chunks=[];
-  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
-  rec={s,mr,mic,ms,mg,bg,chunks,t0:Date.now(),mixed:!!bg,from:songT(),iv:0};
-  mr.onstop=async()=>{const r=rec;rec=null;clearInterval(r.iv);r.mic.getTracks().forEach(x=>x.stop());try{r.ms.disconnect();r.mg.disconnect();if(r.bg){au&&au._src&&au._src.disconnect(r.bg);r.bg.disconnect();}}catch(e){}
-    const type=mr.mimeType||mime||"audio/webm",blob=new Blob(r.chunks,{type}),dur=(Date.now()-r.t0)/1000;recUI();
+  if(!window.MediaRecorder){alert("This browser can't record. Try Chrome, or Safari on iOS 14.3+.");return;}
+  audio();if(!ctx){toast("Audio isn't available in this browser");return;}const S=recSet(),s=cur;
+  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:!!S.nr,autoGainControl:false},video:S.video?{facingMode:"user",width:{ideal:1280},height:{ideal:720}}:false});}
+  catch(e){toast(S.video?"Camera or microphone blocked — allow them in the address bar (🔒)":"Microphone blocked — allow it in the address bar (🔒 → Microphone)");return;}
+  const dest=ctx.createMediaStreamDestination(),ms=ctx.createMediaStreamSource(new MediaStream(st.getAudioTracks()));
+  const out=S.clean?clearChain(ctx,ms):ms;out.connect(dest);
+  let bg=null;if(S.mix&&mode==="file"&&au&&au._src){try{bg=ctx.createGain();bg.gain.value=0.75;au._src.connect(bg).connect(dest);}catch(e){bg=null;}}
+  const r={s,st,ms,out,bg,chunks:[],t0:Date.now(),mixed:!!bg,clean:!!S.clean,video:!!S.video,from:songT(),iv:0,raf:0};
+  let stream=dest.stream,mime;
+  if(S.video){const portrait=innerHeight>innerWidth;r.cv=document.createElement("canvas");r.cv.width=portrait?720:1280;r.cv.height=portrait?1280:720;r.cv.className="recpreview";
+    r.vid=document.createElement("video");r.vid.muted=true;r.vid.playsInline=true;r.vid.srcObject=new MediaStream(st.getVideoTracks());try{await r.vid.play();}catch(e){}
+    const loop=()=>{if(rec!==r)return;drawFrame(r);r.raf=requestAnimationFrame(loop);};
+    stream=new MediaStream([...r.cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]);mime=firstMime(VIDEO_MIMES);
+    rec=r;loop();const pv=$("recPreview");if(pv){pv.innerHTML="";pv.appendChild(r.cv);pv.hidden=false;}}
+  else mime=firstMime(AUDIO_MIMES);
+  const mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);r.mr=mr;rec=r;
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data);};
+  mr.onstop=async()=>{rec=null;clearInterval(r.iv);cancelAnimationFrame(r.raf);r.st.getTracks().forEach(x=>x.stop());try{r.ms.disconnect();r.out.disconnect();if(r.bg){au&&au._src&&au._src.disconnect(r.bg);r.bg.disconnect();}}catch(e){}
+    const pv=$("recPreview");if(pv){pv.hidden=true;pv.innerHTML="";}
+    const type=mr.mimeType||mime||(r.video?"video/webm":"audio/webm"),blob=new Blob(r.chunks,{type}),dur=(Date.now()-r.t0)/1000;recUI();
     if(dur<1.5||!blob.size){toast("Recording too short — not saved");return;}
     const n=((await tdb("all"))||[]).filter(x=>x.songId===r.s.id).length+1;
-    await tdb("put",{songId:r.s.id,name:r.s.title+" — take "+n,date:Date.now(),dur,mixed:r.mixed,from:r.from,type,blob});
-    toast("🎙️ Saved take "+n+" of "+r.s.title+(r.mixed?" (with backing)":""));if(cur===r.s)renderTakes(true);};
-  mr.start(1000);rec.iv=setInterval(recUI,500);recUI();
+    await tdb("put",{songId:r.s.id,name:r.s.title+" — take "+n+(r.video?" (video)":""),date:Date.now(),dur,mixed:r.mixed,clean:r.clean,video:r.video,from:r.from,type,blob});
+    toast("🎙️ Saved take "+n+" of "+r.s.title+(r.video?" — video with lyrics":"")+(r.mixed?", with backing":""));if(cur===r.s)renderTakes(true);};
+  mr.start(1000);r.iv=setInterval(recUI,500);recUI();
   if(!isPlaying())play();
   if(mode==="file"&&au&&!au._recEnd){au._recEnd=true;au.addEventListener("ended",()=>{if(rec)recStop();});}
 }
-function recStop(){if(rec&&rec.mr.state!=="inactive")rec.mr.stop();}
-function recUI(){const b=$("recBtn");if(!b)return;b.classList.toggle("recording",!!rec);b.textContent=rec?"■ Stop "+fmtDur((Date.now()-rec.t0)/1000):"🔴 Rec";
+function recStop(){if(rec&&rec.mr&&rec.mr.state!=="inactive")rec.mr.stop();}
+function recUI(){const b=$("recBtn");if(b){b.classList.toggle("recording",!!rec);b.textContent=rec?"■ Stop "+fmtDur((Date.now()-rec.t0)/1000):"🔴 Rec";
   b.title=rec?"Stop recording and save the take":"Record yourself playing along — saved as a take for this song";}
+  const g=$("recGo");if(g)g.textContent=rec?"■ Stop recording":(recSet().video?"🎥 Record a video take":"🔴 Record a take");}
+// ✨ clean up an existing take: same chain offline + normalise to −1 dBFS → WAV copy (audio takes)
+async function cleanTake(tk){audio();const ab=await tk.blob.arrayBuffer();let buf;try{buf=await ctx.decodeAudioData(ab);}catch(e){toast("Couldn't read this take");return;}
+  const oc=new OfflineAudioContext(buf.numberOfChannels,buf.length,buf.sampleRate),src=oc.createBufferSource();src.buffer=buf;clearChain(oc,src).connect(oc.destination);src.start();
+  const out=await oc.startRendering();let pk=0;for(let c=0;c<out.numberOfChannels;c++){const d=out.getChannelData(c);for(let i=0;i<d.length;i++)pk=Math.max(pk,Math.abs(d[i]));}
+  const g=pk>0?Math.min(4,0.89/pk):1;const wav=toWav(out,g);
+  await tdb("put",{songId:tk.songId,name:tk.name.replace(/ \(clear\)$/,"")+" (clear)",date:Date.now(),dur:tk.dur,mixed:tk.mixed,clean:true,video:false,from:tk.from,type:"audio/wav",blob:wav});
+  toast("✨ Clean copy saved");renderTakes(true);}
+function toWav(b,g){const ch=b.numberOfChannels,n=b.length,sr=b.sampleRate,v=new DataView(new ArrayBuffer(44+n*ch*2));let o=0;const w=s=>{for(const c of s)v.setUint8(o++,c.charCodeAt(0));};
+  w("RIFF");v.setUint32(o,36+n*ch*2,true);o+=4;w("WAVEfmt ");v.setUint32(o,16,true);o+=4;v.setUint16(o,1,true);o+=2;v.setUint16(o,ch,true);o+=2;v.setUint32(o,sr,true);o+=4;v.setUint32(o,sr*ch*2,true);o+=4;v.setUint16(o,ch*2,true);o+=2;v.setUint16(o,16,true);o+=2;w("data");v.setUint32(o,n*ch*2,true);o+=4;
+  const d=[...Array(ch)].map((_,c)=>b.getChannelData(c));for(let i=0;i<n;i++)for(let c=0;c<ch;c++){const s=Math.max(-1,Math.min(1,d[c][i]*g));v.setInt16(o,s<0?s*0x8000:s*0x7fff,true);o+=2;}
+  return new Blob([v],{type:"audio/wav"});}
 async function renderTakes(open){
-  const s=cur;const all=((await tdb("all"))||[]).filter(x=>x.songId===s.id).sort((a,b)=>b.date-a.date);if(cur!==s)return;
+  const s=cur;const all=((await tdb("all"))||[]).filter(x=>x.songId===s.id).sort((a,b)=>b.date-a.date);if(cur!==s)return;const S=recSet();
   const box=document.createElement("details");box.className="card takes";box.id="takes";box.open=open||store.get("sb-takes-open",false);
   box.addEventListener("toggle",()=>store.set("sb-takes-open",box.open));
   box.appendChild(el("summary",null,"🎙️ Record yourself"+(all.length?" · "+all.length+" take"+(all.length>1?"s":""):"")));
-  const row=el("div","takebar");const go=el("button","libbtn primary",rec?"■ Stop recording":"🔴 Record a take");go.type="button";
-  go.addEventListener("click",()=>rec?recStop():recStart());
-  const mx=el("label","rgauto");const mxc=document.createElement("input");mxc.type="checkbox";mxc.checked=store.get("sb-rec-mix",true);mxc.addEventListener("change",()=>store.set("sb-rec-mix",mxc.checked));
-  mx.append(mxc,"Mix the backing into the file (use headphones)");row.append(go,mx);box.appendChild(row);
-  box.appendChild(el("p","vdesc","Press record: the song starts and the mic records you until you stop (or the song ends). With the song's MP3/backing loaded you can mix it into the take; in YouTube mode only the mic is recorded. Takes stay in this browser — share or download one to upload it."));
+  const seg=el("div","seg");const aB=el("button",null,"🎙️ Audio"),vB=el("button",null,"🎥 Video + lyrics");[aB,vB].forEach(b=>b.type="button");
+  aB.setAttribute("aria-pressed",S.video?"false":"true");vB.setAttribute("aria-pressed",S.video?"true":"false");
+  aB.addEventListener("click",()=>{store.set("sb-rec",Object.assign(recSet(),{video:false}));renderTakes(true);});vB.addEventListener("click",()=>{store.set("sb-rec",Object.assign(recSet(),{video:true}));renderTakes(true);});
+  seg.append(aB,vB);box.appendChild(seg);
+  const row=el("div","takebar");const go=el("button","libbtn primary","");go.id="recGo";go.type="button";go.addEventListener("click",()=>rec?recStop():recStart());row.appendChild(go);
+  const opt=(key,label,title)=>{const l=el("label","rgauto");l.title=title;const c=document.createElement("input");c.type="checkbox";c.checked=key==="mix"?store.get("sb-rec-mix",true):!!S[key];
+    c.addEventListener("change",()=>{if(key==="mix")store.set("sb-rec-mix",c.checked);else store.set("sb-rec",Object.assign(recSet(),{[key]:c.checked}));});l.append(c,label);return l;};
+  row.append(opt("clean","✨ Clear sound","Cut rumble and mud, add presence, even out the level, never distort"),opt("mix","Mix the backing in (headphones)","Your take includes the song's backing — use headphones so the mic doesn't pick up the speakers"),opt("nr","Reduce background noise","Browser noise suppression — good for talking or a noisy room, can dull a guitar"));
+  box.appendChild(row);
+  const pv=el("div","recpv");pv.id="recPreview";pv.hidden=!(rec&&rec.cv);if(rec&&rec.cv)pv.appendChild(rec.cv);box.appendChild(pv);
+  box.appendChild(el("p","vdesc",S.video?"Video: your camera with the song's lyrics drawn in as you play — the current line, the words of this chord lit up, the chord and the section. Needs the song's lyrics loaded for the words; otherwise it shows the chords.":"Press record: the song starts and the mic records you until you stop (or the song ends). With the MP3/backing loaded you can mix it in; in YouTube mode only the mic is recorded."));
   const list=el("div","takelist");box.appendChild(list);
   if(!all.length)list.appendChild(el("p","vdesc","No takes yet."));
-  all.forEach(tk=>{const r=el("div","take");const url=URL.createObjectURL(tk.blob);const a=document.createElement("audio");a.controls=true;a.preload="none";a.src=url;
-    const head=el("div","takehd");head.append(el("b",null,tk.name),el("small",null,new Date(tk.date).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" · "+fmtDur(tk.dur)+(tk.mixed?" · with backing":" · mic only")));
-    const ext=/mp4/.test(tk.type)?"m4a":/ogg/.test(tk.type)?"ogg":"webm",fname=(tk.name.replace(/[\\/:*?"<>|]+/g," ")+"."+ext);
+  all.forEach(tk=>{const r=el("div","take");const url=URL.createObjectURL(tk.blob);const isV=/^video/.test(tk.type);const m=document.createElement(isV?"video":"audio");m.controls=true;m.preload="metadata";m.src=url;if(isV){m.playsInline=true;m.className="takevid";}
+    const head=el("div","takehd");head.append(el("b",null,tk.name),el("small",null,new Date(tk.date).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" · "+fmtDur(tk.dur)+(isV?" · video + lyrics":"")+(tk.mixed?" · with backing":" · mic only")+(tk.clean?" · ✨ clear":"")));
+    const ext=/wav/.test(tk.type)?"wav":/mp4/.test(tk.type)?(isV?"mp4":"m4a"):/ogg/.test(tk.type)?"ogg":"webm",fname=tk.name.replace(/[\\/:*?"<>|]+/g," ")+"."+ext;
     const acts=el("div","takeacts");
     const sh=el("button","libbtn","⤴ Share / upload");sh.type="button";sh.title="Send it to WhatsApp, Instagram, Drive, Files… (or download)";
     sh.addEventListener("click",async()=>{const file=new File([tk.blob],fname,{type:tk.type});
       if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:tk.name,text:"Me playing "+s.title+" — Songbook Player"});}catch(e){}}
       else{const l=document.createElement("a");l.href=url;l.download=fname;document.body.appendChild(l);l.click();l.remove();toast("Downloaded — upload it wherever you like");}});
     const dl=el("a","libbtn","⇩");dl.href=url;dl.download=fname;dl.title="Download";
+    const cl=el("button","libbtn","✨ Clean up");cl.type="button";cl.title="Save a clearer copy: less rumble and mud, more presence, even level, normalised";cl.hidden=isV||/\(clear\)$/.test(tk.name);cl.addEventListener("click",()=>{cl.disabled=true;cl.textContent="✨ Cleaning…";cleanTake(tk);});
     const rn=el("button","libbtn","✎");rn.type="button";rn.title="Rename";rn.addEventListener("click",async()=>{const v=prompt("Name this take",tk.name);if(v&&v.trim()){tk.name=v.trim();await tdb("put",tk);renderTakes(true);}});
     const rm=el("button","libbtn","✕");rm.type="button";rm.title="Delete";rm.addEventListener("click",async()=>{if(confirm("Delete “"+tk.name+"”?")){await tdb("del",tk.id);URL.revokeObjectURL(url);renderTakes(true);}});
-    acts.append(sh,dl,rn,rm);r.append(head,a,acts);list.appendChild(r);});
+    acts.append(sh,dl,cl,rn,rm);r.append(head,m,acts);list.appendChild(r);});
   const old=$("takes");if(old)old.replaceWith(box);else{const lb=$("lyrBox"),st=document.querySelector("#main .stage");(lb||st||main.lastChild).after(box);}
+  recUI();
 }
-
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){
   const s=cur,say=m=>{const fn=$("fname");if(fn&&cur===s)fn.textContent=m;};

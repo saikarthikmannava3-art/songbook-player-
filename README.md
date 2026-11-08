@@ -21,6 +21,9 @@ Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-
 - **📚 Songbook**: upload PDFs (kept in the browser), ★ link a page to a song; books listed in `songbook/songbook.json` load automatically.
 - **🎸 Remove guitar** / **Remove guitar on upload** (checkbox next to 🎵 Load, on by default): any song file you upload, drop or add in ＋ New song comes back as a play-along backing (needs `serve.py`; files already named *backing / no guitar / karaoke / instrumental* load as they are).
 
+## ☁️ Cloud backings (Vercel)
+Live site: **https://songbook-player.vercel.app** (team marvels4). Your no-guitar backings live in a **private** Vercel Blob store (`songbook-backings`); `api/tracks.js` lists them with short-lived signed links and hands out signed upload links — only with your passphrase (`SONGBOOK_KEY` env var). In the app: **☁️ Connect cloud** once per device, then songs without local audio load their backing from the cloud automatically; **☁️ Save to cloud** uploads one; 🎸 Remove guitar saves new backings there too. Plain file URLs without a signature are refused.
+
 ## Make a no-guitar backing track
 ```bash
 brew install ffmpeg python@3.12

@@ -373,6 +373,7 @@ body.live-on .livetab{display:none}
 .takelist{display:flex;flex-direction:column;gap:8px}.take{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
 .takehd{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}.takehd small{color:var(--muted)}.take audio{width:100%;height:36px}
 .takeacts{display:flex;flex-wrap:wrap;gap:6px}.takevid{width:100%;max-height:60vh;border-radius:10px;background:#000}.recpv canvas{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000;display:block}.takeacts .libbtn{padding:6px 10px;font-size:13px;text-decoration:none}
+.cloudst{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--fg)}.cloudst small{color:var(--muted);font-weight:400}.cloudst .libbtn{padding:6px 10px;font-size:13px}.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:12px}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -436,6 +437,7 @@ body.live-on .livetab{display:none}
   <details class="dsec" id="secCourse"><summary>🎓 Guitar course</summary><div id="dashCourse"></div></details>
   <details class="dsec" id="secSongs"><summary>🎵 Songs <span class="donecount" id="doneCount"></span></summary>
     <div class="dsongtools"><input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off"><button id="newSong" type="button" class="libbtn primary" title="Build a new song">＋ New</button></div>
+    <div class="cloudst" id="cloudStatus"></div>
     <nav class="shelf" id="shelf" aria-label="Songs"></nav>
   </details>
 </aside>
@@ -666,7 +668,10 @@ function renderSong(){
   rg.addEventListener("click",()=>removeGuitar(rg,rgi));rgi.addEventListener("change",()=>{const f=rgi.files&&rgi.files[0];if(f)removeGuitar(rg,rgi,f);});
   const ar=el("label","rgauto");const arc=document.createElement("input");arc.type="checkbox";arc.checked=store.get("sb-rg-auto",true);arc.addEventListener("change",()=>store.set("sb-rg-auto",arc.checked));
   ar.title="When on, any song you upload (🎵 Load, drag-and-drop, ⇧ Open) comes back with the guitar taken out and quiet intros filled with a soft guide guitar";ar.append(arc,"🎸 Remove guitar on upload");
-  fr.append(fb,fi,ar,fdb,fdi,rg,rgi,buy,fg,fn);vc.appendChild(fr);
+  const cloudB=el("button","filebtn",cloudKey()?"☁️ From cloud":"☁️ Connect cloud");cloudB.type="button";cloudB.title=cloudKey()?"Load this song's backing from your cloud":"Use your private cloud backings on this device";
+  cloudB.addEventListener("click",()=>cloudKey()?cloudLoad(cur):cloudConnect());
+  const cloudS=el("button","filebtn","☁️ Save to cloud");cloudS.type="button";cloudS.title="Upload this song's backing to your private cloud";cloudS.hidden=!cloudKey();cloudS.addEventListener("click",cloudSaveCurrent);
+  fr.append(fb,fi,ar,cloudB,cloudS,fdb,fdi,rg,rgi,buy,fg,fn);vc.appendChild(fr);
   fi.addEventListener("change",()=>{const f=fi.files&&fi.files[0];if(f)uploadSong(f);});
   main.appendChild(vc);
 
@@ -979,6 +984,7 @@ async function autoConnect(id){
   if(!rec&&folderFiles.length){let best=null,bs=0;folderFiles.forEach(f=>{const sc=scoreFile(cur,f.name);if(sc>bs){bs=sc;best=f;}});if(best){rec={name:best.name,type:best.type,blob:best};await idb("put",id,rec);}}
   if(!cur||cur.id!==id||au)return;
   const fn=$("fname");
+  if(!rec&&cloudKey()&&loadSeq===seq0){if(await cloudLoad(cur,true))return;}
   if(!rec){if(fn)fn.textContent="No MP3 connected for this song yet — 🎵 load it, 📁 connect your music folder (auto-matches by name), or 🛒 get it. Drag-and-drop works too.";return;}
   if(loadSeq!==seq0)return;   // you loaded a file yourself while we were looking
   const f=rec.blob instanceof File?rec.blob:new File([rec.blob],rec.name,{type:rec.type||rec.blob.type||"audio/mpeg"});
@@ -1940,6 +1946,38 @@ async function renderTakes(open){
   const old=$("takes");if(old)old.replaceWith(box);else{const lb=$("lyrBox"),st=document.querySelector("#main .stage");(lb||st||main.lastChild).after(box);}
   recUI();
 }
+// ---------- ☁️ cloud backings: private Vercel Blob store behind /api/tracks (passphrase per device, signed links) ----------
+const CLOUD_API=(/\.vercel\.app$/.test(location.hostname)?"":"https://songbook-player.vercel.app")+"/api/tracks";
+let cloud={tracks:null,until:0,busy:false};
+const cloudKey=()=>store.get("sb-cloud-key","")||"";
+async function cloudList(force){if(!cloudKey())return null;if(!force&&cloud.tracks&&Date.now()<cloud.until-60e3)return cloud.tracks;
+  let r;try{r=await fetch(CLOUD_API,{headers:{"X-Songbook-Key":cloudKey()},cache:"no-store"});}catch(e){toast("☁️ Cloud unreachable — check your connection");return null;}
+  if(r.status===401){store.set("sb-cloud-key","");cloud={tracks:null,until:0};renderCloudStatus();toast("☁️ Wrong cloud passphrase — connect again");return null;}
+  if(!r.ok){toast("☁️ Cloud error "+r.status);return null;}const d=await r.json();cloud={tracks:d.tracks||[],until:d.validUntil||Date.now()+3600e3};renderCloudStatus();return cloud.tracks;}
+function cloudMatch(s,tracks){let best=null,bs=0;(tracks||[]).forEach(t=>{const sc=scoreFile(s,t.name);if(sc>bs){bs=sc;best=t;}});return best;}
+async function cloudLoad(s,quiet){const tr=await cloudList();if(!tr||cur!==s)return false;const t=cloudMatch(s,tr);
+  if(!t){if(!quiet)toast("☁️ No backing for "+s.title+" in your cloud yet");return false;}
+  const fn=$("fname");if(fn)fn.textContent="☁️ Loading “"+t.name+"” from your cloud…";
+  try{const r=await fetch(t.url);if(!r.ok)throw new Error(r.status);const b=await r.blob();if(cur!==s)return false;
+    await loadSongFile(new File([b],t.name,{type:b.type&&b.type!=="application/octet-stream"?b.type:mimeFor({name:t.name})}));return true;}
+  catch(e){if(fn)fn.textContent="☁️ Couldn't download from the cloud ("+e.message+") — try again";return false;}}
+async function cloudUpload(file,name){if(!cloudKey())return false;
+  const r=await fetch(CLOUD_API+"?name="+encodeURIComponent(name),{method:"POST",headers:{"X-Songbook-Key":cloudKey()}});
+  if(!r.ok){toast("☁️ Upload refused ("+r.status+")");return false;}const {uploadUrl}=await r.json();
+  const p=await fetch(uploadUrl,{method:"PUT",body:file,headers:{"Content-Type":file.type||mimeFor({name})}});
+  if(!p.ok){toast("☁️ Upload failed ("+p.status+")");return false;}cloud.until=0;await cloudList(true);return true;}
+async function cloudSaveCurrent(){const s=cur;let rec=null;if(SONG_AUDIO[s.id]){try{const bl=await (await fetch(SONG_AUDIO[s.id].data)).blob();rec={name:SONG_AUDIO[s.id].name,blob:bl};}catch(e){}}
+  if(!rec)rec=await idb("get",s.id);if(!rec){toast("Load this song's MP3 or backing first");return;}
+  const name=String(rec.name||s.title+".m4a").replace(/[\\/:*?"<>|]+/g," ");toast("☁️ Uploading “"+name+"”…");
+  if(await cloudUpload(rec.blob instanceof File?rec.blob:new File([rec.blob],name,{type:rec.blob.type||mimeFor({name})}),name))toast("☁️ Saved to your cloud — open it on any device");}
+async function cloudConnect(){const k=prompt("☁️ Cloud passphrase for your backing tracks:","");if(!k||!k.trim())return;store.set("sb-cloud-key",k.trim());
+  const tr=await cloudList(true);if(tr){toast("☁️ Connected — "+tr.length+" backing track"+(tr.length===1?"":"s")+" in your cloud");if(cur&&!au)cloudLoad(cur,true);renderSong();}}
+function cloudDisconnect(){store.set("sb-cloud-key","");cloud={tracks:null,until:0};renderCloudStatus();renderSong();toast("☁️ Cloud disconnected on this device");}
+function renderCloudStatus(){const h=$("cloudStatus");if(!h)return;h.innerHTML="";
+  if(!cloudKey()){const b=el("button","libbtn","☁️ Connect cloud backings");b.type="button";b.addEventListener("click",cloudConnect);h.append(b,el("small",null,"Your no-guitar backings, on any device"));return;}
+  const n=cloud.tracks?cloud.tracks.length:"…";h.append(el("span",null,"☁️ Cloud: "+n+" backing track"+(n===1?"":"s")));
+  const x=el("button","linkbtn","Disconnect");x.type="button";x.addEventListener("click",cloudDisconnect);h.appendChild(x);if(!cloud.tracks)cloudList();}
+
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){
   const s=cur,say=m=>{const fn=$("fname");if(fn&&cur===s)fn.textContent=m;};
@@ -1960,6 +1998,7 @@ async function removeGuitar(btn,picker,file){
     if(cur!==s){toast("✓ Backing for "+s.title+" saved to Downloads › Songbook Backing Tracks");return;}
     store.set("sb-backing-"+s.id,{name,at:Date.now(),guide:info.guide,bare:info.bare_fraction});
     await loadSongFile(out);if(cur===s){const st=qaStatus(s);if(st.ok)toast("✓ All 8 gates pass for "+s.title);}
+    if(cloudKey()){if(await cloudUpload(out,name))toast("☁️ Backing also saved to your cloud");}
     toast("✓ Guitar removed — playing “"+name+"”. Also saved to Downloads › Songbook Backing Tracks"+(info.guide_guitar_at&&info.guide_guitar_at.length?" · soft guitar at "+info.guide_guitar_at.map(x=>x.join("–")).join(", "):""));
   }catch(e){clearInterval(tick);say("🎸 Couldn't make the backing: "+e.message);}
   finally{btn.disabled=false;}
@@ -2334,7 +2373,7 @@ new MutationObserver(redraw).observe(document.documentElement,{attributes:true,a
 refreshSongs();
 $("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));$("liveTab").addEventListener("click",()=>toggleLive(true));document.addEventListener("pointerdown",e=>{if(innerWidth>=1100)return;const tg=e.target;if(document.body.classList.contains("dash-on")&&!tg.closest("#dash,#dashTab"))toggleDash(false);if(document.body.classList.contains("live-on")&&!tg.closest("#live,#liveTab"))toggleLive(false);},true);toggleLive(store.get("sb-live-open",innerWidth>=1500));
 [["secTuner",true],["secCourse",true],["secSongs",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});
-toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();renderTuner();
+toggleDash(store.get("sb-dash-open",innerWidth>=1100));renderDash();renderTuner();renderCloudStatus();
 (()=>{const last=store.get("songbook-last",null);choose((songs.find(s=>s.id===last)||songs[0]).id);})();
 </script>
 </body></html>

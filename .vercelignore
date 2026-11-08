@@ -12,3 +12,5 @@ pipeline/
 Songbook Player.html
 songbook-layout-patch.html
 .claude/
+.env*
+node_modules/

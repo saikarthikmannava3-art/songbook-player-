@@ -1,0 +1,7 @@
+{
+  "name": "songbook-player",
+  "private": true,
+  "type": "module",
+  "description": "Static Songbook Player + one serverless function (api/tracks.js) for private cloud backing tracks",
+  "dependencies": { "@vercel/blob": "^2.8.2" }
+}

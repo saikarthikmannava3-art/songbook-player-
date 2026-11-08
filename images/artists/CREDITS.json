@@ -40,5 +40,12 @@
   "license": "CC BY-SA 3.0",
   "source": "https://commons.wikimedia.org/wiki/File:Harris_Jayaraj_at_Gethu_Audio_Launch_(cropped).jpg",
   "note": "square face crop"
+ },
+ "avicii": {
+  "file": "avicii.jpg",
+  "author": "The Perfect World Foundation",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Avicii_2014_003cr.jpg",
+  "note": "square face crop"
  }
 }

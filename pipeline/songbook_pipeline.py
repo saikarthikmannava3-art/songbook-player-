@@ -34,7 +34,7 @@ measured timing for the changes they tapped. Bump song["rev"] on every re-releas
 per-device settings (old BPM / sync) are discarded automatically.
 
 Usage:
-  python3 songbook_pipeline.py SONG.json AUDIO.(mp3|m4a|wav) [--out SONG_fitted.json] [--chroma-audio HARMONY.wav]
+  python3 songbook_pipeline.py SONG.json AUDIO.(mp3|m4a|wav) [--out SONG_fitted.json] [--chroma-audio HARMONY.wav] [--constant-tempo]
   (HARMONY.wav = the song without vocals and drums, e.g. from Demucs stems — chords are then scored on what the
    instruments play, not on the sung melody. make_backing.py --keep-stems gives you the stems.)
 Needs: librosa, numpy (pip install librosa), ffmpeg for m4a/mp3.
@@ -90,6 +90,26 @@ def check_rules(song):
         if bad: out.append('Easy uses barre chords: ' + ', '.join(bad))
     return out
 
+def constant_grid(y, sr, bpm0):
+    """Exact constant-tempo beat grid: search tempo (±1 BPM around bpm0) and phase that best fit the onset envelope.
+    Beat trackers quantise beat times to the analysis hop and can drift ~1 beat per minute on fixed-tempo tracks."""
+    import librosa
+    hop = 64; env = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop); dur = len(y) / sr
+    def score(B, t0):
+        ts = np.arange(t0, dur, 60 / B); idx = np.clip(np.round(ts * sr / hop).astype(int), 0, len(env) - 1); return env[idx].sum()
+    best = (0, bpm0, 0.0)
+    for B in np.arange(bpm0 - 1, bpm0 + 1.001, 0.02):
+        for t0 in np.arange(0, 60 / B, 0.004):
+            s = score(B, t0)
+            if s > best[0]: best = (s, B, t0)
+    _, B, t0 = best
+    for B2 in np.arange(B - 0.03, B + 0.031, 0.002):
+        for t2 in np.arange(t0 - 0.008, t0 + 0.0081, 0.0005):
+            s = score(B2, t2)
+            if s > best[0]: best = (s, B2, t2)
+    _, B, t0 = best
+    return np.arange(t0, dur - 60 / B, 60 / B)
+
 def load_audio(path, sr=22050):
     import librosa
     if not path.lower().endswith('.wav'):
@@ -100,6 +120,7 @@ def load_audio(path, sr=22050):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('song'); ap.add_argument('audio'); ap.add_argument('--out')
+    ap.add_argument('--constant-tempo', action='store_true', help='fit one exact tempo + phase to the onsets (electronic / click-track songs) instead of beat tracking, which can drift')
     ap.add_argument('--chroma-audio', help='harmony-only audio for gates 5-6 (e.g. guitar+piano+other+bass stems, no vocals/drums); beats still come from AUDIO')
     a = ap.parse_args()
     import librosa
@@ -109,8 +130,12 @@ def main():
 
     # GATE 4 — beats
     y, sr = load_audio(a.audio)
-    _, beats = librosa.beat.beat_track(y=y, sr=sr, start_bpm=song.get('bpm', 120), tightness=200, units='frames')
-    bt = librosa.frames_to_time(beats, sr=sr)
+    if a.constant_tempo:
+        bt = constant_grid(y, sr, float(song.get('bpm', 120)))
+        beats = librosa.time_to_frames(bt, sr=sr)
+    else:
+        _, beats = librosa.beat.beat_track(y=y, sr=sr, start_bpm=song.get('bpm', 120), tightness=200, units='frames')
+        bt = librosa.frames_to_time(beats, sr=sr)
     bpm = 60.0 / float(np.mean(np.diff(bt)))
     yh = load_audio(a.chroma_audio, sr)[0] if a.chroma_audio else librosa.effects.harmonic(y)   # sung melody notes skew chord chroma
     if len(yh) < len(y): yh = np.pad(yh, (0, len(y) - len(yh)))

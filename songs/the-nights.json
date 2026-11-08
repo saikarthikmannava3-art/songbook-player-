@@ -1,0 +1,650 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "the-nights",
+   "order": 7,
+   "title": "The Nights",
+   "artist": "Avicii",
+   "from": "The Days / Nights EP (2014)",
+   "key": "D#m / F# (Am shapes, capo 6)",
+   "capo": 6,
+   "bpm": 126,
+   "beatsPerBar": 4,
+   "subdiv": 4,
+   "timeLabel": "4/4 · 16ths",
+   "length": "2:56",
+   "firstBeat": 1.3,
+   "youtube": "https://www.youtube.com/watch?v=CxF9fHnCz7s",
+   "strums": [
+    {
+     "label": "Easy — one strum per chord, let it ring",
+     "s": "D.......",
+     "src": {
+      "label": "Ultimate Guitar / ChordsEasy / E-Chords: chorus played as single strums",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1669140"
+     }
+    },
+    {
+     "label": "Medium — D · D · · U D U, twice per bar (16ths)",
+     "s": "D.D..UDUD.D..UDU",
+     "src": {
+      "label": "Ultimate Guitar official strumming (verse, pre-chorus · 126 BPM)",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1669140"
+     }
+    },
+    {
+     "label": "Hard — the recording's guitar: accents on the e of 1, & of 2, e of 3, & of 4",
+     "s": ".U.ud.D..U..d.D.",
+     "src": {
+      "label": "Measured from your recording (guitar stem, verses)"
+     }
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Chorus — single strums (the guitar drops out)",
+     "s": "D...............",
+     "src": {
+      "label": "UG / ChordsEasy 'single strum' + recording (no guitar in the drop)",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1669140"
+     }
+    },
+    "mid": {
+     "label": "Verse / pre-chorus — the recording's guitar",
+     "s": ".U.ud.D..U..d.D.",
+     "src": {
+      "label": "Measured from your recording"
+     }
+    },
+    "full": {
+     "label": "Instrumental — the recording's guitar (& of 2, 3, 4)",
+     "s": "d.d...D...D...D.",
+     "src": {
+      "label": "Measured from your recording (instrumental)"
+     }
+    }
+   },
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Capo 6, open chords only, one per bar: Am G Fmaj7 C (+ C/G). Ultimate Guitar ver 3's Am-shape version with F played as Fmaj7 (xx3210).",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "mid",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "C/G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "ring",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "full",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "mid",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "C/G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "ring",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "full",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "full",
+       "bars": [
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am",
+        "Fmaj7",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Ending",
+       "feel": "ring",
+       "bars": [
+        "C",
+        "C",
+        "C"
+       ]
+      }
+     ],
+     "src": {
+      "label": "Ultimate Guitar ver 3 (capo 6) + Easy rule (F→Fmaj7)",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1688442"
+     }
+    },
+    "intermediate": {
+     "label": "Medium",
+     "desc": "Capo 6, Ultimate Guitar ver 3 exactly: verse Am · G Am, pre-chorus F C G Am F C C/G G, chorus F C G Am, instrumental F C G Am ×4.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "mid",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "C/G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "ring",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "mid",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "C/G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "ring",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Ending",
+       "feel": "ring",
+       "bars": [
+        "C",
+        "C",
+        "C"
+       ]
+      }
+     ],
+     "src": {
+      "label": "Ultimate Guitar ver 3 (capo 6, 4.87★ / 542 votes)",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1688442"
+     }
+    },
+    "band": {
+     "label": "Hard",
+     "desc": "Ultimate Guitar's top version (4.9★ / 1217 votes, written at capo 2: C#m B A E) moved to capo 6: the instrumental's quick G at the end of every other line (A E B C#m B), the held B into the chorus, measured ending.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Am"
+       ]
+      },
+      {
+       "name": "Verse 1",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 1",
+       "feel": "mid",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 1",
+       "feel": "ring",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Instrumental",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2",
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2"
+       ]
+      },
+      {
+       "name": "Verse 2",
+       "feel": "mid",
+       "bars": [
+        "Am",
+        "Am",
+        "G",
+        "Am",
+        "Am",
+        "Am",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Pre-chorus 2",
+       "feel": "mid",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "G"
+       ]
+      },
+      {
+       "name": "Chorus 2",
+       "feel": "ring",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Interlude",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Outro",
+       "feel": "full",
+       "bars": [
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2",
+        "F",
+        "C",
+        "G",
+        "Am",
+        "F",
+        "C",
+        "G",
+        "Am:2 G:2",
+        "F",
+        "C",
+        "G",
+        "Am"
+       ]
+      },
+      {
+       "name": "Ending",
+       "feel": "ring",
+       "bars": [
+        "C",
+        "C",
+        "C:1 G:3"
+       ]
+      }
+     ],
+     "src": {
+      "label": "Ultimate Guitar main version + your recording",
+      "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1669140"
+     }
+    }
+   },
+   "notes": [
+    "Capo 6, Am shapes (sounds in D#m / F#). 126 BPM, timed to your MP3 (first downbeat 1.32 s).",
+    "Prefer capo 2? The same song is C#m B A E there (Ultimate Guitar's top version) — but C#m and B are barre chords, which is why this file uses capo 6.",
+    "Chorus: single strums — the guitar drops out under the beat (Ultimate Guitar, ChordsEasy, E-Chords; the recording agrees).",
+    "Medium strum (Ultimate Guitar official): D · D · · U D U on each half bar. Hard = what the record's guitar plays: syncopated, accents on the e of 1, & of 2, e of 3, & of 4."
+   ],
+   "sources": [
+    {
+     "label": "Ultimate Guitar — main version (capo 2, official strum pattern)",
+     "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1669140"
+    },
+    {
+     "label": "Ultimate Guitar ver 3 (capo 6)",
+     "url": "https://tabs.ultimate-guitar.com/tab/avicii/the-nights-chords-1688442"
+    },
+    {
+     "label": "ChordsEasy (capo 1, chorus single strum)",
+     "url": "https://chordseasy.com/song/27962/the-nights/"
+    },
+    {
+     "label": "Kenneth Acoustic easy version (capo 6)",
+     "url": "https://www.youtube.com/watch?v=dLDUe8EJzdE"
+    },
+    {
+     "label": "SongBPM (126 BPM, F# major)",
+     "url": "https://songbpm.com/@avicii/the-nights"
+    },
+    {
+     "label": "Your recording (Avicii – The Nights MP3)",
+     "url": "#"
+    }
+   ],
+   "links": [
+    {
+     "label": "Play-along",
+     "url": "https://www.youtube.com/watch?v=CxF9fHnCz7s"
+    },
+    {
+     "label": "Easy tutorial",
+     "url": "https://www.youtube.com/watch?v=6ZfSKVqPMZQ"
+    },
+    {
+     "label": "Easy fingerstyle (capo 6)",
+     "url": "https://www.youtube.com/watch?v=dLDUe8EJzdE"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g8": true,
+    "g3": true,
+    "g4": true,
+    "g5": true,
+    "g6": true,
+    "g7": true,
+    "top1": 0.835,
+    "top2": 0.956,
+    "bpm_measured": 125.99,
+    "disputed": "Constant-tempo grid (125.99 BPM) — beat tracking drifted ~1 beat/80 s on this track. Chords scored on the instruments only. Capo 6 (UG ver 3) chosen over UG's top capo-2 version so Easy can be open chords at the same capo."
+   },
+   "rev": 2,
+   "map": [
+    1.3,
+    3.205,
+    18.444,
+    33.683,
+    48.922,
+    79.399,
+    94.638,
+    109.877,
+    125.116,
+    140.355,
+    170.832
+   ]
+  }
+ ]
+}

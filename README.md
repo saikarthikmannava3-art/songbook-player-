@@ -17,6 +17,7 @@ Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-
 - **🎓 Guitar course** side panel: JustinGuitar Grade 1 (Modules 0–7) and Grade 2 (Module 8) from Karthik Songbook pages 4–11, with module/lesson ticks, the Grade 1 checklist, strumming order, a 20-minute session and *My 5 songs*. Progress is kept in the browser (included in ⚙︎ Backup).
 - **🎸 Song practice**: Play along on YouTube, 📄 Song sheet (the song's page from your songbook PDF), chord shapes & tips, warm-up plan, chord & strumming drill with a moving strum marker, one-minute chord changes.
 - **Song map**, sticky **player** (Practice / YouTube / your file), moving **chord lane** with section headings on the left, **lyrics with chords** that follow the song (collapsible).
+- **🎙️ Record yourself**: 🔴 Rec in the player records your mic while the song plays (optionally mixed with the backing — use headphones); takes are saved per song in the browser with play, rename, download and ⤴ Share / upload.
 - **📚 Songbook**: upload PDFs (kept in the browser), ★ link a page to a song; books listed in `songbook/songbook.json` load automatically.
 - **🎸 Remove guitar** / **Remove guitar on upload** (checkbox next to 🎵 Load, on by default): any song file you upload, drop or add in ＋ New song comes back as a play-along backing (needs `serve.py`; files already named *backing / no guitar / karaoke / instrumental* load as they are).
 

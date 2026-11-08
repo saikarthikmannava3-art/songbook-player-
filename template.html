@@ -365,6 +365,14 @@ body.live-on .livetab{display:none}
 .dash .shelf button[aria-pressed="true"] .stx small.donedate{color:inherit}
 .donecount{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--c-E);margin-left:6px}
 .songtools .donebtn.on{background:var(--c-E);color:#06281b;border-color:var(--c-E)}
+
+#recBtn.recording{background:#d33;color:#fff;border-color:#d33;animation:recpulse 1.2s ease-in-out infinite}
+@keyframes recpulse{50%{box-shadow:0 0 0 6px rgba(221,51,51,.25)}}
+.takes>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
+.takebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.takelist{display:flex;flex-direction:column;gap:8px}.take{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.takehd{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}.takehd small{color:var(--muted)}.take audio{width:100%;height:36px}
+.takeacts{display:flex;flex-wrap:wrap;gap:6px}.takeacts .libbtn{padding:6px 10px;font-size:13px;text-decoration:none}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -693,6 +701,7 @@ function renderSong(){
    <button id="tapBtn" type="button" aria-pressed="false" title="While the song plays, press T exactly when you hear a chord change — that change is locked to your tap">✋ Tap changes</button>
    <button id="mapBtn" type="button" title="Tap at each section start while the song plays — saved for perfect sync">📍 Map sections</button>
    <button id="loopBtn" type="button" aria-pressed="false" title="Repeat the current section">🔁 Loop</button>
+   <button id="recBtn" type="button" title="Record yourself playing along — saved as a take for this song">🔴 Rec</button>
    <button id="rampBtn" type="button" aria-pressed="false" title="Each loop gets a little faster" hidden>📈 Speed up</button>
    <span id="hear" class="lstat" hidden></span>
    <div class="beats" id="beats" aria-hidden="true"></div>
@@ -762,6 +771,7 @@ function renderSong(){
   renderTrainer();
   renderSongbook();
   renderSheet();
+  renderTakes();
 
   // song map: every section on one line — repeats collapsed (D ×11), its strum shown beside it; tap a chord to jump
   const chart=document.createElement("details");chart.className="card chart";chart.open=store.get("sb-map-open",false);
@@ -806,6 +816,7 @@ function renderSong(){
   $("mapBtn").addEventListener("click",()=>mapping?endMapping(false):startMapping());
   $("tapBtn").addEventListener("click",()=>{tapMode=!tapMode;if(tapMode)toast("Play the song. Press T (or the big button) exactly when you hear each chord change you want to fix.");ui();});
   $("loopBtn").addEventListener("click",()=>{loopSec=loopSec==null?secAtTime(songT()):null;ui();});
+  $("recBtn").addEventListener("click",()=>rec?recStop():recStart());if(rec)recUI();
   $("rampBtn").addEventListener("click",()=>{ramp=!ramp;ui();});
   $("bpm").addEventListener("change",e=>setBpm(Number(e.target.value)));
   $("bpmDn").addEventListener("click",()=>setBpm(tune.bpm-(mode==="practice"?1:0.1)));
@@ -995,7 +1006,7 @@ async function loadSongFile(f,opt){
   let done=false;
   const ready=()=>{if(done||a.error||my!==loadSeq)return;done=true;au=a;auName=f.name;
     ["play","pause","seeked","ended"].forEach(ev=>a.addEventListener(ev,()=>{schedReset();ui();kick();paint(true);}));
-    try{audio();const sn=ctx.createMediaElementSource(a),an=ctx.createAnalyser();an.fftSize=8192;an.smoothingTimeConstant=0.6;sn.connect(ctx.destination);sn.connect(an);fileAn=an;}catch(e){fileAn=null;}
+    try{audio();const sn=ctx.createMediaElementSource(a),an=ctx.createAnalyser();an.fftSize=8192;an.smoothingTimeConstant=0.6;sn.connect(ctx.destination);sn.connect(an);fileAn=an;a._src=sn;}catch(e){fileAn=null;}
     mode="file";const ms=$("mode");if(ms){ms.querySelector('[value="file"]').disabled=false;ms.value="file";}
     const dur=isFinite(a.duration)&&a.duration>0?" ("+fmt(a.duration).replace(/\.\d$/,"")+")":"";
     say((opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+dur+" — press ▶ Play."+(opt.save===false?"":" Saved for next time."));
@@ -1802,6 +1813,65 @@ const BACKING_RE=/backing|no guitar|karaoke|instrumental|minus ?one/i;
 function uploadSong(f,force){
   if(!(force||store.get("sb-rg-auto",true))||BACKING_RE.test(f.name||"")){loadSongFile(f);return;}
   const b=document.createElement("button");b.dataset.fromBuilder="1";removeGuitar(b,document.createElement("input"),f);}
+
+// ---------- 🎙️ record yourself: mic (+ optional backing mix) while the song plays → takes saved per song (IndexedDB) ----------
+function tdb(op,val){return new Promise(res=>{try{const r=indexedDB.open("songbook-takes",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("takes",{keyPath:"id",autoIncrement:true});r.onerror=()=>res(null);
+  r.onsuccess=()=>{const tx=r.result.transaction("takes",op==="all"?"readonly":"readwrite"),st=tx.objectStore("takes");
+    const q=op==="all"?st.getAll():op==="put"?st.put(val):st.delete(val);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);};}catch(e){res(null);}});}
+let rec=null;
+const recMime=()=>["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||"";
+const fmtDur=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+async function recStart(){
+  if(!window.MediaRecorder){alert("This browser can't record audio. Try Chrome or Safari (iOS 14.3+).");return;}
+  audio();if(!ctx){toast("Audio isn't available in this browser");return;}
+  let mic;try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
+  catch(e){toast("Microphone blocked — allow it in the address bar (🔒 → Microphone)");return;}
+  const s=cur,dest=ctx.createMediaStreamDestination(),ms=ctx.createMediaStreamSource(mic),mg=ctx.createGain();mg.gain.value=1;ms.connect(mg).connect(dest);
+  const withBacking=store.get("sb-rec-mix",true)&&mode==="file"&&!!au;let bg=null;
+  if(withBacking){try{if(!au._src){au._src=ctx.createMediaElementSource(au);au._src.connect(ctx.destination);}bg=ctx.createGain();bg.gain.value=0.8;au._src.connect(bg).connect(dest);}catch(e){bg=null;}}
+  const mime=recMime(),mr=new MediaRecorder(dest.stream,mime?{mimeType:mime}:undefined),chunks=[];
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  rec={s,mr,mic,ms,mg,bg,chunks,t0:Date.now(),mixed:!!bg,from:songT(),iv:0};
+  mr.onstop=async()=>{const r=rec;rec=null;clearInterval(r.iv);r.mic.getTracks().forEach(x=>x.stop());try{r.ms.disconnect();r.mg.disconnect();if(r.bg){au&&au._src&&au._src.disconnect(r.bg);r.bg.disconnect();}}catch(e){}
+    const type=mr.mimeType||mime||"audio/webm",blob=new Blob(r.chunks,{type}),dur=(Date.now()-r.t0)/1000;recUI();
+    if(dur<1.5||!blob.size){toast("Recording too short — not saved");return;}
+    const n=((await tdb("all"))||[]).filter(x=>x.songId===r.s.id).length+1;
+    await tdb("put",{songId:r.s.id,name:r.s.title+" — take "+n,date:Date.now(),dur,mixed:r.mixed,from:r.from,type,blob});
+    toast("🎙️ Saved take "+n+" of "+r.s.title+(r.mixed?" (with backing)":""));if(cur===r.s)renderTakes(true);};
+  mr.start(1000);rec.iv=setInterval(recUI,500);recUI();
+  if(!isPlaying())play();
+  if(mode==="file"&&au&&!au._recEnd){au._recEnd=true;au.addEventListener("ended",()=>{if(rec)recStop();});}
+}
+function recStop(){if(rec&&rec.mr.state!=="inactive")rec.mr.stop();}
+function recUI(){const b=$("recBtn");if(!b)return;b.classList.toggle("recording",!!rec);b.textContent=rec?"■ Stop "+fmtDur((Date.now()-rec.t0)/1000):"🔴 Rec";
+  b.title=rec?"Stop recording and save the take":"Record yourself playing along — saved as a take for this song";}
+async function renderTakes(open){
+  const s=cur;const all=((await tdb("all"))||[]).filter(x=>x.songId===s.id).sort((a,b)=>b.date-a.date);if(cur!==s)return;
+  const box=document.createElement("details");box.className="card takes";box.id="takes";box.open=open||store.get("sb-takes-open",false);
+  box.addEventListener("toggle",()=>store.set("sb-takes-open",box.open));
+  box.appendChild(el("summary",null,"🎙️ Record yourself"+(all.length?" · "+all.length+" take"+(all.length>1?"s":""):"")));
+  const row=el("div","takebar");const go=el("button","libbtn primary",rec?"■ Stop recording":"🔴 Record a take");go.type="button";
+  go.addEventListener("click",()=>rec?recStop():recStart());
+  const mx=el("label","rgauto");const mxc=document.createElement("input");mxc.type="checkbox";mxc.checked=store.get("sb-rec-mix",true);mxc.addEventListener("change",()=>store.set("sb-rec-mix",mxc.checked));
+  mx.append(mxc,"Mix the backing into the file (use headphones)");row.append(go,mx);box.appendChild(row);
+  box.appendChild(el("p","vdesc","Press record: the song starts and the mic records you until you stop (or the song ends). With the song's MP3/backing loaded you can mix it into the take; in YouTube mode only the mic is recorded. Takes stay in this browser — share or download one to upload it."));
+  const list=el("div","takelist");box.appendChild(list);
+  if(!all.length)list.appendChild(el("p","vdesc","No takes yet."));
+  all.forEach(tk=>{const r=el("div","take");const url=URL.createObjectURL(tk.blob);const a=document.createElement("audio");a.controls=true;a.preload="none";a.src=url;
+    const head=el("div","takehd");head.append(el("b",null,tk.name),el("small",null,new Date(tk.date).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" · "+fmtDur(tk.dur)+(tk.mixed?" · with backing":" · mic only")));
+    const ext=/mp4/.test(tk.type)?"m4a":/ogg/.test(tk.type)?"ogg":"webm",fname=(tk.name.replace(/[\\/:*?"<>|]+/g," ")+"."+ext);
+    const acts=el("div","takeacts");
+    const sh=el("button","libbtn","⤴ Share / upload");sh.type="button";sh.title="Send it to WhatsApp, Instagram, Drive, Files… (or download)";
+    sh.addEventListener("click",async()=>{const file=new File([tk.blob],fname,{type:tk.type});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:tk.name,text:"Me playing "+s.title+" — Songbook Player"});}catch(e){}}
+      else{const l=document.createElement("a");l.href=url;l.download=fname;document.body.appendChild(l);l.click();l.remove();toast("Downloaded — upload it wherever you like");}});
+    const dl=el("a","libbtn","⇩");dl.href=url;dl.download=fname;dl.title="Download";
+    const rn=el("button","libbtn","✎");rn.type="button";rn.title="Rename";rn.addEventListener("click",async()=>{const v=prompt("Name this take",tk.name);if(v&&v.trim()){tk.name=v.trim();await tdb("put",tk);renderTakes(true);}});
+    const rm=el("button","libbtn","✕");rm.type="button";rm.title="Delete";rm.addEventListener("click",async()=>{if(confirm("Delete “"+tk.name+"”?")){await tdb("del",tk.id);URL.revokeObjectURL(url);renderTakes(true);}});
+    acts.append(sh,dl,rn,rm);r.append(head,a,acts);list.appendChild(r);});
+  const old=$("takes");if(old)old.replaceWith(box);else{const lb=$("lyrBox"),st=document.querySelector("#main .stage");(lb||st||main.lastChild).after(box);}
+}
 
 // ---------- 🎸 remove guitar: send the song's MP3 to pipeline/serve.py (local), get a no-guitar backing back ----------
 async function removeGuitar(btn,picker,file){

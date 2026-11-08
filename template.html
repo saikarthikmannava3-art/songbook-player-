@@ -309,6 +309,19 @@ body.dash-on .dashtab{display:none}
 #lyrBox>.nextup{align-self:flex-start;position:sticky;top:0;z-index:1;background:var(--surface);font-size:15px;padding:6px 14px}
 .nextup .nc{display:inline-flex;align-items:baseline;gap:6px;font-size:14px}.nextup .nch{font-family:var(--display);font-weight:800;font-size:18px}.nextup .nch.first{font-size:28px;line-height:1}
 .nextup.soon .nch{color:var(--accent-ink)!important}
+
+.tbar{display:flex;gap:6px;align-items:center}.tsp{flex:1}
+.tseg{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:5px 10px;cursor:pointer}.tseg.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tcents{font:800 18px var(--mono);color:var(--muted);min-height:22px}.tdisp.live .tcents{color:var(--fg)}.tdisp.ok .tcents{color:var(--c-E)}
+.tstrobe,.ttrace{width:100%;border-radius:10px;display:block}.tstrobe{height:44px;margin:4px 0 6px}.ttrace{height:56px;margin-top:6px}
+.tclose{display:none}
+.tstrings button.drone{box-shadow:inset 0 0 0 2px var(--c-C)}
+.tmode{flex-wrap:wrap}.tmtx{margin:0}.topt{display:flex;gap:6px;flex-wrap:wrap}.topt select{flex:1;min-width:0}
+#tuner.tbig{position:fixed;inset:0;z-index:60;background:var(--bg);padding:calc(16px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px));overflow:auto;gap:12px;max-width:none}
+#tuner.tbig .tdisp{padding:20px 16px 16px;position:relative}#tuner.tbig .tnote{font-size:min(34vw,180px)}#tuner.tbig .tnote[data-oct]::after{font-size:38px}
+#tuner.tbig .tcents{font-size:34px;min-height:40px}#tuner.tbig .thz{font-size:16px}#tuner.tbig .thint{font-size:20px}#tuner.tbig .tmeter{height:44px}#tuner.tbig .tneedle{height:58px}
+#tuner.tbig .tstrobe{height:80px}#tuner.tbig .ttrace{height:90px}#tuner.tbig .tstrings button{padding:12px 0 8px}#tuner.tbig .tstrings button b{font-size:30px}
+#tuner.tbig .tclose{display:block;position:absolute;top:8px;right:8px;font:inherit;font-size:20px;background:none;border:0;color:var(--muted);cursor:pointer}
 /* 🎤 live panel (right) */
 .livepanel{position:fixed;top:0;right:0;bottom:0;width:340px;z-index:25;background:var(--surface);border-left:1px solid var(--line);padding:16px 14px 16px;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);transition:transform .2s ease;box-shadow:0 0 30px rgba(0,0,0,.25)}
 body.live-on .livepanel{transform:none}
@@ -1580,15 +1593,24 @@ async function renderDash(){
 function toggleDash(on){const open=on==null?!document.body.classList.contains("dash-on"):on;document.body.classList.toggle("dash-on",open);store.set("sb-dash-open",open);}
 
 
-// ---------- 🎚️ tuner: YIN pitch detection behind high/low-pass filters, adaptive noise gate, median + eased needle,
-//            alternate tunings, A4 calibration, auto or locked string, mic picker, ✓ per string once it holds in tune ----------
+// ---------- 🎚️ tuner: YIN on a filtered, down-sampled signal (per-instrument window), adaptive noise gate, median + eased
+//            readout, needle or strobe view, 4-second pitch trace, guitar/bass/ukulele/chromatic, A4 calibration,
+//            auto / locked / guided "tune all", drone reference, room sensitivity, big full-screen mode, screen kept awake ----------
 const TNOTE=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"],TFLAT=["C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"];
-const TUNINGS={std:["Standard",[40,45,50,55,59,64]],dropd:["Drop D",[38,45,50,55,59,64]],half:["Half step down (E♭)",[39,44,49,54,58,63]],full:["Whole step down (D)",[38,43,48,53,57,62]],openg:["Open G",[38,43,50,55,59,62]],opend:["Open D",[38,45,50,54,57,62]],dadgad:["DADGAD",[38,45,50,55,57,62]]};
-let tun=null;
-const tset=()=>Object.assign({tuning:"std",a4:440,lock:null,dev:""},store.get("sb-tuner",{}));
+const TINST={guitar:{name:"Guitar",N:4096,dec:2,minF:60,maxF:1100,hp:55,lp:1000},bass:{name:"Bass",N:8192,dec:4,minF:28,maxF:500,hp:25,lp:600},
+  uke:{name:"Ukulele",N:2048,dec:2,minF:180,maxF:1500,hp:150,lp:2000},chrom:{name:"Chromatic",N:8192,dec:2,minF:40,maxF:1500,hp:35,lp:1800}};
+const TUNINGS={std:["guitar","Standard",[40,45,50,55,59,64]],dropd:["guitar","Drop D",[38,45,50,55,59,64]],dropc:["guitar","Drop C",[36,43,48,53,57,62],1],
+  half:["guitar","Half step down (E♭)",[39,44,49,54,58,63],1],full:["guitar","Whole step down (D)",[38,43,48,53,57,62],1],
+  openg:["guitar","Open G",[38,43,50,55,59,62]],opend:["guitar","Open D",[38,45,50,54,57,62]],opene:["guitar","Open E",[40,47,52,56,59,64]],
+  openc:["guitar","Open C",[36,43,48,55,60,64]],dadgad:["guitar","DADGAD",[38,45,50,55,57,62]],
+  bass4:["bass","Bass · 4-string",[28,33,38,43]],bass5:["bass","Bass · 5-string",[23,28,33,38,43]],
+  uke:["uke","Ukulele · GCEA",[67,60,64,69]],ukelow:["uke","Ukulele · low G",[55,60,64,69]],chrom:["chrom","Chromatic (any note)",[]]};
+let tun=null,drone=null;
+const tset=()=>{const s=Object.assign({tuning:"std",a4:440,lock:null,dev:"",view:"needle",sens:1,guided:false,hold:false},store.get("sb-tuner",{}));if(!TUNINGS[s.tuning])s.tuning="std";return s;};
+const tsave=f=>{const s=tset();f(s);store.set("sb-tuner",s);return s;};
 const mfreq=(m,a4)=>a4*Math.pow(2,(m-69)/12);
 const mname=(m,flat)=>(flat?TFLAT:TNOTE)[(m%12+12)%12];
-function yin(buf,sr){const minF=60,maxF=1100,thr=0.12;
+function yin(buf,sr,minF,maxF){const thr=0.12;
   const maxLag=Math.min(Math.floor(sr/minF),buf.length>>1),minLag=Math.max(2,Math.floor(sr/maxF)),W=buf.length-maxLag,d=new Float32Array(maxLag+2);
   for(let tau=1;tau<=maxLag+1;tau++){let s=0;for(let j=0;j<W;j++){const x=buf[j]-buf[j+tau];s+=x*x;}d[tau]=s;}
   const cm=new Float32Array(maxLag+2);cm[0]=1;let run=0;for(let tau=1;tau<=maxLag+1;tau++){run+=d[tau];cm[tau]=run?d[tau]*tau/run:1;}
@@ -1596,71 +1618,123 @@ function yin(buf,sr){const minF=60,maxF=1100,thr=0.12;
   if(tau<0){let bv=1,bt=-1;for(let q=minLag;q<maxLag;q++)if(cm[q]<bv){bv=cm[q];bt=q;}if(bv>0.35||bt<0)return {f:-1,conf:0};tau=bt;}
   const a=cm[tau-1],b=cm[tau],c=cm[tau+1],den=a-2*b+c,sh=den?0.5*(a-c)/den:0;return {f:sr/(tau+sh),conf:1-b};}
 function renderTuner(){
-  const host=$("tuner");if(!host)return;host.innerHTML="";const S=tset();
-  const top=el("div","ttop");const sel=document.createElement("select");sel.setAttribute("aria-label","Tuning");
-  Object.entries(TUNINGS).forEach(([k,[n,ms]])=>{const o=el("option",null,n+" · "+ms.map(m=>mname(m,k==="half"||k==="full")).join(" "));o.value=k;sel.appendChild(o);});sel.value=S.tuning;
+  const host=$("tuner");if(!host)return;if(tun)tunerStop();host.innerHTML="";const S=tset();
+  const top=el("div","ttop");const sel=document.createElement("select");sel.setAttribute("aria-label","Instrument and tuning");
+  let grp=null,last="";Object.entries(TUNINGS).forEach(([k,[ins,n,ms,fl]])=>{if(ins!==last){grp=document.createElement("optgroup");grp.label=TINST[ins].name;sel.appendChild(grp);last=ins;}
+    const o=el("option",null,n+(ms.length?" · "+ms.map(m=>mname(m,fl)).join(" "):""));o.value=k;grp.appendChild(o);});sel.value=S.tuning;
   const a4=document.createElement("input");a4.type="number";a4.min=430;a4.max=450;a4.step=1;a4.value=S.a4;a4.title="Reference pitch A4 (Hz)";a4.setAttribute("aria-label","A4 reference in Hz");
   top.append(sel,el("span","ta4l","A4"),a4);host.appendChild(top);
-  const disp=el("div","tdisp");const nm=el("div","tnote","–");const hz=el("div","thz","Play one string at a time");
+  const bar=el("div","tbar");const vN=el("button","tseg","Needle"),vS=el("button","tseg","Strobe");[vN,vS].forEach(b=>b.type="button");
+  const big=el("button","tseg","⛶ Big");big.type="button";big.title="Full-screen tuner";bar.append(vN,vS,el("span","tsp"),big);host.appendChild(bar);
+  const disp=el("div","tdisp");const nm=el("div","tnote","–");const ct=el("div","tcents","");const hz=el("div","thz","Play one string at a time");
   const meter=el("div","tmeter");const needle=el("i","tneedle");meter.append(el("span","tz"),needle);["-50","-25","0","+25","+50"].forEach((x,i)=>{const l=el("small","tl",x);l.style.left=(i*25)+"%";meter.appendChild(l);});
-  const hint=el("div","thint","");const lvl=el("div","tlvl");const lvf=el("i");lvl.appendChild(lvf);disp.append(nm,hz,meter,hint,lvl);host.appendChild(disp);
+  const strobe=document.createElement("canvas");strobe.className="tstrobe";strobe.width=600;strobe.height=56;
+  const hint=el("div","thint","");const lvl=el("div","tlvl");const lvf=el("i");lvl.appendChild(lvf);
+  const trace=document.createElement("canvas");trace.className="ttrace";trace.width=600;trace.height=70;
+  const close=el("button","tclose","✕");close.type="button";close.title="Close big tuner";
+  disp.append(close,nm,ct,hz,meter,strobe,hint,lvl,trace);host.appendChild(disp);
   const strs=el("div","tstrings");host.appendChild(strs);
-  const modeRow=el("div","tmode");const auto=el("button","libbtn","Auto");auto.type="button";auto.title="Detect the string automatically";const mtx=el("span","dsub","");modeRow.append(auto,mtx);host.appendChild(modeRow);
-  const go=el("button","libbtn primary","🎤 Start tuner");go.type="button";host.appendChild(go);
-  const mic=document.createElement("select");mic.className="tmic";mic.hidden=true;mic.setAttribute("aria-label","Microphone");host.appendChild(mic);
-  host.appendChild(el("p","dsub","Pluck one string, let it ring. Tap a string to lock onto it and hear its note; tap again for Auto. Tune up to the note from below. Capo goes on after tuning."));
-  const u={nm,hz,needle,hint,lvf,go,disp,strs,auto,mtx,mic,sel,a4,btns:[],tuned:new Set()};host._ui=u;
-  const drawStrings=()=>{const s=tset(),ms=TUNINGS[s.tuning][1],flat=s.tuning==="half"||s.tuning==="full";strs.innerHTML="";u.btns=ms.map((m,i)=>{const b=el("button",null,"");b.type="button";
-      b.title=(s.lock===i?"Unlock (back to Auto)":"Lock onto string "+(6-i))+" · plays "+mname(m,flat)+(Math.floor(m/12)-1)+" ("+mfreq(m,s.a4).toFixed(1)+" Hz)";
-      b.append(el("b",null,mname(m,flat)),el("small",null,String(6-i)));if(s.lock===i)b.classList.add("lock");if(u.tuned.has(i))b.classList.add("done");
-      b.addEventListener("click",()=>{const z=tset();z.lock=z.lock===i?null:i;store.set("sb-tuner",z);tone(mfreq(m,z.a4));drawStrings();});strs.appendChild(b);return b;});
-    auto.classList.toggle("primary",s.lock==null);mtx.textContent=s.lock==null?"Auto: finds the nearest string":"Locked on string "+(6-s.lock)+" ("+mname(ms[s.lock],flat)+")";};
-  u.drawStrings=drawStrings;drawStrings();
-  auto.addEventListener("click",()=>{const z=tset();z.lock=null;store.set("sb-tuner",z);drawStrings();});
-  sel.addEventListener("change",()=>{const z=tset();z.tuning=sel.value;z.lock=null;store.set("sb-tuner",z);u.tuned.clear();drawStrings();});
-  a4.addEventListener("change",()=>{const z=tset();z.a4=Math.max(430,Math.min(450,+a4.value||440));a4.value=z.a4;store.set("sb-tuner",z);u.tuned.clear();drawStrings();});
-  mic.addEventListener("change",()=>{const z=tset();z.dev=mic.value;store.set("sb-tuner",z);if(tun){tunerStop();tunerStart();}});
+  const modeRow=el("div","tmode");const auto=el("button","libbtn","Auto");auto.type="button";const guided=el("button","libbtn","▶ Tune all");guided.type="button";guided.title="Guided: string by string, moves on when each one is in tune";
+  const hold=el("button","libbtn","🔊 Drone");hold.type="button";hold.title="On: tapping a string keeps its reference note sounding until you tap again";
+  modeRow.append(auto,guided,hold);host.appendChild(modeRow);const mtx=el("p","dsub tmtx","");host.appendChild(mtx);
+  const go=el("button","libbtn primary tgo","🎤 Start tuner");go.type="button";host.appendChild(go);
+  const opt=el("div","topt");const mic=document.createElement("select");mic.className="tmic";mic.hidden=true;mic.setAttribute("aria-label","Microphone");
+  const sens=document.createElement("select");sens.className="tmic";sens.setAttribute("aria-label","Room");[["0","Quiet room (most sensitive)"],["1","Normal room"],["2","Noisy room"]].forEach(([v,l])=>{const o=el("option",null,l);o.value=v;sens.appendChild(o);});sens.value=String(S.sens);
+  opt.append(sens,mic);host.appendChild(opt);
+  host.appendChild(el("p","dsub","Pluck one string and let it ring. Tap a string to lock onto it (and hear it); Auto finds the nearest string. Strobe stands still when you're in tune. Tune up to the note from below."));
+  const u={nm,ct,hz,needle,hint,lvf,go,disp,strs,auto,guided,hold,mtx,mic,sel,a4,strobe,trace,btns:[],tuned:new Set(),hist:[],sph:0,last:0,disp_c:0};host._ui=u;
+  const setView=()=>{const v=tset().view;vN.classList.toggle("on",v==="needle");vS.classList.toggle("on",v==="strobe");meter.hidden=v!=="needle";strobe.hidden=v!=="strobe";};
+  u.drawStrings=()=>{const s=tset(),[ins,,ms,fl]=TUNINGS[s.tuning];strs.innerHTML="";strs.style.gridTemplateColumns=`repeat(${Math.max(1,ms.length)},1fr)`;strs.hidden=!ms.length;
+    u.btns=ms.map((m,i)=>{const b=el("button",null,"");b.type="button";const num=ins==="uke"?String(4-i):String(ms.length-i);
+      b.title=(s.lock===i?"Unlock (back to Auto)":"Lock onto this string")+" · "+mname(m,fl)+(Math.floor(m/12)-1)+" "+mfreq(m,s.a4).toFixed(1)+" Hz";
+      b.append(el("b",null,mname(m,fl)),el("small",null,num));if(s.lock===i)b.classList.add("lock");if(u.tuned.has(i))b.classList.add("done");if(drone&&drone.i===i)b.classList.add("drone");
+      b.addEventListener("click",()=>{const z=tsave(z=>{z.guided=false;z.lock=z.lock===i&&!(drone&&drone.i!==i)?null:i;});playRef(i,mfreq(m,z.a4));u.drawStrings();});strs.appendChild(b);return b;});
+    auto.classList.toggle("primary",s.lock==null&&!s.guided);guided.classList.toggle("primary",!!s.guided);hold.classList.toggle("primary",!!s.hold);guided.hidden=!ms.length;auto.hidden=!ms.length;
+    u.mtx.textContent=!ms.length?"Chromatic: shows the nearest note of any pitch.":s.guided?"Tune all: string "+u.btns[s.lock]?.lastChild.textContent+" ("+mname(ms[s.lock],fl)+") — it moves on when this string holds in tune.":s.lock==null?"Auto: finds the nearest string.":"Locked on "+mname(ms[s.lock],fl)+" (string "+u.btns[s.lock].lastChild.textContent+"). Tap it again for Auto.";};
+  u.drawStrings();setView();
+  vN.addEventListener("click",()=>{tsave(z=>z.view="needle");setView();});vS.addEventListener("click",()=>{tsave(z=>z.view="strobe");setView();});
+  big.addEventListener("click",()=>host.classList.toggle("tbig"));close.addEventListener("click",()=>host.classList.remove("tbig"));
+  auto.addEventListener("click",()=>{tsave(z=>{z.lock=null;z.guided=false;});u.drawStrings();});
+  guided.addEventListener("click",()=>{const on=!tset().guided;tsave(z=>{z.guided=on;z.lock=on?0:null;});u.tuned.clear();u.drawStrings();if(on&&!tun)tunerStart();});
+  hold.addEventListener("click",()=>{const on=!tset().hold;tsave(z=>z.hold=on);if(!on)stopDrone();u.drawStrings();});
+  sel.addEventListener("change",()=>{tsave(z=>{z.tuning=sel.value;z.lock=null;z.guided=false;});u.tuned.clear();stopDrone();if(tun){tunerStop();tunerStart();}u.drawStrings();});
+  a4.addEventListener("change",()=>{const z=tsave(z=>{z.a4=Math.max(430,Math.min(450,+a4.value||440));});a4.value=z.a4;u.tuned.clear();u.drawStrings();});
+  sens.addEventListener("change",()=>tsave(z=>z.sens=+sens.value));
+  mic.addEventListener("change",()=>{tsave(z=>z.dev=mic.value);if(tun){tunerStop();tunerStart();}});
   go.addEventListener("click",()=>tun?tunerStop():tunerStart());
+  drawTrace(u);drawStrobe(u,0,0);
 }
+function playRef(i,f){audio();if(!ctx)return;const s=tset();
+  if(s.hold){if(drone&&drone.i===i){stopDrone();return;}stopDrone();const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();
+    o.type="triangle";o.frequency.value=f;o2.type="sine";o2.frequency.value=f*2;g2.gain.value=0.25;o2.connect(g2).connect(g);g.gain.setValueAtTime(0.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.25,ctx.currentTime+0.05);
+    o.connect(g).connect(ctx.destination);o.start();o2.start();drone={i,o,o2,g};return;}
+  tone(f);}
+function stopDrone(){if(!drone)return;const d=drone;drone=null;try{d.g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.15);d.o.stop(ctx.currentTime+0.2);d.o2.stop(ctx.currentTime+0.2);}catch(e){}
+  const u=$("tuner")&&$("tuner")._ui;if(u)u.btns.forEach(b=>b.classList.remove("drone"));}
 function tone(f){audio();if(!ctx)return;const t0=ctx.currentTime,o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();
   o.type="triangle";o.frequency.value=f;o2.type="sine";o2.frequency.value=f*2;g2.gain.value=0.3;o2.connect(g2).connect(g);
   g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.35,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+2.2);
   o.connect(g).connect(ctx.destination);o.start(t0);o2.start(t0);o.stop(t0+2.3);o2.stop(t0+2.3);}
+function ding(){audio();if(!ctx)return;const t0=ctx.currentTime;[1318.5,1975.5].forEach((f,k)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=f;
+  g.gain.setValueAtTime(0.0001,t0+k*0.09);g.gain.exponentialRampToValueAtTime(0.18,t0+k*0.09+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t0+k*0.09+0.5);o.connect(g).connect(ctx.destination);o.start(t0+k*0.09);o.stop(t0+k*0.09+0.55);});}
+function drawTrace(u){const c=u.trace,x=c.getContext("2d"),W=c.width,H=c.height,cs=getComputedStyle(document.documentElement);x.clearRect(0,0,W,H);
+  x.fillStyle=cs.getPropertyValue("--sunk").trim()||"#111";x.fillRect(0,0,W,H);const okc=cs.getPropertyValue("--c-E").trim()||"#4c9";
+  x.globalAlpha=0.18;x.fillStyle=okc;x.fillRect(0,H/2-H*4/100,W,H*8/100);x.globalAlpha=1;
+  x.strokeStyle=cs.getPropertyValue("--line").trim()||"#333";x.beginPath();x.moveTo(0,H/2);x.lineTo(W,H/2);x.stroke();
+  const now=performance.now(),span=4000;x.strokeStyle=cs.getPropertyValue("--accent").trim()||"#fa4";x.lineWidth=2.5;x.beginPath();let pen=false;
+  u.hist.forEach(([t,cv])=>{if(cv==null){pen=false;return;}const px=W-(now-t)/span*W,py=H/2-Math.max(-50,Math.min(50,cv))/50*(H/2-3);if(!pen){x.moveTo(px,py);pen=true;}else x.lineTo(px,py);});x.stroke();
+  x.fillStyle=cs.getPropertyValue("--muted").trim()||"#888";x.font="11px ui-monospace,monospace";x.fillText("+50¢",4,12);x.fillText("−50¢",4,H-4);x.fillText("last 4 s",W-58,12);}
+function drawStrobe(u,cents,dt){const c=u.strobe,x=c.getContext("2d"),W=c.width,H=c.height,cs=getComputedStyle(document.documentElement);
+  u.sph=((u.sph+cents*dt*0.006)%1+1)%1;const live=u.disp.classList.contains("live"),ok=u.disp.classList.contains("ok");
+  x.fillStyle=cs.getPropertyValue("--sunk").trim()||"#111";x.fillRect(0,0,W,H);
+  const rows=[[1,H*0.0,H*0.5],[2,H*0.5,H*0.5]];x.fillStyle=ok?(cs.getPropertyValue("--c-E").trim()||"#4c9"):live?(cs.getPropertyValue("--accent").trim()||"#fa4"):(cs.getPropertyValue("--line").trim()||"#333");
+  rows.forEach(([k,y,h])=>{const P=60/k,off=u.sph*P*k;for(let px=-P+(off%P);px<W;px+=P)x.fillRect(px,y+2,P/2,h-4);});}
 async function tunerStart(){
   const u=$("tuner")&&$("tuner")._ui;if(!u)return;audio();if(!ctx){toast("Audio isn't available in this browser");return;}
-  const S=tset();let stream;
+  const S=tset(),I=TINST[TUNINGS[S.tuning][0]];let stream;
   try{stream=await navigator.mediaDevices.getUserMedia({audio:{deviceId:S.dev?{ideal:S.dev}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
   catch(e){u.hint.textContent="Microphone blocked — allow it in the address bar (🔒 → Microphone), then try again.";return;}
   try{const devs=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="audioinput");u.mic.innerHTML="";devs.forEach((d,i)=>{const o=el("option",null,"🎙 "+(d.label||"Microphone "+(i+1)));o.value=d.deviceId;u.mic.appendChild(o);});
-    const cur0=stream.getAudioTracks()[0];const id=cur0&&cur0.getSettings&&cur0.getSettings().deviceId;if(id)u.mic.value=id;u.mic.hidden=devs.length<2;}catch(e){}
+    const tr=stream.getAudioTracks()[0];const id=tr&&tr.getSettings&&tr.getSettings().deviceId;if(id)u.mic.value=id;u.mic.hidden=devs.length<2;}catch(e){}
   const src=ctx.createMediaStreamSource(stream),hp=ctx.createBiquadFilter(),lp1=ctx.createBiquadFilter(),lp2=ctx.createBiquadFilter(),an=ctx.createAnalyser();
-  hp.type="highpass";hp.frequency.value=55;lp1.type=lp2.type="lowpass";lp1.frequency.value=lp2.frequency.value=1000;lp1.Q.value=lp2.Q.value=0.5;an.fftSize=4096;
+  hp.type="highpass";hp.frequency.value=I.hp;lp1.type=lp2.type="lowpass";lp1.frequency.value=lp2.frequency.value=I.lp;lp1.Q.value=lp2.Q.value=0.5;an.fftSize=8192;
   src.connect(hp).connect(lp1).connect(lp2).connect(an);
-  const buf=new Float32Array(an.fftSize),sr=ctx.sampleRate,hist=[];let floor=-70,lastOk=0,disp=0,okSince=0,pend=null,pendN=0,frame=0;
-  tun={stream,nodes:[src,hp,lp1,lp2,an],raf:0};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");u.hint.textContent="Listening…";
-  const loop=()=>{if(!tun)return;tun.raf=requestAnimationFrame(loop);if((frame++&1))return;            // analyse every other frame (~30/s)
-    an.getFloatTimeDomainData(buf);let r=0;for(let i=0;i<buf.length;i++)r+=buf[i]*buf[i];const db=10*Math.log10(r/buf.length+1e-12);
-    floor=db<floor?db:floor+0.03;const gate=Math.max(-62,floor+9);u.lvf.style.width=Math.max(0,Math.min(100,(db+70)*1.6))+"%";u.lvf.classList.toggle("hot",db>gate);
-    const now=performance.now(),s=tset(),ms=TUNINGS[s.tuning][1],flat=s.tuning==="half"||s.tuning==="full";
-    let f=-1;if(db>gate){const y=yin(buf,sr);if(y.f>60&&y.f<1100&&y.conf>0.85)f=y.f;}
+  let wake=null;try{wake=await navigator.wakeLock.request("screen");}catch(e){}
+  const raw=new Float32Array(an.fftSize),sr=ctx.sampleRate,N=Math.min(I.N*Math.round(sr/48000||1),an.fftSize),dsr=sr/I.dec,buf=new Float32Array(Math.floor(N/I.dec)),hist=[];
+  let floor=-70,lastOk=0,okSince=0,pend=null,pendN=0,prevT=performance.now();
+  tun={stream,nodes:[src,hp,lp1,lp2,an],raf:0,wake};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");u.hint.textContent="Listening…";
+  const loop=()=>{if(!tun)return;tun.raf=requestAnimationFrame(loop);const now=performance.now(),dt=now-prevT;prevT=now;
+    an.getFloatTimeDomainData(raw);const off=raw.length-N;let r=0;for(let i=0;i<buf.length;i++){let s=0;for(let j=0;j<I.dec;j++)s+=raw[off+i*I.dec+j];s/=I.dec;buf[i]=s;r+=s*s;}
+    const db=10*Math.log10(r/buf.length+1e-12),s=tset();floor=db<floor?db:floor+0.03;const gate=Math.max(-64,floor+[6,9,14][s.sens]);
+    u.lvf.style.width=Math.max(0,Math.min(100,(db+70)*1.6))+"%";u.lvf.classList.toggle("hot",db>gate);
+    const [ins,,ms,fl]=TUNINGS[s.tuning];let f=-1;
+    if(db>gate){const y=yin(buf,dsr,I.minF,I.maxF);if(y.f>I.minF&&y.f<I.maxF&&y.conf>[0.8,0.85,0.9][s.sens])f=y.f;}
     if(f>0){const med=hist.length?[...hist].sort((a,b)=>a-b)[hist.length>>1]:f;
       if(Math.abs(1200*Math.log2(f/med))>45){if(pend&&Math.abs(1200*Math.log2(f/pend))<45)pendN++;else{pend=f;pendN=1;}if(pendN>=3){hist.length=0;hist.push(f);pend=null;}}
       else{hist.push(f);if(hist.length>7)hist.shift();pend=null;}lastOk=now;}
-    if(!hist.length||now-lastOk>1500){if(now-lastOk>1500){hist.length=0;u.disp.classList.remove("live","ok");u.hint.textContent="Listening…";u.btns.forEach(b=>b.classList.remove("on"));okSince=0;}return;}
+    if(!hist.length||now-lastOk>1500){if(now-lastOk>1500&&u.disp.classList.contains("live")){hist.length=0;u.disp.classList.remove("live","ok");u.hint.textContent="Listening…";u.ct.textContent="";u.btns.forEach(b=>b.classList.remove("on"));okSince=0;}
+      u.hist.push([now,null]);while(u.hist.length&&now-u.hist[0][0]>4000)u.hist.shift();drawTrace(u);drawStrobe(u,0,dt);return;}
     const fm=[...hist].sort((a,b)=>a-b)[hist.length>>1];
-    let si=s.lock;if(si==null){let bd=1e9;ms.forEach((m,i)=>{const d=Math.abs(1200*Math.log2(fm/mfreq(m,s.a4)));if(d<bd){bd=d;si=i;}});if(bd>350)si=null;}
-    let c,label,oct;if(si!=null){const tf=mfreq(ms[si],s.a4);c=1200*Math.log2(fm/tf);label=mname(ms[si],flat);oct=Math.floor(ms[si]/12)-1;}
-    else{const m=12*Math.log2(fm/s.a4)+69,rm=Math.round(m);c=(m-rm)*100;label=mname(rm,flat);oct=Math.floor(rm/12)-1;}
-    disp=u.disp.classList.contains("live")?disp*0.55+c*0.45:c;u.disp.classList.add("live");
-    u.nm.textContent=label;u.nm.dataset.oct=oct;u.hz.textContent=fm.toFixed(1)+" Hz"+(si!=null?" · string "+(6-si):"")+(Math.abs(c)>100&&si!=null?" · "+(c<0?"way flat":"way sharp"):"");
-    const cc=Math.max(-50,Math.min(50,disp));u.needle.style.left=(50+cc)+"%";const ok=Math.abs(disp)<=4&&Math.abs(c)<=6;u.disp.classList.toggle("ok",ok);
-    const rc=Math.round(disp);u.hint.textContent=ok?"✓ In tune":(rc<0?"▲ Tighten (tune up) · "+(-rc)+"¢ flat":"▼ Loosen (tune down) · "+rc+"¢ sharp");
+    let si=s.lock;if(si==null&&ms.length){let bd=1e9;ms.forEach((m,i)=>{const d=Math.abs(1200*Math.log2(fm/mfreq(m,s.a4)));if(d<bd){bd=d;si=i;}});if(bd>350)si=null;}
+    let c,label,oct;if(si!=null&&ms[si]!=null){const tf=mfreq(ms[si],s.a4);c=1200*Math.log2(fm/tf);label=mname(ms[si],fl);oct=Math.floor(ms[si]/12)-1;}
+    else{const m=12*Math.log2(fm/s.a4)+69,rm=Math.round(m);c=(m-rm)*100;label=mname(rm,fl);oct=Math.floor(rm/12)-1;}
+    u.disp_c=u.disp.classList.contains("live")?u.disp_c*0.55+c*0.45:c;u.disp.classList.add("live");const dc=u.disp_c;
+    u.nm.textContent=label;u.nm.dataset.oct=oct;u.ct.textContent=(dc>=0?"+":"−")+(Math.abs(dc)<10?Math.abs(dc).toFixed(1):Math.round(Math.abs(dc)))+"¢";
+    u.hz.textContent=fm.toFixed(2)+" Hz"+(si!=null&&ms.length?" · string "+u.btns[si].lastChild.textContent:"")+(Math.abs(c)>100&&si!=null?" · "+(c<0?"way flat":"way sharp"):"");
+    u.needle.style.left=(50+Math.max(-50,Math.min(50,dc)))+"%";const ok=Math.abs(dc)<=3&&Math.abs(c)<=5;u.disp.classList.toggle("ok",ok);
+    const rc=Math.round(dc);u.hint.textContent=ok?"✓ In tune":(rc<0?"▲ Tighten (tune up) · "+(-rc)+"¢ flat":"▼ Loosen (tune down) · "+rc+"¢ sharp");
+    if(s.lock!=null&&Math.abs(c)>250){const m=12*Math.log2(fm/s.a4)+69,rm=Math.round(m);u.nm.textContent=mname(rm,fl);u.nm.dataset.oct=Math.floor(rm/12)-1;u.ct.textContent="";u.disp.classList.remove("ok");
+      u.hint.textContent="Wrong string? You're playing "+mname(rm,fl)+(Math.floor(rm/12)-1)+" — string "+u.btns[si].lastChild.textContent+" is "+label+oct;u.needle.style.left=(c<0?0:100)+"%";}
     u.btns.forEach((b,i)=>b.classList.toggle("on",i===si));
-    if(ok&&si!=null){if(!okSince)okSince=now;else if(now-okSince>800&&!u.tuned.has(si)){u.tuned.add(si);u.btns[si].classList.add("done");}}else okSince=0;};
+    u.hist.push([now,dc]);while(u.hist.length&&now-u.hist[0][0]>4000)u.hist.shift();drawTrace(u);drawStrobe(u,dc,dt);
+    if(ok&&si!=null&&ms.length){if(!okSince)okSince=now;else if(now-okSince>800&&!u.tuned.has(si)){u.tuned.add(si);u.btns[si].classList.add("done");ding();
+        if(s.guided){const nx=ms.findIndex((_,i)=>i>si&&!u.tuned.has(i))>=0?ms.findIndex((_,i)=>i>si&&!u.tuned.has(i)):ms.findIndex((_,i)=>!u.tuned.has(i));
+          if(nx<0){tsave(z=>{z.guided=false;z.lock=null;});toast("🎉 All strings in tune");}else{tsave(z=>z.lock=nx);hist.length=0;}u.drawStrings();}}}
+    else okSince=0;};
   loop();}
-function tunerStop(){if(!tun)return;cancelAnimationFrame(tun.raf);tun.nodes.forEach(n=>{try{n.disconnect();}catch(e){}});tun.stream.getTracks().forEach(x=>x.stop());tun=null;
-  const u=$("tuner")&&$("tuner")._ui;if(u){u.go.textContent="🎤 Start tuner";u.disp.classList.remove("on","live","ok");u.hint.textContent="";u.lvf.style.width="0";u.btns.forEach(b=>b.classList.remove("on"));}}
-
+function tunerStop(){if(!tun)return;cancelAnimationFrame(tun.raf);tun.nodes.forEach(n=>{try{n.disconnect();}catch(e){}});tun.stream.getTracks().forEach(x=>x.stop());try{tun.wake&&tun.wake.release();}catch(e){}tun=null;
+  const u=$("tuner")&&$("tuner")._ui;if(u){u.go.textContent="🎤 Start tuner";u.disp.classList.remove("on","live","ok");u.hint.textContent="";u.ct.textContent="";u.lvf.style.width="0";u.btns.forEach(b=>b.classList.remove("on"));}}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const h=$("tuner");if(h)h.classList.remove("tbig");}});
 // ---------- 🎤 live panel (right): now / next chords / lyrics that highlight only the words of the current chord ----------
 let LV=null;
 function buildChanges(){const out=[];let prev=null;flat.forEach((f,b)=>{let acc=0;f.toks.forEach(t=>{if(t.c!==prev)out.push({pos:b+acc/bpb(),c:t.c,sec:f.secName,bar:b});prev=t.c;acc+=t.b;});});return out;}

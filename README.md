@@ -11,7 +11,7 @@ Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-
 `serve.py` works like `python3 -m http.server 8000`, plus a local endpoint that makes no-guitar backing tracks.
 
 ## Features
-- **Left panel** (🎸 My guitar): 🎚️ Tuner (YIN pitch detection, filters + adaptive noise gate, alternate tunings, A4 calibration, auto or locked string, mic picker, ✓ per string), 🎓 Guitar course, 🎵 Songs.
+- **Left panel** (🎸 My guitar): 🎚️ Tuner (YIN on a filtered, down-sampled signal ~60 readings/s, 0.1¢ readout; needle or strobe view; 4-second pitch trace; guitar in 10 tunings, bass 4/5-string, ukulele, chromatic; A4 430–450; auto, locked or guided “Tune all”; drone reference; room sensitivity; full-screen Big mode; screen kept awake), 🎓 Guitar course, 🎵 Songs.
 - **Right panel** (🎤 Live): current chord with shape and beat countdown, next chord changes, and lyrics that scroll with the song and highlight only the words of the current chord.
 - **Song header** with artist photos (tap a photo to use your own), capo/key/tempo, chord version and strumming (chords shown in their lane colours).
 - **🎓 Guitar course** side panel: JustinGuitar Grade 1 (Modules 0–7) and Grade 2 (Module 8) from Karthik Songbook pages 4–11, with module/lesson ticks, the Grade 1 checklist, strumming order, a 20-minute session and *My 5 songs*. Progress is kept in the browser (included in ⚙︎ Backup).

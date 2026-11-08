@@ -357,6 +357,14 @@ body.live-on .livetab{display:none}
 .bld label.f .rgauto{margin-top:6px;align-self:flex-start}
 .srcl{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
 .stagehd .nextup.small{font-size:12px;padding:4px 10px}.stagehd .nextup.small .nch{font-size:14px}.stagehd .nextup.small .nch.first{font-size:18px}
+
+.dash .shelf .shelfrow{display:flex;align-items:center;gap:6px;width:100%}.dash .shelf .shelfrow>button:first-child{flex:1;min-width:0;width:auto}
+.dash .shelf .shelfrow>.donetick{flex:0 0 32px;width:32px;height:32px;gap:0;text-align:center;border-radius:8px;border:2px solid var(--line);background:var(--bg);color:var(--accent-ink);font:900 16px/1 var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
+.dash .shelf .shelfrow>.donetick:hover{border-color:var(--c-E)}.dash .shelf .shelfrow.isdone>.donetick{background:var(--c-E);border-color:var(--c-E);color:#06281b}
+.shelfrow.isdone .stx b::after{content:" ✓";color:var(--c-E)}.dash .shelf .stx small.donedate{color:var(--c-E);font-weight:700}
+.dash .shelf button[aria-pressed="true"] .stx small.donedate{color:inherit}
+.donecount{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--c-E);margin-left:6px}
+.songtools .donebtn.on{background:var(--c-E);color:#06281b;border-color:var(--c-E)}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -418,7 +426,7 @@ body.live-on .livetab{display:none}
   <div class="dhead"><h2>🎸 My guitar</h2><button class="dclose" id="dashClose" type="button" title="Hide this panel">✕</button></div>
   <details class="dsec" id="secTuner"><summary>🎚️ Tuner</summary><div id="tuner"></div></details>
   <details class="dsec" id="secCourse"><summary>🎓 Guitar course</summary><div id="dashCourse"></div></details>
-  <details class="dsec" id="secSongs"><summary>🎵 Songs</summary>
+  <details class="dsec" id="secSongs"><summary>🎵 Songs <span class="donecount" id="doneCount"></span></summary>
     <div class="dsongtools"><input id="q" type="search" placeholder="Search songs or artists…" aria-label="Search songs" autocomplete="off"><button id="newSong" type="button" class="libbtn primary" title="Build a new song">＋ New</button></div>
     <nav class="shelf" id="shelf" aria-label="Songs"></nav>
   </details>
@@ -551,12 +559,23 @@ function patFor(sec){
   return String(p).padEnd(n,".").slice(0,n);
 }
 
+
+// ---------- ✓ done songs (practised and learned) — kept in this browser, included in ⚙︎ Backup ----------
+const doneMap=()=>store.get("sb-done",{})||{};
+function setDone(id,on){const m=doneMap();if(on)m[id]=Date.now();else delete m[id];store.set("sb-done",m);renderShelf();
+  const s=songs.find(x=>x.id===id);if(cur&&cur.id===id){const b=document.querySelector(".songtools .donebtn");if(b){b.classList.toggle("on",!!on);b.textContent=on?"✓ Done":"☐ Mark as done";}}
+  if(on&&s)toast("✓ "+s.title+" marked as done");}
 function renderShelf(){
   shelf.innerHTML="";const q=($("q").value||"").trim().toLowerCase();
   const list=songs.filter(s=>!q||(s.title+" "+(s.artist||"")+" "+(s.from||"")).toLowerCase().includes(q));
   list.forEach(s=>{const b=el("button",s.custom?"mine":null);if(artistList(s).length)b.appendChild(artistStack(s,34,false));const tx=el("span","stx");tx.append(el("b",null,s.title),el("small",null,s.artist||""));b.appendChild(tx);b.type="button";b.title=[s.artist,s.custom?"your song":""].filter(Boolean).join(" · ");
     b.setAttribute("aria-pressed",cur&&cur.id===s.id&&!building?"true":"false");
-    b.addEventListener("click",()=>{choose(s.id);if(innerWidth<1100)toggleDash(false);scrollTo({top:0,behavior:"smooth"});});shelf.appendChild(b);});
+    b.addEventListener("click",()=>{choose(s.id);if(innerWidth<1100)toggleDash(false);scrollTo({top:0,behavior:"smooth"});});
+    const dn=doneMap()[s.id],row=el("div","shelfrow"+(dn?" isdone":""));const ck=el("button","donetick",dn?"✓":"");ck.type="button";
+    ck.title=dn?"Done on "+new Date(dn).toLocaleDateString()+" — tap to undo":"Mark as done (practised and learned)";ck.setAttribute("aria-pressed",dn?"true":"false");ck.setAttribute("aria-label",(dn?"Done: ":"Not done: ")+s.title);
+    ck.addEventListener("click",e=>{e.stopPropagation();setDone(s.id,!doneMap()[s.id]);});
+    if(dn)tx.appendChild(el("small","donedate","✓ done "+new Date(dn).toLocaleDateString(undefined,{day:"numeric",month:"short"})));row.append(b,ck);shelf.appendChild(row);});
+  {const dc=$("doneCount"),n=songs.filter(x=>doneMap()[x.id]).length;if(dc)dc.textContent=n?"· "+n+"/"+songs.length+" done":"";}
   if(!list.length){const n=el("span","none","No song matches “"+q+"”. ");const a=el("button","libbtn","＋ Build “"+$("q").value.trim()+"”");a.type="button";
     a.addEventListener("click",()=>openBuilder({title:$("q").value.trim()}));shelf.append(n,a);}
 }
@@ -583,7 +602,9 @@ function renderSong(){
   const tl=el("div","songtools");
   const eb=el("button",null,s.custom?"✎ Edit song":"✎ Edit as my copy");eb.type="button";eb.addEventListener("click",()=>openBuilder(songToForm(s),s.custom?s.id:null));
   const xb=el("button",null,"⇩ Save song file");xb.type="button";xb.addEventListener("click",()=>exportSong(s));
-  tl.append(eb,xb);
+  const dnb=el("button","donebtn"+(doneMap()[s.id]?" on":""),doneMap()[s.id]?"✓ Done":"☐ Mark as done");dnb.type="button";dnb.title=doneMap()[s.id]?"Done on "+new Date(doneMap()[s.id]).toLocaleDateString()+" — tap to undo":"Tick when you've finished practising this song";
+  dnb.addEventListener("click",()=>setDone(s.id,!doneMap()[s.id]));
+  tl.append(dnb,eb,xb);
   if(s.custom){const db=el("button",null,"🗑 Remove");db.type="button";db.addEventListener("click",()=>{if(!confirm("Remove “"+s.title+"” from your songbook?"))return;
     saveCustom(customSongs().filter(x=>x.id!==s.id));refreshSongs();choose(songs[0].id);});tl.appendChild(db);}
   head.appendChild(tl);

@@ -1,0 +1,14 @@
+# Never upload your own audio, stems, lyrics or songbook PDFs (copyrighted, kept local)
+audio/
+songbook/
+songs/*-lyrics.txt
+*.mp3
+*.m4a
+*.wav
+*.flac
+# Not needed for the website
+pipeline/
+**/__pycache__/
+Songbook Player.html
+songbook-layout-patch.html
+.claude/

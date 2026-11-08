@@ -11,3 +11,4 @@
 songbook/
 audio/
 __pycache__/
+.vercel

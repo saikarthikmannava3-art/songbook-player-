@@ -1,0 +1,7 @@
+{
+  "appId": "com.karthik.songbook",
+  "appName": "Songbook",
+  "webDir": "www",
+  "ios": { "contentInset": "never", "limitsNavigationsToAppBoundDomains": false },
+  "server": { "iosScheme": "https" }
+}

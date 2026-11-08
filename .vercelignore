@@ -14,3 +14,8 @@ songbook-layout-patch.html
 .claude/
 .env*
 node_modules/
+ios/
+www/
+scripts/
+capacitor.config.json
+.songbook-key

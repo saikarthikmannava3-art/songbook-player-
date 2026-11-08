@@ -1014,6 +1014,7 @@ async function loadSongFile(f,opt){
     ["play","pause","seeked","ended"].forEach(ev=>a.addEventListener(ev,()=>{schedReset();ui();kick();paint(true);}));
     try{audio();const sn=ctx.createMediaElementSource(a),an=ctx.createAnalyser();an.fftSize=8192;an.smoothingTimeConstant=0.6;sn.connect(ctx.destination);sn.connect(an);fileAn=an;a._src=sn;}catch(e){fileAn=null;}
     mode="file";const ms=$("mode");if(ms){ms.querySelector('[value="file"]').disabled=false;ms.value="file";}
+    if(cloudKey()&&songId)setTimeout(()=>cloudAutoSync(songId,f),1500);
     const dur=isFinite(a.duration)&&a.duration>0?" ("+fmt(a.duration).replace(/\.\d$/,"")+")":"";
     say((opt.builtIn?"✓ Song file built in: ":opt.auto?"✓ Connected automatically: ":"✓ Loaded: ")+f.name+dur+" — press ▶ Play."+(opt.save===false?"":" Saved for next time."));
     if($("forgetFile"))$("forgetFile").hidden=false;
@@ -1970,6 +1971,10 @@ async function cloudSaveCurrent(){const s=cur;let rec=null;if(SONG_AUDIO[s.id]){
   if(!rec)rec=await idb("get",s.id);if(!rec){toast("Load this song's MP3 or backing first");return;}
   const name=String(rec.name||s.title+".m4a").replace(/[\\/:*?"<>|]+/g," ");toast("☁️ Uploading “"+name+"”…");
   if(await cloudUpload(rec.blob instanceof File?rec.blob:new File([rec.blob],name,{type:rec.blob.type||mimeFor({name})}),name))toast("☁️ Saved to your cloud — open it on any device");}
+
+async function cloudAutoSync(id,f){const s=songs.find(x=>x.id===id);if(!s||!cloudKey()||!f)return;const tr=await cloudList();if(!tr||cloudMatch(s,tr))return;
+  const name=String(f.name||s.title+".m4a").replace(/[\\/:*?"<>|]+/g," ");if(scoreFile(s,name)<=0)return;     // only files named after this song
+  if(await cloudUpload(f instanceof File?f:new File([f],name,{type:f.type||mimeFor({name})}),name))toast("☁️ “"+s.title+"” backing moved to your cloud — it's on all your devices now");}
 async function cloudConnect(){const k=prompt("☁️ Cloud passphrase for your backing tracks:","");if(!k||!k.trim())return;store.set("sb-cloud-key",k.trim());
   const tr=await cloudList(true);if(tr){toast("☁️ Connected — "+tr.length+" backing track"+(tr.length===1?"":"s")+" in your cloud");if(cur&&!au)cloudLoad(cur,true);renderSong();}}
 function cloudDisconnect(){store.set("sb-cloud-key","");cloud={tracks:null,until:0};renderCloudStatus();renderSong();toast("☁️ Cloud disconnected on this device");}
@@ -2370,6 +2375,7 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change",redraw);
 new MutationObserver(redraw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 
 // ---------- start ----------
+{const m=location.hash.match(/(?:^#|&)cloud=([^&]+)/);if(m){store.set("sb-cloud-key",decodeURIComponent(m[1]));history.replaceState(null,"",location.pathname+location.search);setTimeout(()=>{cloudList(true).then(tr=>{if(tr)toast("☁️ This device is now linked to your cloud — "+tr.length+" backing tracks");});},500);}}
 refreshSongs();
 $("dashTab").addEventListener("click",()=>toggleDash(true));$("dashClose").addEventListener("click",()=>toggleDash(false));$("liveTab").addEventListener("click",()=>toggleLive(true));document.addEventListener("pointerdown",e=>{if(innerWidth>=1100)return;const tg=e.target;if(document.body.classList.contains("dash-on")&&!tg.closest("#dash,#dashTab"))toggleDash(false);if(document.body.classList.contains("live-on")&&!tg.closest("#live,#liveTab"))toggleLive(false);},true);toggleLive(store.get("sb-live-open",innerWidth>=1500));
 [["secTuner",true],["secCourse",true],["secSongs",true]].forEach(([id,d])=>{const e=$(id);e.open=store.get("sb-"+id,d);e.addEventListener("toggle",()=>{store.set("sb-"+id,e.open);if(id==="secTuner"&&!e.open)tunerStop();});});

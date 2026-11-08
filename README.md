@@ -24,6 +24,17 @@ Guitar play-along app: moving chord cards, strum patterns, metronome with a 3-2-
 ## ☁️ Cloud backings (Vercel)
 Live site: **https://songbook-player.vercel.app** (team marvels4). Your no-guitar backings live in a **private** Vercel Blob store (`songbook-backings`); `api/tracks.js` lists them with short-lived signed links and hands out signed upload links — only with your passphrase (`SONGBOOK_KEY` env var). In the app: **☁️ Connect cloud** once per device, then songs without local audio load their backing from the cloud automatically; **☁️ Save to cloud** uploads one; 🎸 Remove guitar saves new backings there too. Plain file URLs without a signature are refused.
 
+## 📱 iPhone app (Capacitor, for your own phone)
+The `ios/` folder is a native Xcode project that runs the app offline from bundled files (cloud backings still stream).
+1. Install **Xcode** (App Store), open it once, then `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`.
+2. `npm install` then `npm run ios` — copies the latest app into the project and opens Xcode.
+3. Xcode → target **App** → Signing & Capabilities → Team: add your Apple ID (Personal Team). If the bundle ID is taken, change `com.karthik.songbook`.
+4. iPhone: plug in, Settings → Privacy & Security → **Developer Mode** on; choose your phone in Xcode and press ▶.
+5. First launch: Settings → General → VPN & Device Management → trust your developer profile. A free Apple ID re-signs every 7 days (just press ▶ again); the $99 Developer Program removes that and allows TestFlight.
+
+If `.songbook-key` exists (git- and Vercel-ignored), `npm run build:www` bakes your cloud passphrase into **your** build so the app is always linked. Don't ship that build to anyone else.
+On the website, open `…/#cloud=YOUR-PASSPHRASE` once per device to link it; backings that a linked device has but the cloud doesn't are moved to the cloud automatically.
+
 ## Make a no-guitar backing track
 ```bash
 brew install ffmpeg python@3.12

@@ -3,5 +3,16 @@
   "private": true,
   "type": "module",
   "description": "Static Songbook Player + one serverless function (api/tracks.js) for private cloud backing tracks",
-  "dependencies": { "@vercel/blob": "^2.8.2" }
+  "dependencies": {
+    "@vercel/blob": "^2.8.2",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  },
+  "scripts": {
+    "build:www": "node scripts/build-www.mjs",
+    "ios": "node scripts/build-www.mjs && npx cap sync ios && npx cap open ios"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
 }

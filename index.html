@@ -1853,15 +1853,19 @@ function clearChain(c,input){const hp=c.createBiquadFilter();hp.type="highpass";
   const mk=c.createGain();mk.gain.value=1.8;const lim=c.createDynamicsCompressor();lim.threshold.value=-3;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=0.001;lim.release.value=0.05;
   input.connect(hp).connect(mud).connect(pres).connect(air).connect(comp).connect(mk).connect(lim);return lim;}
 // what to show in the video right now: section, chord, current lyric line (words of this chord lit), next line
-function lyricNow(tt){const pos=posAt(tt==null?songT():tt),b=Math.floor(pos),f=flat[Math.max(0,Math.min(flat.length-1,b))];
+let _lyrC={k:null,v:null};
+function lyricNow(tt){const p0=posAt(tt==null?songT():tt),M0=LV&&LV.map||[];let lo=0,hi=M0.length-1,a0=-1;while(lo<=hi){const m=(lo+hi)>>1;if(M0[m].pos<=p0+1e-6){a0=m;lo=m+1;}else hi=m-1;}
+  const b0=Math.floor(p0),f0=flat[Math.max(0,Math.min(flat.length-1,b0))],key=a0+"|"+(p0<0?"":(chordAtPos(p0)||""))+"|"+(p0<0?"r":(f0?f0.secName:""))+"|"+M0.length;
+  if(_lyrC.k===key)return _lyrC.v;const v=lyricCompute(p0);_lyrC={k:key,v};return v;}
+function lyricCompute(pos){const b=Math.floor(pos),f=flat[Math.max(0,Math.min(flat.length-1,b))];
   const o={sec:pos<0?"Get ready":(f?f.secName:""),chord:pos<0?"":(chordAtPos(pos)||""),words:[],lit:new Set(),next:""};
   const M=LV&&LV.map||[];if(!M.length)return o;let lo=0,hi=M.length-1,a=-1;while(lo<=hi){const m=(lo+hi)>>1;if(M[m].pos<=pos+1e-6){a=m;lo=m+1;}else hi=m-1;}
   const it=M[Math.max(0,a)];if(!it||!it.els.length)return o;const ln=it.els[0].parentElement;
   [...ln.querySelectorAll(".sg")].forEach(sg=>{const w=(sg.querySelector(".t")||{}).textContent||"";if(w.trim()){o.words.push(w);if(a>=0&&it.els.includes(sg))o.lit.add(o.words.length-1);}});
   let n=ln.nextElementSibling;while(n&&(!n.classList.contains("ln")||!n.textContent.trim()||n.querySelectorAll(".t").length===0||![...n.querySelectorAll(".t")].some(x=>x.textContent.trim())))n=n.nextElementSibling;
   if(n)o.next=[...n.querySelectorAll(".t")].map(x=>x.textContent).join(" ").replace(/\s+/g," ").trim();return o;}
-function drawFrame(r){const c=r.cv,x=c.getContext("2d"),W=c.width,H=c.height,cs=getComputedStyle(document.documentElement),v=r.vid;
-  x.fillStyle="#000";x.fillRect(0,0,W,H);
+function drawFrame(r){const c=r.cv,x=r.ctx2||(r.ctx2=c.getContext("2d")),W=c.width,H=c.height,cs=r.cs||(r.cs=getComputedStyle(document.documentElement)),v=r.vid;
+  if(r.transparent)x.clearRect(0,0,W,H);else{x.fillStyle="#000";x.fillRect(0,0,W,H);}
   if(v&&v.videoWidth){const s=Math.max(W/v.videoWidth,H/v.videoHeight),w=v.videoWidth*s,h=v.videoHeight*s;x.drawImage(v,(W-w)/2,(H-h)/2,w,h);}
   const u=Math.min(W,H)/720,g=x.createLinearGradient(0,H*0.55,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(0.45,"rgba(0,0,0,.6)");g.addColorStop(1,"rgba(0,0,0,.85)");x.fillStyle=g;x.fillRect(0,H*0.55,W,H*0.45);
   const tg=x.createLinearGradient(0,0,0,H*0.14);tg.addColorStop(0,"rgba(0,0,0,.6)");tg.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=tg;x.fillRect(0,0,W,H*0.14);

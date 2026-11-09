@@ -1745,25 +1745,30 @@ async function tunerStart(){
   hp.type="highpass";hp.frequency.value=I.hp;lp1.type=lp2.type="lowpass";lp1.frequency.value=lp2.frequency.value=I.lp;lp1.Q.value=lp2.Q.value=0.5;an.fftSize=8192;
   src.connect(hp).connect(lp1).connect(lp2).connect(an);
   let wake=null;try{wake=await navigator.wakeLock.request("screen");}catch(e){}
-  const raw=new Float32Array(an.fftSize),sr=ctx.sampleRate,N=Math.min(I.N*Math.round(sr/48000||1),an.fftSize),dsr=sr/I.dec,buf=new Float32Array(Math.floor(N/I.dec)),hist=[];
+  const raw=new Float32Array(an.fftSize),sr=ctx.sampleRate,N=Math.min(I.N*Math.round(sr/48000||1),an.fftSize),N2=Math.min(N*2,an.fftSize),dsr=sr/I.dec,bufS=new Float32Array(Math.floor(N/I.dec)),bufL=new Float32Array(Math.floor(N2/I.dec)),hist=[],recent=[];let steady=false;
   let floor=-70,lastOk=0,okSince=0,pend=null,pendN=0,prevT=performance.now();
   tun={stream,nodes:[src,hp,lp1,lp2,an],raf:0,wake};u.go.textContent="■ Stop tuner";u.disp.classList.add("on");u.hint.textContent="Listening…";
   const loop=()=>{if(!tun)return;tun.raf=requestAnimationFrame(loop);const now=performance.now(),dt=now-prevT;prevT=now;
-    an.getFloatTimeDomainData(raw);const off=raw.length-N;let r=0;for(let i=0;i<buf.length;i++){let s=0;for(let j=0;j<I.dec;j++)s+=raw[off+i*I.dec+j];s/=I.dec;buf[i]=s;r+=s*s;}
+    an.getFloatTimeDomainData(raw);const NU=steady?N2:N,buf=steady?bufL:bufS,off=raw.length-NU;let r=0;for(let i=0;i<buf.length;i++){let s=0;for(let j=0;j<I.dec;j++)s+=raw[off+i*I.dec+j];s/=I.dec;buf[i]=s;r+=s*s;}
     const db=10*Math.log10(r/buf.length+1e-12),s=tset();floor=db<floor?db:floor+0.03;const gate=Math.max(-64,floor+[6,9,14][s.sens]);
     u.lvf.style.width=Math.max(0,Math.min(100,(db+70)*1.6))+"%";u.lvf.classList.toggle("hot",db>gate);
     const [ins,,ms,fl]=TUNINGS[s.tuning];let f=-1;
-    if(db>gate){const y=yin(buf,dsr,I.minF,I.maxF);if(y.f>I.minF&&y.f<I.maxF&&y.conf>[0.8,0.85,0.9][s.sens])f=y.f;}
+    let cf=0;if(db>gate){const y=yin(buf,dsr,I.minF,I.maxF);if(y.f>I.minF&&y.f<I.maxF&&y.conf>[0.8,0.85,0.9][s.sens]){f=y.f;cf=y.conf;}}
+    const clear=cf>0.9&&db>gate+3;
     if(f>0){const med=hist.length?[...hist].sort((a,b)=>a-b)[hist.length>>1]:f;
-      if(Math.abs(1200*Math.log2(f/med))>45){if(pend&&Math.abs(1200*Math.log2(f/pend))<45)pendN++;else{pend=f;pendN=1;}if(pendN>=3){hist.length=0;hist.push(f);pend=null;}}
+      const jc=1200*Math.log2(f/med),harm=[1200,-1200,702,-702,1902,-1902].some(h=>Math.abs(jc-h)<40);
+      if(Math.abs(jc)>45){if(clear){if(pend&&Math.abs(1200*Math.log2(f/pend))<45)pendN++;else{pend=f;pendN=1;}}if(pendN>=(harm&&steady?8:4)){hist.length=0;recent.length=0;hist.push(f);pend=null;pendN=0;}}
       else{hist.push(f);if(hist.length>7)hist.shift();pend=null;}lastOk=now;}
     if(!hist.length||now-lastOk>1500){if(now-lastOk>1500&&u.disp.classList.contains("live")){hist.length=0;u.disp.classList.remove("live","ok");u.hint.textContent="Listening…";u.ct.textContent="";u.btns.forEach(b=>b.classList.remove("on"));okSince=0;}
       u.hist.push([now,null]);while(u.hist.length&&now-u.hist[0][0]>4000)u.hist.shift();drawTrace(u);drawStrobe(u,0,dt);return;}
-    const fm=[...hist].sort((a,b)=>a-b)[hist.length>>1];
+    const fm0=[...hist].sort((a,b)=>a-b)[hist.length>>1];
+    if(f>0&&clear){const cc=1200*Math.log2(f/fm0);if(Math.abs(cc)<=12){recent.push(f);if(recent.length>14)recent.shift();}}
+    const spread=recent.length>=5?1200*Math.log2(Math.max(...recent)/Math.min(...recent)):99;steady=spread<20&&recent.length>=6;
+    const fm=recent.length>=4?(()=>{const s=[...recent].sort((a,b)=>a-b),k=Math.floor(s.length/5),m=s.slice(k,s.length-k);return m.reduce((a,b)=>a+b,0)/m.length;})():fm0;
     let si=s.lock;if(si==null&&ms.length){let bd=1e9;ms.forEach((m,i)=>{const d=Math.abs(1200*Math.log2(fm/mfreq(m,s.a4)));if(d<bd){bd=d;si=i;}});if(bd>350)si=null;}
     let c,label,oct;if(si!=null&&ms[si]!=null){const tf=mfreq(ms[si],s.a4);c=1200*Math.log2(fm/tf);label=mname(ms[si],fl);oct=Math.floor(ms[si]/12)-1;}
     else{const m=12*Math.log2(fm/s.a4)+69,rm=Math.round(m);c=(m-rm)*100;label=mname(rm,fl);oct=Math.floor(rm/12)-1;}
-    u.disp_c=u.disp.classList.contains("live")?u.disp_c*0.55+c*0.45:c;u.disp.classList.add("live");const dc=u.disp_c;
+    {const al=steady?0.25:0.6;u.disp_c=u.disp.classList.contains("live")?u.disp_c*(1-al)+c*al:c;}u.disp.classList.add("live");const dc=u.disp_c;
     u.nm.textContent=label;u.nm.dataset.oct=oct;u.ct.textContent=(dc>=0?"+":"−")+(Math.abs(dc)<10?Math.abs(dc).toFixed(1):Math.round(Math.abs(dc)))+"¢";
     u.hz.textContent=fm.toFixed(2)+" Hz"+(si!=null&&ms.length?" · string "+u.btns[si].lastChild.textContent:"")+(Math.abs(c)>100&&si!=null?" · "+(c<0?"way flat":"way sharp"):"");
     u.needle.style.left=(50+Math.max(-50,Math.min(50,dc)))+"%";const ok=Math.abs(dc)<=3&&Math.abs(c)<=5;u.disp.classList.toggle("ok",ok);

@@ -10,7 +10,7 @@ Endpoints (localhost only):
   POST /api/backing  → body = the song file; headers X-Filename, X-Title, X-Artist (URL-encoded), X-Guide
                        returns the finished .m4a (also saved to ~/Downloads/Songbook Backing Tracks)
 """
-import http.server, importlib.util, json, os, shutil, sys, tempfile, threading, urllib.parse
+import http.server, importlib.util, json, os, shutil, subprocess, sys, tempfile, threading, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -37,11 +37,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.split("?")[0] == "/api/health":
             return self._json(200, {"ok": True, "demucs": importlib.util.find_spec("demucs") is not None,
-                                    "ffmpeg": shutil.which("ffmpeg") is not None, "busy": JOB.locked()})
+                                    "ffmpeg": shutil.which("ffmpeg") is not None, "render": True, "busy": JOB.locked()})
         return super().do_GET()
 
     def do_POST(self):
-        if self.path.split("?")[0] != "/api/backing":
+        p = self.path.split("?")[0]
+        if p.startswith("/api/render/"):
+            return self._render(p[len("/api/render/"):])
+        if p != "/api/backing":
             return self._json(404, {"error": "not found"})
         if self.client_address[0] not in ("127.0.0.1", "::1"):
             return self._json(403, {"error": "local use only"})
@@ -76,6 +79,78 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.end_headers(); self.wfile.write(data)
         finally:
             JOB.release(); shutil.rmtree(tmp, ignore_errors=True)
+
+
+RENDERS = {}
+RENDER_OUT = os.path.expanduser("~/Downloads/Songbook Videos")
+
+
+def _read_body(handler, limit):
+    n = int(handler.headers.get("Content-Length") or 0)
+    if not 0 < n <= limit: return None
+    out, left = bytearray(), n
+    while left:
+        c = handler.rfile.read(min(left, 1 << 20))
+        if not c: break
+        out += c; left -= len(c)
+    return bytes(out)
+
+
+def _render(self, step):
+    """Full-quality lyric videos (mandatory path after a lyrics upload, when this server is running):
+    start (original video) → frame (transparent overlay PNGs at 10 fps, drawn by the app) → audio (guitar-fixed + backing WAV,
+    rendered offline by the app) → finish: ffmpeg overlays the frames on the ORIGINAL video at its own frame rate, H.264 8 Mbps."""
+    if self.client_address[0] not in ("127.0.0.1", "::1"):
+        return self._json(403, {"error": "local use only"})
+    q = dict(urllib.parse.parse_qsl(urllib.parse.urlparse(self.path).query))
+    if step == "start":
+        body = _read_body(self, 900 * 1024 * 1024)
+        if body is None: return self._json(400, {"error": "send the video (up to 900 MB)"})
+        rid = os.urandom(6).hex(); d = tempfile.mkdtemp(prefix="sb-render-"); os.makedirs(d + "/ov")
+        ext = os.path.splitext(q.get("name", "video.mp4"))[1].lower() or ".mp4"
+        open(d + "/src" + ext, "wb").write(body)
+        RENDERS[rid] = {"dir": d, "src": d + "/src" + ext, "name": os.path.splitext(os.path.basename(q.get("name", "video")))[0]}
+        info = {}
+        try:
+            pr = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height,avg_frame_rate:stream_side_data=rotation:format=duration",
+                                 "-of", "json", d + "/src" + ext], capture_output=True, text=True, timeout=60)
+            j = json.loads(pr.stdout or "{}"); s0 = (j.get("streams") or [{}])[0]; w, h = int(s0.get("width", 0)), int(s0.get("height", 0))
+            rot = abs(int(float(((s0.get("side_data_list") or [{}])[0]).get("rotation", 0) or 0)))
+            if rot in (90, 270): w, h = h, w
+            info = {"w": w, "h": h, "dur": float((j.get("format") or {}).get("duration", 0) or 0)}
+        except Exception: pass
+        return self._json(200, {"id": rid, **info})
+    r = RENDERS.get(q.get("id", ""))
+    if not r: return self._json(404, {"error": "unknown render"})
+    if step == "frame":
+        body = _read_body(self, 20 * 1024 * 1024)
+        if body is None: return self._json(400, {"error": "empty frame"})
+        open(r["dir"] + "/ov/o_%05d.png" % int(q.get("i", "0")), "wb").write(body); return self._json(200, {"ok": True})
+    if step == "audio":
+        body = _read_body(self, 400 * 1024 * 1024)
+        if body is None: return self._json(400, {"error": "empty audio"})
+        open(r["dir"] + "/audio.wav", "wb").write(body); return self._json(200, {"ok": True})
+    if step == "finish":
+        w = max(320, min(3840, int(q.get("w", "1280")))); fps = float(q.get("ovfps", "10")); label = q.get("label", "lyrics")
+        os.makedirs(RENDER_OUT, exist_ok=True)
+        out = os.path.join(RENDER_OUT, mb.clean_name(f"{r['name']} ({label})") + ".mp4")
+        have_audio = os.path.exists(r["dir"] + "/audio.wav")
+        cmd = ["ffmpeg", "-loglevel", "error", "-y", "-i", r["src"], "-framerate", str(fps), "-i", r["dir"] + "/ov/o_%05d.png"]
+        if have_audio: cmd += ["-i", r["dir"] + "/audio.wav"]
+        cmd += ["-filter_complex", f"[0:v:0]scale={w}:-2,format=yuv420p[b];[1:v]format=rgba,scale={w}:-2[o];[b][o]overlay=0:0:eof_action=pass,format=yuv420p[v]",
+                "-map", "[v]", "-map", "2:a:0" if have_audio else "0:a:0?"]
+        enc = ["-c:v", "h264_videotoolbox", "-b:v", "8M", "-profile:v", "high"] if sys.platform == "darwin" else ["-c:v", "libx264", "-preset", "medium", "-crf", "19"]
+        cmd += enc + ["-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", out]
+        p = subprocess.run(cmd, capture_output=True, text=True)
+        if p.returncode != 0:
+            return self._json(500, {"error": "ffmpeg: " + (p.stderr or "")[-600:]})
+        data = open(out, "rb").read(); shutil.rmtree(r["dir"], ignore_errors=True); RENDERS.pop(q["id"], None)
+        self.send_response(200); self.send_header("Content-Type", "video/mp4"); self.send_header("Content-Length", str(len(data)))
+        self.send_header("X-Filename", urllib.parse.quote(os.path.basename(out))); self.end_headers(); self.wfile.write(data); return
+    return self._json(404, {"error": "unknown step"})
+
+
+Handler._render = _render
 
 
 def main():

@@ -375,6 +375,7 @@ body.live-on .livetab{display:none}
 .takeacts{display:flex;flex-wrap:wrap;gap:6px}.takevid{width:100%;max-height:60vh;border-radius:10px;background:#000}.recpv canvas{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000;display:block}.takeacts .libbtn{padding:6px 10px;font-size:13px;text-decoration:none}
 .cloudst{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--fg)}.cloudst small{color:var(--muted);font-weight:400}.cloudst .libbtn{padding:6px 10px;font-size:13px}.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:12px}
 .vidimport{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.scorecard{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;background:var(--sunk);border:1px solid var(--line);border-left:4px solid var(--c-E);border-radius:10px;padding:8px 12px;font-size:13px}.scorecard b{font-family:var(--display);font-size:20px;color:var(--c-E)}
 /* songbook (PDFs) */
 .songbook>summary{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--accent)}
 .songbook.drag{outline:2px dashed var(--accent);outline-offset:3px}
@@ -1934,12 +1935,60 @@ function onsetEnv(buf,hop){const sr=buf.sampleRate,n=buf.length,H=Math.round(sr*
 async function songAudioBlob(s){if(SONG_AUDIO[s.id]){try{return await (await fetch(SONG_AUDIO[s.id].data)).blob();}catch(e){}}const r=await idb("get",s.id);if(r&&r.blob)return r.blob;
   if(cloudKey()){const tr=await cloudList();const m=cloudMatch(s,tr||[]);if(m){try{return await (await fetch(m.url)).blob();}catch(e){}}}return null;}
 // where does the video sit in the song? cross-correlate onset envelopes (50 per second); song time = video time + offset
+function chromaSeq(buf,hop){const dec=Math.max(1,Math.round(buf.sampleRate/11025)),sr=buf.sampleRate/dec,ch=[...Array(buf.numberOfChannels)].map((_,i)=>buf.getChannelData(i));
+  const N=Math.floor(buf.length/dec),x=new Float32Array(N);for(let i=0;i<N;i++){let v=0;for(const c of ch)for(let j=0;j<dec;j++)v+=c[i*dec+j]||0;x[i]=v/(dec*ch.length);}
+  const W=2048,H=Math.round(hop*sr),win=Float64Array.from({length:W},(_,i)=>0.5-0.5*Math.cos(2*Math.PI*i/W)),bins=[];
+  for(let k=1;k<W/2;k++){const f=k*sr/W;bins.push(f<80||f>4000?-1:((Math.round(12*Math.log2(f/440))+9)%12+12)%12);}
+  const out=[];for(let st=0;st+W<N;st+=H){const fr=new Float64Array(W);for(let i=0;i<W;i++)fr[i]=x[st+i]*win[i];const m=fftMag(fr),c=new Float64Array(12);
+    for(let k=1;k<W/2;k++){const p=bins[k-1];if(p>=0)c[p]+=m[k];}let mu=0;for(const v of c)mu+=v/12;let nn=0;for(let k=0;k<12;k++){c[k]-=mu;nn+=c[k]*c[k];}nn=Math.sqrt(nn)||1;for(let k=0;k<12;k++)c[k]/=nn;out.push(c);}
+  return out;}
+
 async function alignVideo(file,s){audio();const sb=await songAudioBlob(s);if(!sb)return null;let vb,ab;
   try{vb=await ctx.decodeAudioData(await file.arrayBuffer());}catch(e){return {err:"Couldn't read the video's sound"};}
   try{ab=await ctx.decodeAudioData(await sb.arrayBuffer());}catch(e){return null;}
-  const hop=0.02,ev=onsetEnv(vb,hop),es=onsetEnv(ab,hop),n=Math.min(ev.length,Math.round(90/hop));let best=-1e9,lag=0;
-  for(let L=-Math.round(20/hop);L<es.length-20;L++){let s2=0,c=0;for(let i=0;i<n;i+=2){const j=i+L;if(j<0||j>=es.length)continue;s2+=ev[i]*es[j];c++;}if(c>50){s2/=c;if(s2>best){best=s2;lag=L;}}}
-  return {offset:lag*hop,score:best};}
+  const hop=0.1,cv=chromaSeq(vb,hop),cs=chromaSeq(ab,hop),n=cv.length,need=Math.floor(0.6*n);let best=-1e9,lag=0;
+  for(let L=-Math.round(20/hop);L<=cs.length-need;L++){let s2=0,c=0;for(let i=0;i<n;i++){const j=i+L;if(j<0||j>=cs.length)continue;const a2=cv[i],b2=cs[j];let d=0;for(let k=0;k<12;k++)d+=a2[k]*b2[k];s2+=d;c++;}
+    if(c>=need){s2/=c;if(s2>best){best=s2;lag=L;}}}
+  // refine to 20 ms with the onset envelopes around the chord match
+  const h2=0.02,ev=onsetEnv(vb,h2),es=onsetEnv(ab,h2);let lb=Math.round(lag*hop/h2),bb=-1e9,fine=lb;
+  for(let L=lb-15;L<=lb+15;L++){let s3=0,c=0;for(let i=0;i<ev.length;i+=2){const j=i+L;if(j<0||j>=es.length)continue;s3+=ev[i]*es[j];c++;}if(c>50){s3/=c;if(s3>bb){bb=s3;fine=L;}}}
+  return {offset:fine*h2,score:best,vb};}
+// 📊 score a take against the chart: coverage, right chord per beat (best of Easy/Medium/Hard), strum timing vs the 8th-note grid
+function fftMag(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){[re[i],re[j]]=[re[j],re[i]];}}
+  for(let len=2;len<=n;len<<=1){const a=-2*Math.PI/len,wr=Math.cos(a),wi=Math.sin(a);for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let k=0;k<len/2;k++){const ur=re[i+k],ui=im[i+k],vr=re[i+k+len/2]*cr-im[i+k+len/2]*ci,vi=re[i+k+len/2]*ci+im[i+k+len/2]*cr;
+    re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+len/2]=ur-vr;im[i+k+len/2]=ui-vi;const nr=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=nr;}}}
+  const m=new Float64Array(n/2);for(let i=0;i<n/2;i++)m[i]=Math.hypot(re[i],im[i]);return m;}
+function scoreTake(vb,s,offset){if(!vb||cur!==s)return null;const dec=Math.max(1,Math.round(vb.sampleRate/11025)),sr=vb.sampleRate/dec,ch=[...Array(vb.numberOfChannels)].map((_,i)=>vb.getChannelData(i));
+  const N=Math.floor(vb.length/dec),x=new Float32Array(N);for(let i=0;i<N;i++){let v=0;for(const c of ch)for(let j=0;j<dec;j++)v+=c[i*dec+j]||0;x[i]=v/(dec*ch.length);}
+  const W=4096,win=Float64Array.from({length:W},(_,i)=>0.5-0.5*Math.cos(2*Math.PI*i/W)),cap=+s.capo||0,bl=beatLen();
+  const chromaAt=tv=>{const st=Math.round(tv*sr);if(st<0||st+W>N)return null;const fr=new Float64Array(W);let e=0;for(let i=0;i<W;i++){fr[i]=x[st+i]*win[i];e+=x[st+i]*x[st+i];}
+    const m=fftMag(fr),c=new Float64Array(12);for(let k=1;k<W/2;k++){const f=k*sr/W;if(f<80||f>4000)continue;const p=((Math.round(12*Math.log2(f/440))+9)%12+12)%12;c[p]+=m[k]*m[k];}return {c,rms:Math.sqrt(e/W)};};
+  const tpl=n=>{const p=chordPCs(n);if(!p)return null;const v=new Float64Array(12);p.pcs.forEach(q=>v[(q+cap)%12]=1);v[(p.root+cap)%12]=1.4;let mu=0;v.forEach(z=>mu+=z/12);let nn=0;for(let i=0;i<12;i++){v[i]-=mu;nn+=v[i]*v[i];}nn=Math.sqrt(nn);for(let i=0;i<12;i++)v[i]/=nn;return v;};
+  const beats=[];sections().forEach((sec,si)=>{(sec.bars||[]).forEach((_,bi)=>{for(let q=0;q<bpb();q++){const pos=secFirst[si]+bi+q/bpb(),tv=timeAtPos(pos)-offset;if(tv>=0&&tv+0.4<vb.duration)beats.push({si,bi,q,tv});}});});
+  if(beats.length<16)return null;const feats=beats.map(b=>chromaAt(b.tv));const levels=feats.filter(Boolean).map(f=>20*Math.log10(f.rms+1e-9)).sort((a,b)=>a-b),loud=levels[Math.floor(levels.length*0.9)]||-20,floor=loud-26;
+  let played=0;const res={};
+  Object.entries(s.versions||{}).forEach(([k,v])=>{const T={};let h=0,n=0;const per={};
+    beats.forEach((b,i)=>{const f=feats[i];if(!f||20*Math.log10(f.rms+1e-9)<floor+8)return;const bar=(v.sections[b.si]||{}).bars;if(!bar)return;
+      const toks=parseBar(bar[b.bi]||"",bpb());let acc=0,c=toks[0]&&toks[0].c;for(const tk of toks){if(b.q<acc+tk.b){c=tk.c;break;}acc+=tk.b;}if(!c)return;
+      const names=[...new Set(v.sections.flatMap(s2=>s2.bars.flatMap(b2=>parseBar(b2,bpb()).map(z=>z.c))))];names.forEach(nm=>{if(!T[nm])T[nm]=tpl(nm);});
+      const cv=f.c,mu=cv.reduce((a,z)=>a+z,0)/12,vv=Array.from(cv,z=>z-mu),nr=Math.hypot(...vv)||1;let best=null,bs=-9;names.forEach(nm=>{const tt=T[nm];if(!tt)return;let d=0;for(let j=0;j<12;j++)d+=tt[j]*vv[j]/nr;if(d>bs){bs=d;best=nm;}});
+      n++;const ok=best===c;h+=ok;const sn=sections()[b.si].name;(per[sn]=per[sn]||[0,0])[0]++;if(ok)per[sn][1]++;});
+    res[k]={pct:n?h/n:0,label:v.label||k,per};played=Math.max(played,n);});
+  const bestV=Object.values(res).sort((a,b)=>b.pct-a.pct)[0];
+  // strum onsets (spectral flux 150–4000 Hz) vs the 8th-note grid of the song
+  const H=256,fl=[];let prev=null;for(let st=0;st+1024<N;st+=H){const fr=new Float64Array(1024);for(let i=0;i<1024;i++)fr[i]=x[st+i]*(0.5-0.5*Math.cos(2*Math.PI*i/1024));const m=fftMag(fr);let s2=0;
+    if(prev)for(let k=Math.floor(150*1024/sr);k<Math.floor(4000*1024/sr);k++)s2+=Math.max(0,Math.log(1e-6+m[k])-Math.log(1e-6+prev[k]));fl.push(s2);prev=m;}
+  const mu=fl.reduce((a,z)=>a+z,0)/fl.length,sd=Math.sqrt(fl.reduce((a,z)=>a+(z-mu)**2,0)/fl.length)||1,devs=[];const gap=Math.round(0.06*sr/H);
+  for(let i=gap;i<fl.length-gap;i++){if(fl[i]<mu+1.5*sd)continue;let pk=true;for(let j=i-gap;j<=i+gap;j++)if(fl[j]>fl[i]){pk=false;break;}if(!pk)continue;
+    const tv=i*H/sr,ts=tv+offset,pos=posAt(ts);if(pos<0||pos>flat.length)continue;const b=pos*bpb(),d=(b*2-Math.round(b*2))/2;devs.push(d*bl*1000);}
+  const w50=devs.length?devs.filter(d=>Math.abs(d)<=50).length/devs.length:0,mean=devs.length?devs.reduce((a,z)=>a+z,0)/devs.length:0,cover=played/beats.length;
+  const weak=Object.entries(bestV.per).filter(([,a])=>a[0]>=8).map(([n,a])=>[n,a[1]/a[0]]).sort((a,b)=>a[1]-b[1])[0];
+  const score=Math.round(100*(0.5*bestV.pct+0.35*(0.6*w50+0.4*Math.max(0,1-Math.abs(mean)/60))+0.15*cover));
+  return {score,chord:bestV.pct,version:bestV.label,w50,mean,cover,weak:weak?{name:weak[0],pct:weak[1]}:null,strums:devs.length};}
+function scoreCard(sc){if(!sc)return el("p","vdesc","📊 No score — needs the song's chart timing and at least a few bars of playing.");
+  const d=el("div","scorecard");d.append(el("b",null,"📊 "+sc.score+"/100"),el("span",null,"Chords "+Math.round(sc.chord*100)+"% ("+sc.version+")"),el("span",null,"On beat "+Math.round(sc.w50*100)+"% · "+(sc.mean>=0?"+":"")+Math.round(sc.mean)+" ms"),el("span",null,"Played "+Math.round(sc.cover*100)+"%"));
+  if(sc.weak)d.appendChild(el("span",null,"Work on: "+sc.weak.name+" ("+Math.round(sc.weak.pct*100)+"%)"));return d;}
+
 async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)return;host.hidden=false;host.innerHTML="";
   const url=URL.createObjectURL(file),pv=document.createElement("video");pv.src=url;pv.controls=true;pv.playsInline=true;pv.className="takevid";
   host.append(el("b",null,"⬆️ "+file.name),pv);const st=el("p","vdesc","🔎 Finding where your video sits in the song…");host.appendChild(st);
@@ -1951,7 +2000,8 @@ async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)re
   const go=el("button","libbtn primary","✨ Make the video");go.type="button";const bar=el("div","dbar");const fill=el("i");bar.appendChild(fill);bar.hidden=true;host.append(go,bar);
   alignVideo(file,s).then(r=>{if(cur!==s)return;if(!r){st.textContent="No song audio on this device to match against — set the start time by hand (play the preview and match it to the chords).";return;}
     if(r.err){st.textContent=r.err+" — set the start time by hand.";return;}off.value=r.offset.toFixed(2);
-    st.textContent=r.score>0.35?"✓ Matched: your video starts at "+fmt(Math.max(0,r.offset))+" of the song"+(r.offset<0?" (the song begins "+(-r.offset).toFixed(1)+" s into your video)":"")+".":"≈ Best guess "+fmt(Math.max(0,r.offset))+" — the song is hard to hear in this video, check it with the preview.";});
+    const sc=scoreTake(r.vb,s,r.offset);host._score=sc;const old=host.querySelector(".scorecard,.scorenote");if(old)old.remove();const card=scoreCard(sc);card.classList.add("scorenote");st.after(card);
+    st.textContent=r.score>0.25?"✓ Matched: your video starts at "+fmt(Math.max(0,r.offset))+" of the song"+(r.offset<0?" (the song begins "+(-r.offset).toFixed(1)+" s into your video)":"")+".":"≈ Best guess "+fmt(Math.max(0,r.offset))+" — the song is hard to hear in this video, check it with the preview.";});
   go.addEventListener("click",()=>makeVideo(file,s,+off.value||0,{fix:oFix._c.checked,lyrics:oLyr._c.checked,mix:oMix._c.checked},go,bar,fill,st));}
 async function makeVideo(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop the current recording first");return;}audio();pause();go.disabled=true;bar.hidden=false;
   const v=document.createElement("video");v.src=URL.createObjectURL(file);v.playsInline=true;v.preload="auto";
@@ -1961,14 +2011,17 @@ async function makeVideo(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop the
   let ba=null;if(o.mix){const sb=await songAudioBlob(s);if(sb){ba=new Audio(URL.createObjectURL(sb));const bs=ctx.createMediaElementSource(ba),g=ctx.createGain();g.gain.value=0.7;bs.connect(g).connect(dest);}}
   const r={s,cv,vid:v,imported:true,lyrics:o.lyrics,t0:Date.now(),tSong:()=>v.currentTime+offset};
   const mime=firstMime(VIDEO_MIMES),stream=new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]),mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined),chunks=[];
-  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};let raf=0;
-  const loop=()=>{drawFrame(r);fill.style.width=Math.min(100,v.currentTime/(v.duration||1)*100)+"%";st.textContent="✨ Making your video… "+fmt(v.currentTime).replace(/\.\d$/,"")+" / "+fmt(v.duration||0).replace(/\.\d$/,"")+" (real time — keep this tab open)";raf=requestAnimationFrame(loop);};
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};let raf=0,live=true;
+  const tick=()=>{drawFrame(r);fill.style.width=Math.min(100,v.currentTime/(v.duration||1)*100)+"%";st.textContent="✨ Making your video… "+fmt(v.currentTime).replace(/\.\d$/,"")+" / "+fmt(v.duration||0).replace(/\.\d$/,"")+(document.hidden?" — paused while this tab is hidden":" (real time — keep this tab in front)");};
+  const loop=()=>{if(!live)return;tick();if(v.requestVideoFrameCallback)raf=v.requestVideoFrameCallback(loop);else raf=requestAnimationFrame(loop);};
+  const vis=()=>{if(document.hidden){v.pause();if(ba)ba.pause();if(mr.state==="recording")mr.pause();}else if(mr.state==="paused"){mr.resume();v.play().catch(()=>{});if(ba){ba.currentTime=Math.max(0,v.currentTime+offset);ba.play().catch(()=>{});}}};
+  document.addEventListener("visibilitychange",vis);
   const done=new Promise(res=>{mr.onstop=res;});v.onended=()=>{if(mr.state!=="inactive")mr.stop();};
   mr.start(1000);loop();await v.play().catch(()=>{});
   if(ba){const startB=()=>{ba.currentTime=Math.max(0,v.currentTime+offset);ba.play().catch(()=>{});};if(offset>=0)startB();else setTimeout(startB,-offset*1000);}
-  await done;cancelAnimationFrame(raf);if(ba)ba.pause();try{src.disconnect();}catch(e){}
+  await done;live=false;document.removeEventListener("visibilitychange",vis);cancelAnimationFrame(raf);if(ba)ba.pause();try{src.disconnect();}catch(e){}
   const type=mr.mimeType||mime||"video/webm",blob=new Blob(chunks,{type});
-  await tdb("put",{songId:s.id,name:file.name.replace(/\.[^.]+$/,"")+" ("+[o.fix?"guitar fix":"",o.lyrics?"lyrics":"",o.mix?"backing":""].filter(Boolean).join(" + ")+")",date:Date.now(),dur:v.duration||0,mixed:!!ba,clean:!!o.fix,video:true,from:offset,type,blob});
+  await tdb("put",{songId:s.id,name:file.name.replace(/\.[^.]+$/,"")+" ("+[o.fix?"guitar fix":"",o.lyrics?"lyrics":"",o.mix?"backing":""].filter(Boolean).join(" + ")+")",date:Date.now(),dur:v.duration||0,mixed:!!ba,clean:!!o.fix,video:true,from:offset,type,blob,score:($("vidImport")||{})._score||null});
   st.textContent="✓ Saved as a new video take below — share or download it.";toast("✨ Video ready: "+s.title);go.disabled=false;bar.hidden=true;if(cur===s)renderTakes(true);}
 
 async function renderTakes(open){
@@ -2004,7 +2057,7 @@ async function renderTakes(open){
     const cl=el("button","libbtn","✨ Clean up");cl.type="button";cl.title="Save a clearer copy: less rumble and mud, more presence, even level, normalised";cl.hidden=isV||/\(clear\)$/.test(tk.name);cl.addEventListener("click",()=>{cl.disabled=true;cl.textContent="✨ Cleaning…";cleanTake(tk);});
     const rn=el("button","libbtn","✎");rn.type="button";rn.title="Rename";rn.addEventListener("click",async()=>{const v=prompt("Name this take",tk.name);if(v&&v.trim()){tk.name=v.trim();await tdb("put",tk);renderTakes(true);}});
     const rm=el("button","libbtn","✕");rm.type="button";rm.title="Delete";rm.addEventListener("click",async()=>{if(confirm("Delete “"+tk.name+"”?")){await tdb("del",tk.id);URL.revokeObjectURL(url);renderTakes(true);}});
-    acts.append(sh,dl,cl,rn,rm);r.append(head,m,acts);list.appendChild(r);});
+    acts.append(sh,dl,cl,rn,rm);r.append(head,m);if(tk.score)r.appendChild(scoreCard(tk.score));r.appendChild(acts);list.appendChild(r);});
   const old=$("takes");if(old)old.replaceWith(box);else{const lb=$("lyrBox"),st=document.querySelector("#main .stage");(lb||st||main.lastChild).after(box);}
   recUI();
 }

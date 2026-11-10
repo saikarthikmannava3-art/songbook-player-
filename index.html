@@ -2007,17 +2007,37 @@ async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)re
   const nud=(d,l)=>{const b=el("button","libbtn",l);b.type="button";b.addEventListener("click",()=>{off.value=(+off.value+d).toFixed(2);});return b;};
   offRow.append(el("span",null,"Song time at the video's start:"),nud(-1,"−1s"),nud(-0.1,"−0.1"),off,nud(0.1,"+0.1"),nud(1,"+1s"));host.appendChild(offRow);
   const opts=el("div","takebar");const mk=(k,l,d)=>{const lab=el("label","rgauto");const c=document.createElement("input");c.type="checkbox";c.checked=store.get("sb-vi-"+k,d);c.addEventListener("change",()=>store.set("sb-vi-"+k,c.checked));lab.append(c,l);lab._c=c;return lab;};
-  const oFix=mk("fix","🎸 Guitar sound fix",true),oLyr=mk("lyr","Add lyrics",true),oChd=mk("chd","Show chord names",true),oMix=mk("mix","Mix in the song's backing",false);opts.append(oFix,oLyr,oChd,oMix);host.appendChild(opts);
+  const oFix=mk("fix","🎸 Guitar sound fix",true),oLyr=mk("lyr","Add lyrics",true),oChd=mk("chd","Show chord names",true),oMix=mk("mix","Mix in the song's backing",false);const oIso=mk("iso","🎚 Isolate my guitar (removes the song your phone heard)",true);oIso.title="Uses Demucs on the Mac's Songbook server, so the speaker in the room doesn't bury your guitar";opts.append(oFix,oIso,oLyr,oChd,oMix);host.appendChild(opts);
   const bl=el("label","rgauto");bl.title="How loud the backing sits under your guitar";const blr=document.createElement("input");blr.type="range";blr.min=0;blr.max=100;blr.value=store.get("sb-vi-blevel",35);const blv=el("span",null,blr.value+"%");
-  blr.addEventListener("input",()=>{blv.textContent=blr.value+"%";store.set("sb-vi-blevel",+blr.value);});bl.append("Backing level ",blr,blv);host.appendChild(bl);
+  blr.addEventListener("input",()=>{blv.textContent=blr.value+"%";store.set("sb-vi-blevel",+blr.value);});const blh=document.createElement("small");blh.className="muted";blh.textContent=" · auto-balanced: turned down in loud parts so your guitar stays on top";bl.append("Backing level ",blr,blv,blh);host.appendChild(bl);
   const go=el("button","libbtn primary","✨ Make the video");go.type="button";const bar=el("div","dbar");const fill=el("i");bar.appendChild(fill);bar.hidden=true;host.append(go,bar);
   alignVideo(file,s).then(r=>{if(cur!==s)return;if(!r){st.textContent="No song audio on this device to match against — set the start time by hand (play the preview and match it to the chords).";return;}
     if(r.err){st.textContent=r.err+" — set the start time by hand.";return;}off.value=r.offset.toFixed(2);
     host._vb=r.vb;const sc=scoreTake(r.vb,s,r.offset);host._score=sc;const old=host.querySelector(".scorecard,.scorenote");if(old)old.remove();const card=scoreCard(sc);card.classList.add("scorenote");st.after(card);
     st.textContent=r.score>0.25?"✓ Matched: your video starts at "+fmt(Math.max(0,r.offset))+" of the song"+(r.offset<0?" (the song begins "+(-r.offset).toFixed(1)+" s into your video)":"")+".":"≈ Best guess "+fmt(Math.max(0,r.offset))+" — the song is hard to hear in this video, check it with the preview.";});
-  go.addEventListener("click",()=>makeVideo(file,s,+off.value||0,{fix:oFix._c.checked,lyrics:oLyr._c.checked||oChd._c.checked,words:oLyr._c.checked,chords:oChd._c.checked,mix:oMix._c.checked,blevel:(+blr.value||0)/100},go,bar,fill,st));}
+  go.addEventListener("click",()=>makeVideo(file,s,+off.value||0,{fix:oFix._c.checked,iso:oIso._c.checked,lyrics:oLyr._c.checked||oChd._c.checked,words:oLyr._c.checked,chords:oChd._c.checked,mix:oMix._c.checked,blevel:(+blr.value||0)/100},go,bar,fill,st));}
 // Full-quality path (mandatory when the Mac's Songbook server is running): offline audio (guitar fix + backing at the matched offset),
 // offline lyric overlay frames drawn by drawFrame at 10 fps, ffmpeg overlays them on the ORIGINAL video at its own frame rate.
+// Auto-balance: the backing gets louder when drums/vocals come in (7 Years: +6-7 dB from Verse 2), burying the guitar.
+// Measure guitar and backing every 0.25 s; wherever backing/guitar is louder than the balance of the quieter 30% of the take
+// (the parts you could hear yourself), or louder than the backing's own quieter 30%, turn the backing down. Never turns it up. Smoothed (fast duck, slow release).
+function duckMix(gb,bb){const sr=gb.sampleRate,n=gb.length,hop=Math.round(sr*0.25),W=Math.ceil(n/hop),ch=gb.numberOfChannels;
+  const rms=(b,i)=>{let a=0,c=0;for(let k=0;k<b.numberOfChannels;k++){const d=b.getChannelData(k);for(let j=i*hop;j<Math.min(n,(i+1)*hop);j+=4){a+=d[j]*d[j];c++;}}return Math.sqrt(a/Math.max(1,c));};
+  const G=[],B=[];for(let i=0;i<W;i++){G.push(rms(gb,i));B.push(rms(bb,i));}
+  const sm=a=>a.map((_,i)=>{let t=0,c=0;for(let j=Math.max(0,i-4);j<=Math.min(W-1,i+4);j++){t+=a[j];c++;}return t/c;}),Gs=sm(G),Bs=sm(B);
+  const r=[];for(let i=0;i<W;i++)if(Gs[i]>0.003&&Bs[i]>0.001)r.push(20*Math.log10(Bs[i]/Gs[i]));
+  const out=new AudioBuffer({length:n,numberOfChannels:ch,sampleRate:sr});
+  let gain=new Float32Array(W).fill(1);
+  const bl=[];for(let i=0;i<W;i++)if(Bs[i]>0.001)bl.push(Bs[i]);bl.sort((a,b)=>a-b);const bcap=bl.length>8?bl[Math.floor(bl.length*0.3)]:Infinity;
+  r.sort((a,b)=>a-b);const cap=r.length>8?r[Math.floor(r.length*0.3)]:Infinity;
+  for(let i=0;i<W;i++){if(Bs[i]<=0.001)continue;let d=20*Math.log10(Bs[i]/bcap);   // level the backing to its own quieter parts (drums/vocals coming in)
+    if(Gs[i]>0.003)d=Math.max(d,20*Math.log10(Bs[i]/Gs[i])-cap);                     // and keep the guitar/backing balance of the parts you could hear
+    if(d>0)gain[i]=Math.pow(10,-Math.min(d,14)/20);}
+  {let g=1;for(let i=0;i<W;i++){g=gain[i]<g?gain[i]:g+(gain[i]-g)*0.15;gain[i]=g;}}
+  let peak=0;for(let k=0;k<ch;k++){const a=gb.getChannelData(k),b=bb.getChannelData(Math.min(k,bb.numberOfChannels-1)),o=out.getChannelData(k);
+    for(let j=0;j<n;j++){const x=j/hop-0.5,i=Math.max(0,Math.min(W-1,Math.floor(x))),f=Math.max(0,Math.min(1,x-i)),gg=gain[i]+(gain[Math.min(W-1,i+1)]-gain[i])*f;o[j]=a[j]+b[j]*gg;const v=Math.abs(o[j]);if(v>peak)peak=v;}}
+  if(peak>0)for(let k=0;k<ch;k++){const o=out.getChannelData(k);for(let j=0;j<n;j++)o[j]*=0.97/peak;}   // full volume, never clipping
+  return out;}
 async function hqAvailable(){try{const r=await fetch("api/health",{cache:"no-store"});if(!r.ok)return false;const h=await r.json();return !!(h.ok&&h.ffmpeg&&h.render);}catch(e){return false;}}
 async function makeVideo(file,s,offset,o,go,bar,fill,st){if(await hqAvailable())return makeVideoHQ(file,s,offset,o,go,bar,fill,st);
   toast("Real-time video (the full-quality 30 fps version needs the app opened on your Mac with the Songbook server)");return makeVideoRT(file,s,offset,o,go,bar,fill,st);}
@@ -2027,9 +2047,15 @@ async function makeVideoHQ(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop t
     prog(0.02,"🎬 Full quality · reading the video…");
     let vb=($("vidImport")||{})._vb;if(!vb)vb=await ctx.decodeAudioData(await file.arrayBuffer());
     prog(0.05,"🎬 Full quality · 1/4 sound: guitar fix"+(o.mix?" + backing":"")+"…");
-    const oc=new OfflineAudioContext(2,vb.length,vb.sampleRate),src=oc.createBufferSource();src.buffer=vb;(o.fix?guitarChain(oc,src):src).connect(oc.destination);src.start();
-    if(o.mix){const sb=await songAudioBlob(s);if(sb){const ab=await ctx.decodeAudioData(await sb.arrayBuffer()),bs=oc.createBufferSource(),g=oc.createGain();g.gain.value=0.7;bs.buffer=ab;g.gain.value=o.blevel!=null?o.blevel:0.35;bs.connect(g).connect(oc.destination);bs.start(Math.max(0,-offset),Math.max(0,offset));}}
-    const mixed=await oc.startRendering(),wav=toWav(mixed,1);
+    let gtr=null;if(o.iso){try{prog(0.06,"🎬 Full quality · 1/4 isolating your guitar from the room sound (Demucs)…");
+      const q=await fetch("api/isolate",{method:"POST",body:toWav(vb,1)});if(q.ok)gtr=await ctx.decodeAudioData(await q.arrayBuffer());else toast("Guitar isolation skipped: "+(await q.text()).slice(0,80));}catch(e){toast("Guitar isolation skipped");}}
+    const oc=new OfflineAudioContext(2,vb.length,vb.sampleRate),src=oc.createBufferSource();src.buffer=gtr||vb;(o.fix?guitarChain(oc,src):src).connect(oc.destination);src.start();
+    if(gtr){const room=oc.createBufferSource(),rg=oc.createGain();room.buffer=vb;rg.gain.value=0.12;room.connect(rg).connect(oc.destination);room.start();}  // a trace of the room, so it still sounds live
+    let mixed=await oc.startRendering();
+    if(o.mix){const sb=await songAudioBlob(s);if(sb){const ab=await ctx.decodeAudioData(await sb.arrayBuffer()),ob=new OfflineAudioContext(2,vb.length,vb.sampleRate),bs=ob.createBufferSource(),g=ob.createGain();
+      bs.buffer=ab;g.gain.value=o.blevel!=null?o.blevel:0.35;bs.connect(g).connect(ob.destination);bs.start(Math.max(0,-offset),Math.max(0,offset));
+      const back=await ob.startRendering();mixed=duckMix(mixed,back);}}
+    const wav=toWav(mixed,1);
     prog(0.12,"🎬 Full quality · 2/4 uploading the video to the Songbook server…");
     let r=await fetch("api/render/start?name="+encodeURIComponent(file.name),{method:"POST",body:file});if(!r.ok)throw new Error("server: "+(await r.text()).slice(0,120));const info=await r.json(),id=info.id;
     if(!info.w||!info.h)throw new Error("the server couldn't read this video");const W=Math.min(1280,info.w-(info.w%2)),H=Math.round(W*info.h/info.w/2)*2,dur=info.dur||vb.duration;

@@ -7,6 +7,7 @@ serve.py: serves the Songbook Player like `python3 -m http.server`, plus the �
 
 Endpoints (localhost only):
   GET  /api/health   → {"ok":true,"demucs":bool,"ffmpeg":bool}
+  POST /api/isolate  → body = WAV of a take; returns the guitar stem (removes the song the phone heard in the room)
   POST /api/backing  → body = the song file; headers X-Filename, X-Title, X-Artist (URL-encoded), X-Guide
                        returns the finished .m4a (also saved to ~/Downloads/Songbook Backing Tracks)
 """
@@ -44,6 +45,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         p = self.path.split("?")[0]
         if p.startswith("/api/render/"):
             return self._render(p[len("/api/render/"):])
+        if p == "/api/isolate":
+            return self._isolate()
         if p != "/api/backing":
             return self._json(404, {"error": "not found"})
         if self.client_address[0] not in ("127.0.0.1", "::1"):
@@ -80,6 +83,32 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         finally:
             JOB.release(); shutil.rmtree(tmp, ignore_errors=True)
 
+
+def _isolate(self):
+    """POST /api/isolate: body = WAV of a take (phone video sound). Demucs pulls the guitar out, so the song playing
+    in the room (which the phone also heard) doesn't bury it. Returns the guitar stem as WAV."""
+    if self.client_address[0] not in ("127.0.0.1", "::1"):
+        return self._json(403, {"error": "local use only"})
+    body = _read_body(self, MAX_BYTES)
+    if not body: return self._json(400, {"error": "send a WAV"})
+    if not JOB.acquire(blocking=False):
+        return self._json(409, {"error": "busy, try again in a minute"})
+    tmp = tempfile.mkdtemp(prefix="sb-iso-")
+    try:
+        src = os.path.join(tmp, "take.wav"); open(src, "wb").write(body)
+        r = subprocess.run([sys.executable, "-m", "demucs", "-n", "htdemucs_6s", "--two-stems", "guitar", "-o", tmp, src],
+                           capture_output=True, text=True)
+        out = os.path.join(tmp, "htdemucs_6s", "take", "guitar.wav")
+        if r.returncode or not os.path.exists(out):
+            return self._json(500, {"error": "demucs: " + (r.stderr or "")[-300:]})
+        data = open(out, "rb").read()
+        self.send_response(200); self.send_header("Content-Type", "audio/wav"); self.send_header("Content-Length", str(len(data)))
+        self.end_headers(); self.wfile.write(data)
+    finally:
+        JOB.release(); shutil.rmtree(tmp, ignore_errors=True)
+
+
+Handler._isolate = _isolate
 
 RENDERS = {}
 RENDER_OUT = os.path.expanduser("~/Downloads/Songbook Videos")

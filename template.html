@@ -483,7 +483,7 @@ body.live-on .livetab{display:none}
            per-device BPM/sync settings are dropped.
    Tools: pipeline/songbook_pipeline.py runs gates 4–6 on an MP3/M4A and writes map + qa.
    ===================================================================================== */
-const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords & strumming from sources (Easy = open chords)"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"],["g8","Play-along backing: guitar removed, quiet parts filled"]];
+const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g3","Chords & strumming from sources (Easy = open chords)"],["g4","Beats from the recording"],["g5","Sections aligned to the recording"],["g6","Measured accuracy ≥ 80%"],["g7","Lyrics match the chart"],["g8","Play-along backing: guitar removed, quiet parts filled"],["g9","Bar lines checked: beat 1 is where the bass & chord changes land (pipeline/check_timing.py)"]];
 
 // ---------- 📏 song rules (checked on every song, shown in the gate-3 badge; same checks in pipeline/songbook_pipeline.py) ----------
 // 1. Every strumming pattern names its source: a tutorial / chord site, the user, or a measurement of the recording. No generic defaults.

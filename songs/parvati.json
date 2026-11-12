@@ -593,7 +593,8 @@
     "top1": 0.842,
     "bpm_measured": 86.1,
     "disputed": "Chorus 1 bar 5: the sheet's Am → C is heard as G in the recording; kept the sheet so the lyrics line up. Old chart (C instead of F → G) scored 81%, the sheet 84%.",
-    "g8": true
+    "g8": true,
+    "g9": true
    },
    "map": [
     0.906,

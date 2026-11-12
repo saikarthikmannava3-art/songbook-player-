@@ -629,7 +629,8 @@
     "top1": 0.835,
     "top2": 0.956,
     "bpm_measured": 125.99,
-    "disputed": "Constant-tempo grid (125.99 BPM) — beat tracking drifted ~1 beat/80 s on this track. Chords scored on the instruments only. Capo 6 (UG ver 3) chosen over UG's top capo-2 version so Easy can be open chords at the same capo."
+    "disputed": "Constant-tempo grid (125.99 BPM) — beat tracking drifted ~1 beat/80 s on this track. Chords scored on the instruments only. Capo 6 (UG ver 3) chosen over UG's top capo-2 version so Easy can be open chords at the same capo.",
+    "g9": true
    },
    "rev": 2,
    "map": [

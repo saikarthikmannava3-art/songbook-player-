@@ -63,6 +63,13 @@
      "src": {
       "label": "Your YouTube tutorial (confirmed by the recording)"
      }
+    },
+    {
+     "label": "Tutorial — D-DU | DUDU | DUDU | DUDU (16ths, from beat 1: one miss after the first down, then keep going)",
+     "s": "D.DUDUDUDUDUDUDU",
+     "src": {
+      "label": "Your YouTube tutorial (on-screen strum chart, shared 2026-11-12)"
+     }
     }
    ],
    "versions": {
@@ -883,6 +890,7 @@
    "notes": [
     "Capo 2, G shapes (sounds in A). 115 BPM, timed to your MP3 (first beat 0.78 s; bar lines re-checked against the bass and chord changes on 2026-11-12).",
     "Strumming (your tutorial): keep the hand moving in 16ths and play D D U | D U D | D U D | D U D — 12 strokes, 4 misses. Counted from beat 1 of the bar: D . d u d . D . d u d u D . d u — the tutorial's cycle starts on the & of 2. Accent beat 1 (the heaviest hit in the recording), the & of 2 and beat 4.",
+    "Tutorial strum chart: D-DU | DUDU | DUDU | DUDU — each group is one beat of 16ths (D . D U, then D U D U ×3), starting on beat 1. Busier than the recording's guitar, which leaves gaps; the MJ pattern is the same idea with one more miss.",
     "Intro strum G ↔ Gsus2 (capo 2; A ↔ Asus2 in the tutorial): keep strumming and lift your index finger on the first up-stroke of part 3, put it back on the last up-stroke of part 4. Gsus2 = 3x0233.",
     "Intro lick on the B and G strings (capo 2): B 0-2-3-5-3/5p3-2-0, then G 2-2, B 5-5; second time end G 2-2-2, B 2-0.",
     "'Oh shaanti' lines: Am (1 beat) G (2 beats) D (1 beat), then a full bar of D.",

@@ -1,4 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Songbook"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0e1320"><link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png"><link rel="icon" href="images/icons/icon-512.png"><link rel="manifest" href="manifest.webmanifest"><style>[hidden]:not([hidden=until-found i]){display:none!important}img{max-width:100%}</style><title>Katha's Songbook Player</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Songbook"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0e1320"><link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png"><link rel="icon" href="images/icons/icon-512.png"><link rel="manifest" href="manifest.webmanifest"><style>[hidden]:not([hidden=until-found i]){display:none!important}img{max-width:100%}.coach .crow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}
+.coach .clab{font-size:12px;color:var(--muted);min-width:70px}
+.coach .cvol{width:120px}
+.chips.ts button{font-family:var(--mono)}
+.slots small.beat{color:var(--fg);font-weight:700}
+.slots small.now{color:var(--accent);font-weight:700}
+.callrow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:10px;font:700 13px var(--mono)}
+.callrow i{font-style:normal;color:var(--muted);font-weight:400}
+.callrow span{padding:3px 7px;border-radius:6px;border:1px solid var(--line);background:var(--bg)}
+.callrow span.acc{border-color:var(--fg)}
+.callrow span.ghost{opacity:.45;font-weight:400;border-style:dashed}
+.callrow span.now{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);opacity:1;transform:scale(1.1)}
+.vcap{font:800 40px var(--mono);color:var(--fg);letter-spacing:.5px;min-height:48px;flex:1;text-align:center}
+.drill .dstage .dnow{flex-direction:row;align-items:center;flex-wrap:wrap}
+.vcap.count{color:var(--accent)}
+.vcap.ghost{opacity:.45}
+</style><title>Katha's Songbook Player</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -1424,15 +1440,55 @@ function renderWarmup(){
 }
 
 // ---------- 🎸 chord & strumming practice: loop the song's chords with its strum pattern, metronome and a moving strum marker ----------
+// ---------- 🎙 Voice coach: pre-rendered voice clips (Kokoro, offline) scheduled on the SAME Web Audio clock as the clicks ----------
+// Speech never drives timing: every word is an AudioBuffer started at an exact ctx.currentTime, ~120 ms ahead, like the clicks.
+// Each clip is faded out before the next spoken slot, so words never overlap; at fast tempos low-priority words are dropped.
+const VC={meta:null,bufs:{}},NUMW=["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+async function vcLoad(voice){audio();if(!ctx)return null;
+  if(!VC.meta){try{VC.meta=await (await fetch("voice/voice.json")).json();}catch(e){return null;}}
+  if(VC.bufs[voice])return VC.bufs[voice];
+  const keys=Object.keys((VC.meta.dur||{})[voice]||{}),out={};
+  await Promise.all(keys.map(async k=>{try{const r=await fetch("voice/"+voice+"/"+k+".mp3");if(!r.ok)return;const b=await ctx.decodeAudioData(await r.arrayBuffer()),d=b.getChannelData(0);let pk=0;for(let i=0;i<d.length;i++)pk=Math.max(pk,Math.abs(d[i]));
+    const th=pk*0.02;let a=0,z=d.length-1;while(a<z&&Math.abs(d[a])<th)a++;while(z>a&&Math.abs(d[z])<th)z--;b._off=Math.max(0,a/b.sampleRate-0.003);b._len=(z-a)/b.sampleRate+0.02;out[k]=b;}catch(e){}}));
+  return VC.bufs[voice]=Object.keys(out).length?out:null;}
+// plucked-string strum (Karplus–Strong) for "Hear it once" and the optional strum sound
+const KS={},OPEN_MIDI=[40,45,50,55,59,64];
+function ksBuf(m){if(KS[m])return KS[m];const sr=ctx.sampleRate,N=Math.max(2,Math.round(sr/(440*Math.pow(2,(m-69)/12)))),len=Math.round(sr*1.4),b=ctx.createBuffer(1,len,sr),d=b.getChannelData(0),r=new Float32Array(N);
+  for(let i=0;i<N;i++)r[i]=Math.random()*2-1;let p=0;for(let i=0;i<len;i++){const q=(p+1)%N,v=r[p];d[i]=v;r[p]=0.4985*(v+r[q]);p=q;}return KS[m]=b;}
+function strumSound(at,chord,ch,ring,track){const f=SHAPES[chord]||SHAPES[chordRoot?chordRoot(chord):chord]||SHAPES.G;if(!f)return;const c=ch.toLowerCase();
+  let idx=[0,1,2,3,4,5].filter(i=>f[i]>=0);if(c==="u")idx=idx.slice(-4).reverse();if(c==="b")idx=idx.slice(0,1);
+  const gap=Math.min(0.011,ring/14),amp=(ch===ch.toUpperCase()?0.2:0.13)*(c==="x"?0.7:1);
+  idx.forEach((i,j)=>{const s=ctx.createBufferSource(),g=ctx.createGain(),lp=ctx.createBiquadFilter(),t=at+j*gap,end=t+(c==="x"?0.05:Math.max(0.2,ring));
+    s.buffer=ksBuf(OPEN_MIDI[i]+(c==="x"?0:f[i]));lp.type="lowpass";lp.frequency.value=c==="x"?900:c==="u"?4200:3000;
+    g.gain.setValueAtTime(amp,t);g.gain.setTargetAtTime(0.0001,end,0.04);s.connect(lp).connect(g).connect(ctx.destination);s.start(t);s.stop(end+0.25);track(s,t);});}
+// time signatures: beats = counted beats (BPM is per beat), sub = slots per beat; 6/8 counts every eighth ("one…six")
+const DRILL_TS={"4/4":{beats:4},"3/4":{beats:3},"6/8":{beats:2,sub:3,six:true},"12/8":{beats:4,sub:3}};
+const PRACTICE_PATS=[
+  {ts:"4/4",label:"Down on every beat — D D D D",s:"D.D.D.D.",src:"JustinGuitar Grade 1, Modules 1–2"},
+  {ts:"4/4",label:"Down-ups — D U D U D U D U",s:"DUDUDUDU",src:"JustinGuitar Grade 1, Module 3"},
+  {ts:"4/4",label:"Old Faithful — D · D U · U D U",s:"D.DU.UDU",src:"JustinGuitar Grade 1, Module 4"},
+  {ts:"3/4",label:"Exercise — down on every beat",s:"D.D.D.",src:"counting exercise"},
+  {ts:"3/4",label:"Exercise — down-ups",s:"DUDUDU",src:"counting exercise"},
+  {ts:"6/8",label:"Exercise — downs on 1 and 4",s:"D..D..",src:"counting exercise"},
+  {ts:"6/8",label:"Exercise — every eighth down",s:"DDDDDD",src:"counting exercise"},
+  {ts:"12/8",label:"Exercise — down on every beat",s:"D..D..D..D..",src:"counting exercise"},
+  {ts:"12/8",label:"Exercise — every triplet down",s:"DDDDDDDDDDDD",src:"counting exercise"}];
+function patTs(s){const b=bpb(),n=String(s).length,sub=n/b;return b===2&&sub===3?"6/8":b===4&&sub===3?"12/8":b===3?"3/4":b===4&&[1,2,4].includes(sub)?"4/4":null;}
+function tsLabel(ts,s,sub){const T=DRILL_TS[ts];if(T.six)return NUMW[s];const b=Math.floor(s/sub),j=s%sub;
+  if(!j)return NUMW[b];return sub===2?"and":sub===3?(j===1?"and":"a"):["","e","and","a"][j];}
+const SHOW_LAB={one:"1",two:"2",three:"3",four:"4",five:"5",six:"6",seven:"7",eight:"8",nine:"9",ten:"10",eleven:"11",twelve:"12",and:"&",e:"e",a:"a"};
+const DIRW={d:"down",u:"up",x:"chuck",b:"bass"};
+
 let drill=null;
-function stopDrill(){if(!drill)return;clearInterval(drill.iv);cancelAnimationFrame(drill.raf);const b=drill.btn;drill=null;if(b&&b.isConnected){b.textContent="▶ Start practice";b.classList.remove("on");}}
+function stopDrill(){if(!drill)return;const d=drill;drill=null;clearInterval(d.iv);cancelAnimationFrame(d.raf);if(d.halt)d.halt();}
 function renderDrill(d){
   stopDrill();
   const box=document.createElement("details");box.className="sub drill";box.id="drill";box.open=store.get("sb-drill-open",true);
   box.addEventListener("toggle",()=>{store.set("sb-drill-open",box.open);if(!box.open)stopDrill();});
-  box.appendChild(el("summary",null,"Chord & strumming practice"));
-  box.appendChild(el("p","vdesc","Loop this song's chords with its strumming pattern. The marker shows each strum; change chord on beat 1. Start slow, then step up the tempo."));
-  const pk=store.get("sb-drill-"+cur.id,{}),n=slots(),strs=(cur.strums||[]).filter(x=>x&&x.s);
+  box.appendChild(el("summary",null,"Chord & strumming practice · 🎙 voice coach"));
+  box.appendChild(el("p","vdesc","Loop this song's chords with a strumming pattern. A calm voice can count the beats, call every Down and Up, or both — locked to the metronome clock. Start slow, then step up the tempo."));
+  const pk=store.get("sb-drill-"+cur.id,{}),co=Object.assign({vm:"combo",cs:"beats",vv:"michael",vol:0.8,met:true,snd:false,ci:1,up:0},store.get("sb-coach",{}));
+  const saveCo=()=>store.set("sb-coach",co);
   // what to practise: each common change, or every chord of the song in order of appearance
   const seqs=d.top.map(([k])=>({label:k.replace("↔"," ↔ "),chords:k.split("↔")}));
   const order=[];flat.forEach(b=>b.toks.forEach(t=>{if(order[order.length-1]!==t.c)order.push(t.c);}));
@@ -1440,50 +1496,146 @@ function renderDrill(d){
   if(d.chords.length>2)seqs.push({label:"All chords: "+d.chords.join(" → "),chords:d.chords});
   if(prog.length>2)seqs.push({label:"Song order: "+prog.join(" → "),chords:prog});
   if(!seqs.length)seqs.push({label:d.chords.join(" → ")||"—",chords:d.chords});
-  let si=Math.min(pk.s||0,seqs.length-1),pi=Math.min(pk.p||0,Math.max(0,strs.length-1)),bars=pk.b||2,bpm=pk.bpm||d.start;
-  const save=()=>{store.set("sb-drill-"+cur.id,{s:si,p:pi,b:bars,bpm});if(drill&&drill.btn===go){stopDrill();go.click();}};
+  // patterns: this song's sourced strums (for their time signature) + practice patterns for every time signature
+  const songPats=(cur.strums||[]).filter(x=>x&&x.s&&patTs(x.s)).map(x=>({ts:patTs(x.s),label:"🎵 "+x.label,s:String(x.s),src:x.src?(x.src.label||String(x.src)):""}));
+  const defTs=(songPats[0]||{}).ts||"4/4";
+  let ts=DRILL_TS[pk.ts]?pk.ts:defTs;
+  const patsFor=t=>songPats.filter(p=>p.ts===t).concat(PRACTICE_PATS.filter(p=>p.ts===t));
+  let si=Math.min(pk.s||0,seqs.length-1),pi=Math.min(pk.p||0,Math.max(0,patsFor(ts).length-1)),bars=pk.b||2,bpm=pk.bpm||d.start;
+  const save=(restart)=>{store.set("sb-drill-"+cur.id,{s:si,p:pi,b:bars,bpm,ts});if(restart&&drill&&drill.btn===go){const was=drill.demo;stopDrill();if(!was)go.click();}};
+  const curPat=()=>patsFor(ts)[pi]||patsFor(ts)[0];
+  const geo=()=>{const T=DRILL_TS[ts],P=curPat().s,sub=T.sub||Math.max(1,P.length/T.beats);return {T,P,n:P.length,sub};};
   const opts=el("div","grid3");
-  const chooser=(title,items,get,set)=>{const w=el("div","box");w.appendChild(el("h4",null,title));const ch=el("div","chips");
-    items.forEach((it,i)=>{const b=el("button",i===get()?"on":"",it);b.type="button";b.addEventListener("click",()=>{set(i);save();[...ch.children].forEach((x,j)=>x.classList.toggle("on",j===i));draw();});ch.appendChild(b);});
-    w.appendChild(ch);return w;};
+  const chips=(items,get,set,cls)=>{const ch=el("div","chips"+(cls?" "+cls:""));items.forEach(([v,lab,tip])=>{const b=el("button",v===get()?"on":"",lab);b.type="button";if(tip)b.title=tip;
+    b.addEventListener("click",()=>{set(v);[...ch.children].forEach(x=>x.classList.toggle("on",x===b));});ch.appendChild(b);});return ch;};
+  const chooser=(title,items,get,set)=>{const w=el("div","box");w.appendChild(el("h4",null,title));w.appendChild(chips(items.map((it,i)=>[i,it]),get,i=>{set(i);save(true);draw();}));return w;};
   opts.appendChild(chooser("Chords",seqs.map(x=>x.label),()=>si,i=>{si=i;}));
-  if(strs.length)opts.appendChild(chooser("Strumming",strs.map(x=>x.label),()=>pi,i=>{pi=i;}));
+  const patBox=el("div","box");opts.appendChild(patBox);
+  function renderPats(){patBox.innerHTML="";patBox.appendChild(el("h4",null,"Strumming · time signature"));
+    patBox.appendChild(chips(Object.keys(DRILL_TS).map(t=>[t,t,t==="6/8"?"Counted one to six":t==="12/8"?"Counted one-and-a":""]),()=>ts,t=>{ts=t;pi=0;save(true);renderPats();draw();},"ts"));
+    patBox.appendChild(chips(patsFor(ts).map((p,i)=>[i,p.label.length>44?p.label.slice(0,42).replace(/[\s(—-]+$/,"")+"…":p.label,p.label+(p.src?"\nSource: "+p.src:"")]),()=>pi,i=>{pi=i;save(true);draw();}));}
+  renderPats();
   const tw=el("div","box");tw.appendChild(el("h4",null,"Tempo & bars per chord"));
   const tr=el("div","chips");const bi=document.createElement("input");bi.type="number";bi.min=30;bi.max=240;bi.value=bpm;bi.setAttribute("aria-label","Practice BPM");
   bi.style.cssText="width:70px;font:700 16px var(--mono);text-align:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:5px";
-  bi.addEventListener("change",()=>{bpm=Math.max(30,Math.min(240,+bi.value||d.start));bi.value=bpm;save();});
-  const step=(v,lab)=>{const b=el("button",null,lab);b.type="button";b.addEventListener("click",()=>{bpm=Math.max(30,Math.min(240,bpm+v));bi.value=bpm;save();});return b;};
-  tr.append(step(-5,"−5"),bi,step(5,"+5"));const orig=el("button",null,d.orig+" ★");orig.type="button";orig.title="Original song tempo";orig.addEventListener("click",()=>{bpm=d.orig;bi.value=bpm;save();});tr.appendChild(orig);
+  const setBpmLive=v=>{bpm=Math.max(30,Math.min(240,Math.round(v)||d.start));bi.value=bpm;save(false);if(drill&&drill.st)drill.st.bpm=bpm;};  // live: no restart, next slot uses the new tempo
+  bi.addEventListener("change",()=>setBpmLive(+bi.value));
+  const step=(v,lab)=>{const b=el("button",null,lab);b.type="button";b.addEventListener("click",()=>setBpmLive(bpm+v));return b;};
+  tr.append(step(-5,"−5"),bi,step(5,"+5"));const orig=el("button",null,d.orig+" ★");orig.type="button";orig.title="Original song tempo";orig.addEventListener("click",()=>setBpmLive(d.orig));tr.appendChild(orig);
   tw.appendChild(tr);
-  const bc=el("div","chips");[1,2,4].forEach(v=>{const b=el("button",v===bars?"on":"",v+(v===1?" bar":" bars"));b.type="button";b.addEventListener("click",()=>{bars=v;save();[...bc.children].forEach(x=>x.classList.toggle("on",x===b));});bc.appendChild(b);});
-  tw.appendChild(bc);opts.appendChild(tw);box.appendChild(opts);
-  // live view: current chord (big + shape), next chord, strum row with moving marker
+  tw.appendChild(chips([1,2,4].map(v=>[v,v+(v===1?" bar":" bars")]),()=>bars,v=>{bars=v;save(true);}));
+  tw.appendChild(el("h4",null,"Speed up as you go"));
+  tw.appendChild(chips([[0,"Off"],[1,"+2 every 4 bars"],[2,"+5 every 8 bars"]],()=>co.up,v=>{co.up=v;saveCo();}));
+  tw.appendChild(el("small","vdesc","Stops at the song tempo ★ (or +20 BPM if you're already there)."));
+  opts.appendChild(tw);box.appendChild(opts);
+  // 🎙 coach settings
+  const cb=el("div","box coach");cb.appendChild(el("h4",null,"🎙 Voice coach"));
+  const row=(lab,node)=>{const r=el("div","crow");r.append(el("span","clab",lab),node);cb.appendChild(r);return r;};
+  row("Mode",chips([["silent","🔇 Silent metronome"],["count","🔢 Count"],["strum","✋ Strum coach"],["combo","🎓 Count + strum"]],()=>co.vm,v=>{co.vm=v;saveCo();upd();}));
+  const csRow=row("Counting",chips([["beats","Beats: 1 2 3 4"],["subs","With subdivisions: 1 & 2 &"]],()=>co.cs,v=>{co.cs=v;saveCo();}));
+  const vl=(VC.meta&&VC.meta.voices)||{michael:"Michael — warm, calm",fenrir:"Fenrir — deeper",puck:"Puck — brighter"};
+  const vr=document.createElement("input");vr.type="range";vr.min=0;vr.max=100;vr.value=Math.round(co.vol*100);vr.setAttribute("aria-label","Voice volume");vr.className="cvol";
+  vr.addEventListener("input",()=>{co.vol=vr.value/100;saveCo();if(drill&&drill.st)drill.st.vol=co.vol;});
+  const vrow=row("Voice",chips(Object.entries(vl).map(([k,l])=>[k,l]),()=>co.vv,v=>{co.vv=v;saveCo();vcLoad(v);}));vrow.append(el("span","clab","🔉"),vr);
+  const tg=(lab,key,tip)=>{const l=el("label","rgauto");const c=document.createElement("input");c.type="checkbox";c.checked=!!co[key];c.addEventListener("change",()=>{co[key]=c.checked;saveCo();if(drill&&drill.st)drill.st[key]=c.checked;});if(tip)l.title=tip;l.append(c," "+lab);return l;};
+  const misc=el("div","chips");misc.append(chips([[1,"Count-in 1 bar"],[2,"Count-in 2 bars"]],()=>co.ci,v=>{co.ci=v;saveCo();}),tg("🔔 Metronome click","met"),tg("🎸 Strum sound","snd","A soft plucked strum of the current chord on every stroke"));
+  row("Options",misc);
+  const credit=el("small","vdesc","Voice: Kokoro (open-source, offline) — pre-recorded words scheduled on the audio clock, so they stay exactly on the beat.");cb.appendChild(credit);
+  if(co.vm!=="silent")setTimeout(()=>vcLoad(co.vv),300);   // warm the voice in the background so Start is instant
+  function upd(){csRow.style.opacity=co.vm==="count"||co.vm==="combo"?1:0.45;}upd();
+  box.appendChild(cb);
+  // live view: current chord (big + shape), next chord, strum row with moving marker, spoken call row
   const stage=el("div","box dstage");const nowRow=el("div","dnow");
-  const cName=el("div","big","");const cDg=el("div","ddg");const nxt=el("div","vdesc","");
-  nowRow.append(cName,cDg,nxt);stage.appendChild(nowRow);
-  const sl=el("div","slots");sl.style.gridTemplateColumns=`repeat(${n},auto)`;stage.appendChild(sl);
-  const ctl=el("div","chips");const go=el("button","go","▶ Start practice");go.type="button";const info=el("span","vdesc","");ctl.append(go,info);stage.appendChild(ctl);
+  const cName=el("div","big","");const cDg=el("div","ddg");const nxt=el("div","vdesc","");const cap=el("div","vcap","");
+  nowRow.append(cName,cDg,nxt,cap);stage.appendChild(nowRow);
+  const sl=el("div","slots");stage.appendChild(sl);
+  const calls=el("div","callrow");stage.appendChild(calls);
+  const ctl=el("div","chips");const go=el("button","go","▶ Start practice");go.type="button";const pz=el("button",null,"⏸ Pause");pz.type="button";pz.hidden=true;
+  const demo=el("button",null,"👂 Hear it once");demo.type="button";demo.title="Hear one bar of the pattern (strums + voice) before you play";
+  const info=el("span","vdesc","");ctl.append(go,pz,demo,info);stage.appendChild(ctl);
   box.appendChild(stage);
-  const pat=()=>String((strs[pi]||{s:"D".padEnd(n,".")}).s).padEnd(n,".").slice(0,n);
   function showChord(ci){const seq=seqs[si].chords,c=seq[ci%seq.length]||"—";cName.textContent=c;cName.style.color=chordColor(c);
     cDg.innerHTML="";const g=diagram(c);if(g){g.setAttribute("width",70);g.setAttribute("height",84);cDg.appendChild(g);}
     nxt.textContent=seq.length>1?"next: "+(seq[(ci+1)%seq.length]):"";}
-  function draw(){sl.innerHTML="";const p=pat();[...p].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));countLabels().forEach(x=>sl.appendChild(el("small",null,x)));if(!drill)showChord(0);}
+  function draw(){const {P,n,sub}=geo();sl.innerHTML="";sl.style.gridTemplateColumns=`repeat(${n},auto)`;
+    [...P].forEach(x=>sl.appendChild(el("i",x!=="."&&x===x.toUpperCase()?"acc":"",ARW[x.toLowerCase()]||"·")));
+    for(let s=0;s<n;s++){const sm=el("small",s%sub===0?"beat":"",SHOW_LAB[tsLabel(ts,s,sub)]||"");sl.appendChild(sm);}
+    // every hand movement, in order — misses shown faint, so the hand never stops
+    calls.innerHTML="";[...P].forEach((x,s)=>{const c=x.toLowerCase(),hand=s%2&&sub!==3&&!DRILL_TS[ts].six?"up":"down";
+      const w=el("span",c==="."?"ghost":(x===x.toUpperCase()?"acc":""),c==="."?(sub===3||DRILL_TS[ts].six?"(skip)":"("+hand+")"):DIRW[c].toUpperCase());calls.appendChild(w);if(s<n-1)calls.appendChild(el("i",null,"→"));});
+    if(!drill)showChord(0);}
   draw();
-  go.addEventListener("click",()=>{
+  // ---- the engine: ONE look-ahead scheduler on ctx.currentTime drives clicks, voice, strum sound and the highlights ----
+  async function run(isDemo){
     if(drill){stopDrill();return;}
     pause();cancelCount();audio();if(!ctx){toast("Audio isn't available in this browser");return;}
-    const spb=60/bpm/sub();let k=0,t0=ctx.currentTime+0.15;const q=[];
-    drill={btn:go,iv:0,raf:0};go.textContent="■ Stop";go.classList.add("on");
+    const vm=isDemo?(co.vm==="silent"||co.vm==="count"?"strum":co.vm):co.vm;
+    let V=null;if(vm!=="silent"){info.textContent="Loading the voice…";V=await vcLoad(co.vv);if(!V){toast("Voice clips couldn't load — playing the metronome only");}}
+    const dur=k=>V&&V[k]?V[k]._len:9;
+    const {T,P,n,sub}=geo(),six=!!T.six,live=[],q=[];
+    const st={bpm,vol:co.vol,met:co.met,snd:co.snd||isDemo,pk:0,cl:isDemo?0:co.ci*n,ciTotal:isDemo?0:co.ci*n,nextAt:ctx.currentTime+(V?0.95:0.2),pbar:-1,dropped:false,lastQ:null};
+    const track=(src,at)=>live.push({src,at});
+    const target=bpm<d.orig?d.orig:bpm+20;
+    // what the voice says on each slot of a practice bar (keys of the clip set), with priorities for fast tempos
+    const want=s=>{const ch=P[s],c=ch.toLowerCase(),beat=s%sub===0,lab=tsLabel(ts,s,sub),dir=DIRW[c];
+      if(vm==="count")return beat||six||co.cs==="subs"?[lab]:[];
+      if(vm==="strum")return dir?[dir]:[];
+      if(vm==="combo"){if(dir){const combo=(c==="d"||c==="u")?lab+"_"+dir:null;return [combo,beat?lab:dir].filter(Boolean);}return beat||six?[lab]:[];}
+      return [];};
+    let planBpm=-1,plan=[];
+    const makePlan=()=>{const spb=60/st.bpm/sub;let keys=[...Array(n)].map((_,s)=>want(s).flatMap(k=>V&&V[k+"_q"]?[k,k+"_q"]:[k]));let pick=keys.map(k=>k[0]||null);st.dropped=false;
+      for(let pass=0;pass<3;pass++){for(let s=0;s<n;s++){if(!pick[s])continue;let g=1;while(g<n&&!pick[(s+g)%n])g++;const avail=g*spb*0.92;
+        if(dur(pick[s])/1.3>avail){const alt=keys[s].slice(keys[s].indexOf(pick[s])+1).find(k=>dur(k)/1.3<=avail);
+          if(alt)pick[s]=alt;else if(s%sub!==0||vm==="strum"){pick[s]=null;st.dropped=true;}}}}
+      plan=pick;planBpm=st.bpm;};
+    const say=(key,at,avail,gain)=>{const b=V&&V[key];if(!b)return;const rate=Math.min(1.3,Math.max(1,b._len/avail)),len=Math.min(b._len/rate,avail);
+      const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=b;s.playbackRate.value=rate;const t=Math.max(ctx.currentTime,at-0.012),v=st.vol*gain;
+      g.gain.setValueAtTime(v,t);g.gain.setValueAtTime(v,t+Math.max(0.02,len-0.03));g.gain.linearRampToValueAtTime(0.0001,t+len);s.connect(g).connect(ctx.destination);s.start(t,b._off);s.stop(t+len+0.02);track(s,t);};
+    const seq=seqs[si].chords;
     const sched=()=>{if(!box.isConnected){stopDrill();return;}
-      while(t0+k*spb<ctx.currentTime+0.12){const at=t0+k*spb,s=k%n,bar=Math.floor(k/n);
-        if(!(sub()===4&&s%2))click(at,s===0?2:s%sub()===0?1:0);q.push({at,s,ci:Math.floor(bar/bars),bar});k++;}};
-    const paint=()=>{if(!drill)return;const now=ctx.currentTime;let e=null;while(q.length&&q[0].at<=now)e=q.shift();
-      if(e){[...sl.querySelectorAll("i")].forEach((x,j)=>x.classList.toggle("now",j===e.s));
-        if(e.s===0){showChord(e.ci);info.textContent="bar "+((e.bar%bars)+1)+" of "+bars+" · "+bpm+" BPM";}}
-      drill.raf=requestAnimationFrame(paint);};
-    sched();drill.iv=setInterval(sched,25);drill.raf=requestAnimationFrame(paint);
-  });
+      while(st.nextAt<ctx.currentTime+0.12){const at=st.nextAt,spb=60/st.bpm/sub;
+        if(st.cl>0){ // count-in: clicks on the beats, the voice counts the last bar (and "one … two" in the first of two bars)
+          const ci=st.ciTotal-st.cl,s=ci%n,last=ci>=st.ciTotal-n,beat=s%sub===0;
+          if(beat&&st.met)click(at,s===0?2:1);
+          let key=null,avail=(six&&last?1:sub)*spb*0.92;
+          if(six){if(last)key=NUMW[s];else if(s===0)key="one";else if(s===3)key="two";}
+          else if(beat){const b=s/sub;if(last)key=NUMW[b];else if(b===0)key="one";else if(T.beats>=4&&b===T.beats/2)key="two";}
+          if(V&&key)say(key,at,avail,1);
+          q.push({at,count:true,s,b:Math.floor(s/sub)});st.cl--;st.nextAt+=spb;continue;}
+        if(isDemo&&st.pk>=n){if(!st.endAt){if(V)say("yourturn",at+0.1,1.2,1);st.endAt=at+1.3;}break;}
+        const s=st.pk%n,bar=Math.floor(st.pk/n);
+        if(s===0&&bar!==st.pbar){st.pbar=bar;
+          if(co.up&&!isDemo&&bar>0){const ev=co.up===1?4:8,inc=co.up===1?2:5;if(bar%ev===0&&st.bpm<target&&st.upBar!==bar){st.upBar=bar;st.bpm=Math.min(target,st.bpm+inc);bpm=st.bpm;bi.value=bpm;save(false);q.push({at,msg:"↑ "+bpm+" BPM — nice, a little faster"});}}}
+        if(planBpm!==st.bpm)makePlan();
+        const sp=60/st.bpm/sub,ch=P[s];
+        if(st.met&&!(sub===4&&s%2))click(at,s===0?2:s%sub===0?1:0);
+        if(plan[s]){let g=1;while(g<n&&!plan[(s+g)%n])g++;say(plan[s],at,g*sp*0.92,vm==="count"?(s%sub===0?1:0.75):((ch!=="."&&ch===ch.toUpperCase())||s===0?1:0.82));}
+        if(st.snd&&ch!=="."){const chord=seq[Math.floor(bar/bars)%seq.length];strumSound(at,chord,ch,sp*1.8,track);}
+        q.push({at,s,bar,ci:Math.floor(bar/bars),word:plan[s]});st.pk++;st.nextAt+=sp;}
+      if(st.endAt&&ctx.currentTime>st.endAt)stopDrill();};
+    const cells=()=>[...sl.querySelectorAll("i")],labs=()=>[...sl.querySelectorAll("small")],cw=()=>[...calls.querySelectorAll("span")];
+    const mark=(arr,j)=>arr.forEach((x,i)=>x.classList.toggle("now",i===j));
+    const paintQ=()=>{if(!drill)return;const now=ctx.currentTime;let e=null;while(q.length&&q[0].at<=now){const x=q.shift();if(x.msg)toast(x.msg);else e=x;}
+      if(e){if(e.count){mark(cells(),-1);mark(cw(),-1);mark(labs(),-1);cap.textContent=six?String(e.s+1):String(e.b+1);cap.className="vcap count";info.textContent="Count-in… get ready";}
+        else{st.lastQ=e;mark(cells(),e.s);mark(labs(),e.s);mark(cw(),e.s);const ch=P[e.s],c=ch.toLowerCase(),lab=SHOW_LAB[tsLabel(ts,e.s,sub)];
+          cap.textContent=lab+" · "+(c==="."?"(miss)":DIRW[c].toUpperCase());cap.className="vcap"+(c==="."?" ghost":"");
+          if(e.s===0){showChord(e.ci);info.textContent=(isDemo?"Listen · ":"bar "+((e.bar%bars)+1)+" of "+bars+" · ")+st.bpm+" BPM"+(st.dropped?(vm==="count"?" · too fast to say every subdivision — beats only":" · too fast to call every stroke — slow down to hear them all"):"");}}}
+      drill.raf=requestAnimationFrame(paintQ);};
+    const cancelFuture=(all)=>{const now=ctx.currentTime;live.forEach(x=>{if(all||x.at>now){try{x.src.stop();}catch(e){}}});live.length=0;q.length=0;};
+    drill={btn:go,demo:isDemo,iv:0,raf:0,st,
+      halt(){const practised=st.pk>=2*n&&!isDemo;cancelFuture(true);mark(cells(),-1);mark(cw(),-1);mark(labs(),-1);cap.textContent="";
+        if(V&&practised&&vm!=="silent")say("nicework",ctx.currentTime+0.05,1.2,1);
+        go.textContent="▶ Start practice";go.classList.remove("on");pz.hidden=true;pz.textContent="⏸ Pause";demo.disabled=false;info.textContent=practised?"Nice work — "+Math.floor(st.pk/n)+" bars at "+st.bpm+" BPM":"";},
+      pause(){if(drill.paused)return;drill.paused=true;clearInterval(drill.iv);const lq=st.lastQ;cancelFuture(false);
+        st.pk=lq?Math.floor(lq.bar)*n:0;pz.textContent="▶ Resume";info.textContent="Paused — resume restarts this bar after a one-bar count-in";},
+      resume(){if(!drill.paused)return;drill.paused=false;st.cl=n;st.ciTotal=n;st.pbar=-1;st.nextAt=ctx.currentTime+0.25;pz.textContent="⏸ Pause";sched();drill.iv=setInterval(sched,25);}};
+    if(isDemo){demo.disabled=true;go.textContent="■ Stop";go.classList.add("on");if(V)say("listen",ctx.currentTime+0.05,0.85,1);}
+    else{go.textContent="■ Stop";go.classList.add("on");pz.hidden=false;demo.disabled=true;if(V)say("herewego",ctx.currentTime+0.05,0.85,1);}
+    sched();drill.iv=setInterval(sched,25);drill.raf=requestAnimationFrame(paintQ);
+  }
+  go.addEventListener("click",()=>run(false));
+  demo.addEventListener("click",()=>{if(!drill)run(true);});
+  pz.addEventListener("click",()=>{if(!drill||drill.demo)return;drill.paused?drill.resume():drill.pause();});
   return box;
 }
 

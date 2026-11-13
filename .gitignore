@@ -16,3 +16,6 @@ __pycache__/
 node_modules/
 www/
 .songbook-key
+
+# Voice-coach clips (generated, Kokoro Apache-2.0) are part of the app
+!voice/*/*.mp3

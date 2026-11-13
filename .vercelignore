@@ -19,3 +19,6 @@ www/
 scripts/
 capacitor.config.json
 .songbook-key
+
+# Voice-coach clips are part of the app (must deploy)
+!voice/*/*.mp3

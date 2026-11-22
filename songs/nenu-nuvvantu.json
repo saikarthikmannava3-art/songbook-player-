@@ -44,11 +44,11 @@
      }
     },
     {
-     "label": "Medium — the tutorial pattern in 8ths: D . D U . U D U (strokes on 1, 2, & of 2, & of 3, 4, & of 4)",
-     "s": "D.DU.UDU",
+     "label": "Medium — EliteTarun 'DDUUDD DU' (on screen): down, down, up, up, down, down, down, up — one stroke per 8th is my placement",
+     "s": "DDUUDDDU",
      "src": {
-      "label": "Your YouTube tutorial — strokes measured in the Pallavi and Charanam (0:51–3:09)",
-      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+      "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU' (0:11 and through the song), capo 1",
+      "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
      }
     },
     {
@@ -617,7 +617,8 @@
     "Strumming, as the tutor plays it (keep the hand moving in 16ths: down on the beat and the &, up on e and a): D . . . | D . d u | . u d . | D . d u. Accent beats 1, 2 and 4.",
     "MJ Music Notes writes the pattern as DDD-DU-DUDD-DU; it can't be placed on the beat grid without guessing, so it isn't used as a pattern.",
     "Shapes with capo 1: Em = Fm, Am = B♭m, D = E♭, G = A♭, C = D♭, Bm = Cm, A = B♭. Easy plays Bm as Bm7 (x20202).",
-    "Pattern 1 (Easy): D D U D D from YouTube's Ask summary of your tutorial at 0:36 — down on 1, 2, up on the & of 2, down on 3 and 4, no up after 4. It replaces ChordZone's generic DU DU DU DU. The measured tutorial pattern (Hard) ends with a light up on the a of 4."
+    "Pattern 1 (Easy): D D U D D from YouTube's Ask summary of your tutorial at 0:36 — down on 1, 2, up on the & of 2, down on 3 and 4, no up after 4. It replaces ChordZone's generic DU DU DU DU. The measured tutorial pattern (Hard) ends with a light up on the a of 4.",
+    "Pattern 2 (Medium): EliteTarun's on-screen DDUUDD DU, played as 8 strokes, one per 8th (my placement). It replaces the 8th-note simplification of the measured pattern, whose directions didn't match Pattern 3."
    ],
    "sources": [
     {
@@ -693,7 +694,7 @@
     },
     "disputed": "Gate 6 scored on the instruments only (Demucs guitar+piano+bass+other stems). check_timing.py (gate 9): the pipeline's grid was 1 beat late (bass 6x stronger on its beat 4) — map shifted −1 beat; fit 0.450 → 0.564, bass now hardest on beat 1; scores above are on the corrected grid. Okasari chusi: MJ writes Em…D / Em…G / Em…D, but the recording (bass A♭ D♭ | C B♭ | B♭ | E♭) plays Bonson's G C | Em Am | C | D — Easy and Medium follow Bonson. Charanam: Bonson's C Em on 'Musugesukodu' / 'Nanu nannugane' not used — the recording plays MJ's C G. Instrumental 2: MJ's Em D Em D does not fit; the recording plays Cm | B♭m A♭ | C Cm | B♭m A♭ | Fm (Bm | Am G | B Bm | Am G | Em in shapes). MJ's strum DDD-DU-DUDD-DU not placed on the grid (ambiguous)."
    },
-   "rev": 3,
+   "rev": 4,
    "map": [
     3.458,
     32.135,

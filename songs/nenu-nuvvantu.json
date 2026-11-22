@@ -36,13 +36,13 @@
    },
    "strums": [
     {
-     "label": "Easy — your tutorial: D, D U, D, D (1, 2 &, 3, 4) — no up after 4 · Confidence 25% (AI summary only — below the Easy rule (needs 100%); waiting for your ear check)",
+     "label": "Easy — your tutorial: D, D U, D, D (1, 2 &, 3, 4) — no up after 4 · Confidence 75% (YouTube AI summary 25% + you confirmed it by ear 50%; no second written source found)",
      "s": "D.DUD.D.",
      "src": {
-      "label": "Your Telugu Guitar Songs tutorial — strumming shown at 0:36 (D D U D D), via YouTube's Ask summary of the video (AI — check by ear)",
+      "label": "Your Telugu Guitar Songs tutorial at 0:36 (D D U D D) — YouTube's Ask summary, confirmed by you by ear on 2026-11-22",
       "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU&t=36s"
      },
-     "conf": 25
+     "conf": 75
     },
     {
      "label": "Medium — EliteTarun 'DDUUDD DU' (on screen): down, down, up, up, down, down, down, up — one stroke per 8th is my placement · Confidence 50% (1 source: EliteTarun on-screen text; beat placement mine)",
@@ -625,7 +625,7 @@
     "Shapes with capo 1: Em = Fm, Am = B♭m, D = E♭, G = A♭, C = D♭, Bm = Cm, A = B♭. Easy plays Bm as Bm7 (x20202).",
     "Pattern 1 (Easy): D D U D D from YouTube's Ask summary of your tutorial at 0:36 — down on 1, 2, up on the & of 2, down on 3 and 4, no up after 4. It replaces ChordZone's generic DU DU DU DU. The measured tutorial pattern (Hard) ends with a light up on the a of 4.",
     "Pattern 2 (Medium): EliteTarun's on-screen DDUUDD DU, played as 8 strokes, one per 8th (my placement). It replaces the 8th-note simplification of the measured pattern, whose directions didn't match Pattern 3.",
-    "Confidence (rule 4): each verified source = 50%, AI summary = 25%, my own beat placement caps at 50%. Easy chords 100%, Medium 100%, Hard 50% (colour chords measured only). Pattern 1 25%, Pattern 2 50%, Pattern 3 50% — Pattern 1 is below the Easy rule until you confirm it by ear."
+    "Confidence (rule 4): each verified source = 50%, AI summary = 25%, my own beat placement caps at 50%. Easy chords 100%, Medium 100%, Hard 50% (colour chords measured only). Pattern 1 75% (AI summary + your ear check; one more written source would make it 100%), Pattern 2 50%, Pattern 3 50%."
    ],
    "sources": [
     {

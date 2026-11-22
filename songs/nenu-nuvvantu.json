@@ -1,0 +1,711 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "nenu-nuvvantu",
+   "order": 8,
+   "title": "Nenu Nuvvantu",
+   "artist": "Harris Jayaraj",
+   "from": "Orange (Telugu, 2010)",
+   "key": "Fm (Em shapes, capo 1)",
+   "capo": 1,
+   "bpm": 92,
+   "beatsPerBar": 4,
+   "subdiv": 4,
+   "timeLabel": "4/4 · 16ths",
+   "length": "4:50",
+   "firstBeat": 3.458,
+   "youtube": "https://www.youtube.com/watch?v=XZGTTLiWRXg",
+   "patterns": {
+    "full": {
+     "label": "Tutorial pattern (Hard), as the tutor plays it",
+     "s": "D...D.du.ud.D.du",
+     "src": {
+      "label": "Your YouTube tutorial — Telugu Guitar Songs (capo 1: Em C Am D)",
+      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+     }
+    },
+    "mid": {
+     "label": "Tutorial pattern (Hard), as the tutor plays it",
+     "s": "D...D.du.ud.D.du",
+     "src": {
+      "label": "Your YouTube tutorial — Telugu Guitar Songs (capo 1: Em C Am D)",
+      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+     }
+    }
+   },
+   "strums": [
+    {
+     "label": "Easy — straight 8ths D U D U D U D U (ChordZone: DU,DU,DU,DU)",
+     "s": "DUDUDUDU",
+     "src": {
+      "label": "ChordZone — suggested strumming DU,DU,DU,DU",
+      "url": "https://www.chordzone.org/2016/03/orange-movie-nenu-nuvvantu.html"
+     }
+    },
+    {
+     "label": "Medium — the tutorial pattern in 8ths: D . D U . U D U (strokes on 1, 2, & of 2, & of 3, 4, & of 4)",
+     "s": "D.DU.UDU",
+     "src": {
+      "label": "Your YouTube tutorial — strokes measured in the Pallavi and Charanam (0:51–3:09)",
+      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+     }
+    },
+    {
+     "label": "Hard — the tutorial pattern in 16ths, as played: D . . . | D . d u | . u d . | D . d u; accents on beats 1, 2 and 4",
+     "s": "D...D.du.ud.D.du",
+     "src": {
+      "label": "Your YouTube tutorial (“down up down down”) — every 16th measured, 0:51–3:09",
+      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+     }
+    }
+   ],
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "desc": "Capo 1, open chords only (Em Am D G C, Bm7 in Instrumental 2), one chord per bar. Pallavi, Charanam and Instrumental 1 from MJ Music Notes (they match the recording bar for bar); “Okasari chusi” from Bonson's chart (G Em C D, the first chord of each bar) because the recording plays G–C–Em–Am–C–D there, not MJ's Em.",
+     "src": {
+      "label": "MJ Music Notes + Bonson's chart (Indian Guitar Tabs / UG) for “Okasari chusi”",
+      "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
+     },
+     "sections": [
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 2",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G",
+        "Em",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "G",
+        "C",
+        "Em",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 3",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 2",
+       "feel": "mid",
+       "bars": [
+        "Bm7",
+        "Am",
+        "Bm7",
+        "Am",
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "G",
+        "C",
+        "Em",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 4",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Em",
+        "C",
+        "D",
+        "G",
+        "Em",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi — ending",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Medium",
+     "desc": "Capo 1. Bonson's chart (Indian Guitar Tabs, copied on Ultimate Guitar) in Em shapes — the same changes the tutor plays: Em→Am inside the Pallavi's second bar, “Okasari chusi” G C | Em Am | C | D. Charanam from MJ Music Notes (C G on “Musugesukodu” / “Nanu nannugane”, which the recording plays; Bonson's C Em does not fit).",
+     "src": {
+      "label": "Bonson's chart (Indian Guitar Tabs / Ultimate Guitar) + your tutorial + MJ Music Notes (Charanam)",
+      "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
+     },
+     "sections": [
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi",
+       "feel": "full",
+       "bars": [
+        "G C",
+        "Em Am",
+        "C",
+        "D",
+        "G C",
+        "Em Am",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 2",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G",
+        "Em",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C G",
+        "G",
+        "C G",
+        "Em",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 3",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 2",
+       "feel": "mid",
+       "bars": [
+        "Bm",
+        "Am G",
+        "Bm",
+        "Am G",
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C G",
+        "G",
+        "C G",
+        "Em",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 4",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em Am",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi 2",
+       "feel": "full",
+       "bars": [
+        "G C",
+        "Em Am",
+        "C",
+        "D",
+        "G C",
+        "Em Am",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi — ending",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Hard",
+     "desc": "Medium plus what the recording plays, measured from the bass and instrument stems: A → Am (B♭ → B♭m) in the later Pallavis and the ending, G D and Em Bm in Instrumental 1, B → Bm in Instrumental 2, D Em / D Bm at the ends of the Charanams, and the bass-line version of the second “Okasari chusi” (G Am | Bm Em | Am | D).",
+     "src": {
+      "label": "Bonson's chart + MJ Music Notes + measurement of your recording (Demucs bass / instrument stems)",
+      "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
+     },
+     "sections": [
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi",
+       "feel": "full",
+       "bars": [
+        "G C",
+        "Em Am",
+        "C",
+        "D",
+        "G C",
+        "Em Am",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi 2",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "A Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G D",
+        "Em Bm",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D Em",
+        "C G",
+        "G",
+        "C G",
+        "Em",
+        "D",
+        "D Bm"
+       ]
+      },
+      {
+       "name": "Pallavi 3",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Instrumental 2",
+       "feel": "mid",
+       "bars": [
+        "Bm",
+        "Am G",
+        "B Bm",
+        "Am G",
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "full",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D Em",
+        "C G",
+        "G",
+        "C G",
+        "Em",
+        "D",
+        "D Bm"
+       ]
+      },
+      {
+       "name": "Pallavi 4",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em Am",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Okasari chusi 2",
+       "feel": "full",
+       "bars": [
+        "G Am",
+        "Bm Em",
+        "Am",
+        "D",
+        "G Am",
+        "Bm Em",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi — ending",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "Am",
+        "D",
+        "Em",
+        "Em",
+        "A Am",
+        "A Am",
+        "A Am",
+        "D"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "Capo 1, Em shapes (sounds in F minor). 92 BPM (measured 91.97), timed to your MP3: first downbeat 3.46 s after a sung pickup; bar lines checked against the bass (gate 9).",
+    "Tutorial (Telugu Guitar Songs): “capo on the first fret … the chords are E minor, C major, A minor and D major … strumming pattern down up down down.”",
+    "Strumming, as the tutor plays it (keep the hand moving in 16ths: down on the beat and the &, up on e and a): D . . . | D . d u | . u d . | D . d u. Accent beats 1, 2 and 4.",
+    "MJ Music Notes writes the pattern as DDD-DU-DUDD-DU; it can't be placed on the beat grid without guessing, so it isn't used as a pattern.",
+    "Shapes with capo 1: Em = Fm, Am = B♭m, D = E♭, G = A♭, C = D♭, Bm = Cm, A = B♭. Easy plays Bm as Bm7 (x20202)."
+   ],
+   "sources": [
+    {
+     "label": "Telugu Guitar Songs — YouTube tutorial (capo 1, Em C Am D, “down up down down”)",
+     "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+    },
+    {
+     "label": "MJ Music Notes — capo 1, Em Am D G C, strum DDD-DU-DUDD-DU",
+     "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
+    },
+    {
+     "label": "Indian Guitar Tabs — Bonson's chart in F minor (G# Fm A#m C# D#)",
+     "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
+    },
+    {
+     "label": "Ultimate Guitar — same chart as Indian Guitar Tabs",
+     "url": "https://tabs.ultimate-guitar.com/tab/naresh-iyer/nenu-nuvvantu-chords-1153469"
+    },
+    {
+     "label": "ChordZone — F minor, 4/4, 90 BPM, strum DU,DU,DU,DU",
+     "url": "https://www.chordzone.org/2016/03/orange-movie-nenu-nuvvantu.html"
+    },
+    {
+     "label": "Chordify — Fm, B♭m, E♭, A♭ at 91 BPM",
+     "url": "https://chordify.net/chords/nenu-nuvvantu-full-song-with-lyrics-orange-songs-ram-charan-tej-genelia-harris-jayaraj-aditya-musicnmovies"
+    },
+    {
+     "label": "EliteTarun — YouTube tutorial (capo 1: Em C Am D)",
+     "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+    }
+   ],
+   "links": [
+    {
+     "label": "Play-along video (Star Maa Music)",
+     "url": "https://www.youtube.com/watch?v=XZGTTLiWRXg"
+    },
+    {
+     "label": "Guitar tutorial (Telugu Guitar Songs)",
+     "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "gate4_bpm": 91.97,
+    "gate5_map": true,
+    "gate6_top1": 0.844,
+    "gate6_top2": 0.896,
+    "release_ok": true,
+    "g4": true,
+    "g5": true,
+    "g6": true,
+    "g7": true,
+    "g8": true,
+    "g9": true,
+    "top1": 0.844,
+    "top2": 0.896,
+    "bpm_measured": 91.97,
+    "scores_by_version": {
+     "easy": [
+      0.887,
+      0.943
+     ],
+     "medium": [
+      0.844,
+      0.896
+     ],
+     "hard": [
+      0.835,
+      0.901
+     ]
+    },
+    "disputed": "Gate 6 scored on the instruments only (Demucs guitar+piano+bass+other stems). check_timing.py (gate 9): the pipeline's grid was 1 beat late (bass 6x stronger on its beat 4) — map shifted −1 beat; fit 0.450 → 0.564, bass now hardest on beat 1; scores above are on the corrected grid. Okasari chusi: MJ writes Em…D / Em…G / Em…D, but the recording (bass A♭ D♭ | C B♭ | B♭ | E♭) plays Bonson's G C | Em Am | C | D — Easy and Medium follow Bonson. Charanam: Bonson's C Em on 'Musugesukodu' / 'Nanu nannugane' not used — the recording plays MJ's C G. Instrumental 2: MJ's Em D Em D does not fit; the recording plays Cm | B♭m A♭ | C Cm | B♭m A♭ | Fm (Bm | Am G | B Bm | Am G | Em in shapes). MJ's strum DDD-DU-DUDD-DU not placed on the grid (ambiguous)."
+   },
+   "rev": 2,
+   "map": [
+    3.458,
+    32.135,
+    53.009,
+    68.66,
+    89.511,
+    126.059,
+    141.71,
+    162.584,
+    199.086,
+    230.41,
+    251.285
+   ]
+  }
+ ]
+}

@@ -1,0 +1,670 @@
+{
+ "songbook": 1,
+ "songs": [
+  {
+   "id": "nenu-nuvvantu",
+   "order": 8,
+   "title": "Nenu Nuvvantu",
+   "artist": "Harris Jayaraj",
+   "from": "Orange (2010, Telugu) · sung by Naresh Iyer",
+   "key": "F minor (Em shapes, capo 1)",
+   "capo": 1,
+   "bpm": 96,
+   "beatsPerBar": 4,
+   "subdiv": 2,
+   "timeLabel": "4/4 · 8ths",
+   "length": "4:34",
+   "youtube": "https://www.youtube.com/watch?v=XZGTTLiWRXg",
+   "strums": [
+    {
+     "label": "Easy — DU DU DU DU, straight 8ths",
+     "s": "DUDUDUDU",
+     "src": {
+      "label": "ChordZone (F minor, 4/4, tempo 90, 'DU,DU,DU,DU')",
+      "url": "https://www.chordzone.org/2016/03/orange-movie-nenu-nuvvantu.html"
+     }
+    },
+    {
+     "label": "Medium — EliteTarun 'DDUUDD DU': 8 strokes, one per 8th (the space only groups 6 + 2)",
+     "s": "DDUUDDDU",
+     "src": {
+      "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU', capo 1",
+      "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+     }
+    },
+    {
+     "label": "Hard — MJ Music Notes 'DDD-DU-DUDD-DU': one symbol per 16th, each '-' a rest, last 2 slots rest",
+     "s": "DDD.DU.DUDD.DU..",
+     "src": {
+      "label": "MJ Music Notes (Fm, capo 1, Em Am D G C, 'DDD-DU-DUDD-DU')",
+      "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
+     }
+    }
+   ],
+   "patterns": {
+    "ring": {
+     "label": "Intro — DU DU DU DU (ChordZone)",
+     "s": "DUDUDUDU",
+     "src": {
+      "label": "ChordZone (F minor, 4/4, tempo 90, 'DU,DU,DU,DU')",
+      "url": "https://www.chordzone.org/2016/03/orange-movie-nenu-nuvvantu.html"
+     }
+    },
+    "mid": {
+     "label": "Verses/interludes — DDUUDD DU (EliteTarun)",
+     "s": "DDUUDDDU",
+     "src": {
+      "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU', capo 1",
+      "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+     }
+    },
+    "full": {
+     "label": "Pallavi — DDUUDD DU (EliteTarun)",
+     "s": "DDUUDDDU",
+     "src": {
+      "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU', capo 1",
+      "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+     }
+    }
+   },
+   "versions": {
+    "simple": {
+     "label": "Easy",
+     "src": {
+      "label": "Telugu Guitar Songs tutorial (your link), on-screen chords 0:51–3:09",
+      "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+     },
+     "desc": "From your Telugu Guitar Songs tutorial: capo 1, four open chords Em C Am D. Pallavi [Em C Am | C Am Em] ×2, Okasari [Em C Am Em] ×2, Charanam [Em C Am Em] ×2 then [Em C | Em C Am D]. EliteTarun's tutorial shows the same progressions. Interludes (not in the tutorial) from MJ Music Notes / ChordZone: Em Am D G and Em D Em D.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G",
+        "Em",
+        "Am",
+        "D",
+        "G"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Em",
+        "C",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Em",
+        "C",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "C",
+        "Am",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari (end)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "C",
+        "Am",
+        "Em",
+        "Em",
+        "C",
+        "Am",
+        "Em"
+       ]
+      }
+     ]
+    },
+    "intermediate": {
+     "label": "Medium",
+     "src": {
+      "label": "MJ Music Notes (Fm, capo 1, Em Am D G C, 'DDD-DU-DUDD-DU')",
+      "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
+     },
+     "desc": "From MJ Music Notes (capo 1, Fm): Em Am D plus G and C. Pallavi Em · Em→Am · D; Okasari Em · D · Em→G · Em→D; Charanam G→Am · Em→D ×2, C→G · C→G→Em→D · D (ohovooo). Last Okasari line goes G→Em.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "D",
+        "D",
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "D",
+        "D",
+        "Em",
+        "G",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G",
+        "Em",
+        "Am",
+        "D",
+        "G"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "D",
+        "D"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "G",
+        "C",
+        "G",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "D",
+        "D",
+        "Em",
+        "Em",
+        "Em",
+        "Am",
+        "Am",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari (end)",
+       "feel": "full",
+       "bars": [
+        "Em",
+        "Em",
+        "D",
+        "D",
+        "G",
+        "Em",
+        "Em",
+        "D"
+       ]
+      }
+     ]
+    },
+    "band": {
+     "label": "Hard",
+     "src": {
+      "label": "Ultimate Guitar — hellolala123 (G# Fm A#m C# D#, no capo)",
+      "url": "https://tabs.ultimate-guitar.com/tab/naresh-iyer/nenu-nuvvantu-chords-1153469"
+     },
+     "desc": "Ultimate Guitar (hellolala123), moved down a fret for capo 1 (G#→G, Fm→Em, A#m→Am, C#→C, D#→D) — same chords as IndianGuitarTabs. Pallavi line 2 changes G Am C Am C inside the line; Okasari G C Em Am · C D; Charanam ends C Em Em G Am D. Dsus4 → D before 'ohovooo' from ChordZone (Ebsus4 at capo 0). Dsus4 = xx0233.",
+     "sections": [
+      {
+       "name": "Intro",
+       "feel": "ring",
+       "bars": [
+        "Em",
+        "Em",
+        "Em",
+        "Em"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2",
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari",
+       "feel": "full",
+       "bars": [
+        "G:2 C:2",
+        "Em:2 Am:2",
+        "C",
+        "D",
+        "G:2 C:2",
+        "Em:2 Am:2",
+        "C",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2"
+       ]
+      },
+      {
+       "name": "Interlude 1",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "Am",
+        "D",
+        "G",
+        "Em",
+        "Am",
+        "D",
+        "G"
+       ]
+      },
+      {
+       "name": "Charanam 1",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "Em",
+        "C",
+        "Em:2 G:2",
+        "Am:2 Dsus4:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi (return)",
+       "feel": "full",
+       "bars": [
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2"
+       ]
+      },
+      {
+       "name": "Interlude 2",
+       "feel": "mid",
+       "bars": [
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D",
+        "Em",
+        "D"
+       ]
+      },
+      {
+       "name": "Charanam 2",
+       "feel": "mid",
+       "bars": [
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "G",
+        "Am",
+        "Em",
+        "D",
+        "C",
+        "Em",
+        "C",
+        "Em:2 G:2",
+        "Am:2 Dsus4:2",
+        "D"
+       ]
+      },
+      {
+       "name": "Pallavi",
+       "feel": "full",
+       "bars": [
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2",
+        "G:2 Em:2",
+        "Em",
+        "G:2 Am:2",
+        "C:2 Am:2",
+        "C",
+        "Am:2 D:2"
+       ]
+      },
+      {
+       "name": "Pallavi — Okasari (end)",
+       "feel": "full",
+       "bars": [
+        "G:2 C:2",
+        "Em:2 Am:2",
+        "C",
+        "D",
+        "G:2 C:2",
+        "Em:2 Am:2",
+        "C",
+        "D"
+       ]
+      }
+     ]
+    }
+   },
+   "notes": [
+    "Capo 1, Em shapes (sounds in F minor) — your tutorial shows the capo on fret 1; MJ Music Notes and EliteTarun say the same; ChordZone, UG and IndianGuitarTabs give the same chords without capo (Fm Bbm Eb Ab Db).",
+    "Your play-along video (Star Maa upload) plays about 4% fast: ChordU measures it at 96.05 BPM reading F#m, against 92.15 BPM in F minor for the film audio (96.05 ÷ 92.15 = 1.042 ≈ PAL 25/24). Chordify also flags it as off-standard tuning (~433 Hz). With that video, capo 1 sounds ~70 cents flat; use capo 2 (same shapes) and set the tuner to A4 = 432. With the film audio / your own MP3: capo 1, A4 = 440, ~92 BPM.",
+    "BPM 96 matches the play-along video; the song itself is ~92 (ChordU on the film audio; ChordZone says 90).",
+    "Strumming: your tutorial explains its pattern out loud (0:31–0:51) with no on-screen text, so it is not in here yet — tell me the pattern and it becomes Pattern 4.",
+    "Bar counts come from the chord sheets (one chord per bar, ~2 bars per lyric line), not from the recording — run pipeline/songbook_pipeline.py on your MP3 to align them."
+   ],
+   "sources": [
+    {
+     "label": "Telugu Guitar Songs tutorial (your link), on-screen chords 0:51–3:09",
+     "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+    },
+    {
+     "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU', capo 1",
+     "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+    },
+    {
+     "label": "MJ Music Notes (Fm, capo 1, Em Am D G C, 'DDD-DU-DUDD-DU')",
+     "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
+    },
+    {
+     "label": "ChordZone (F minor, 4/4, tempo 90, 'DU,DU,DU,DU')",
+     "url": "https://www.chordzone.org/2016/03/orange-movie-nenu-nuvvantu.html"
+    },
+    {
+     "label": "Ultimate Guitar — hellolala123 (G# Fm A#m C# D#, no capo)",
+     "url": "https://tabs.ultimate-guitar.com/tab/naresh-iyer/nenu-nuvvantu-chords-1153469"
+    },
+    {
+     "label": "IndianGuitarTabs — bonson (G# Fm A#m C# D#; reply: song is in F minor)",
+     "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
+    },
+    {
+     "label": "ChordU — film audio: 92.15 BPM, Ab major / F minor",
+     "url": "https://chordu.com/chords-tabs-nenu-nuvvantu-full-song-orange-movie-songs-telugu-harrisjayaraj-ramcharantej-genelia-d-souza-id_Dm5ZZ8hhm3Y"
+    },
+    {
+     "label": "ChordU — your play-along video: 96.05 BPM, reads F#m (upload runs ~4% fast)",
+     "url": "https://chordu.com/chords-tabs-orange-nenu-nuvvantu-id_XZGTTLiWRXg"
+    }
+   ],
+   "links": [
+    {
+     "label": "Play-along: Orange : Nenu Nuvvantu",
+     "url": "https://www.youtube.com/watch?v=XZGTTLiWRXg"
+    },
+    {
+     "label": "Tutorial — Telugu Guitar Songs",
+     "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
+    },
+    {
+     "label": "Tutorial — EliteTarun (capo 1)",
+     "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
+    }
+   ],
+   "qa": {
+    "g1": true,
+    "g2": true,
+    "g3": true,
+    "g4": false,
+    "g5": false,
+    "g6": false,
+    "g7": false,
+    "g8": false,
+    "g9": false,
+    "disputed": "Easy (tutorial) skips the G on 'Nenu nuvvantu' that UG/IGT/MJ-verse play, and uses Em C Am Em where UG has G C Em Am / C D on 'Okasari' — kept as the tutorial's simplification; Medium/Hard carry the sheet chords. MJ starts the charanam G→Am like UG; ChordZone agrees. Play-along video pitch/tempo is ~4% above the film audio (see notes). Strum placements for EliteTarun and MJ on the beat grid are my reading of their written strings — not yet confirmed against audio."
+   },
+   "rev": 1
+  }
+ ]
+}

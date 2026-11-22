@@ -36,34 +36,37 @@
    },
    "strums": [
     {
-     "label": "Easy — your tutorial: D, D U, D, D (1, 2 &, 3, 4) — no up after 4",
+     "label": "Easy — your tutorial: D, D U, D, D (1, 2 &, 3, 4) — no up after 4 · Confidence 25% (AI summary only — below the Easy rule (needs 100%); waiting for your ear check)",
      "s": "D.DUD.D.",
      "src": {
       "label": "Your Telugu Guitar Songs tutorial — strumming shown at 0:36 (D D U D D), via YouTube's Ask summary of the video (AI — check by ear)",
       "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU&t=36s"
-     }
+     },
+     "conf": 25
     },
     {
-     "label": "Medium — EliteTarun 'DDUUDD DU' (on screen): down, down, up, up, down, down, down, up — one stroke per 8th is my placement",
+     "label": "Medium — EliteTarun 'DDUUDD DU' (on screen): down, down, up, up, down, down, down, up — one stroke per 8th is my placement · Confidence 50% (1 source: EliteTarun on-screen text; beat placement mine)",
      "s": "DDUUDDDU",
      "src": {
       "label": "EliteTarun tutorial — on-screen 'Strumming: DDUUDD DU' (0:11 and through the song), capo 1",
       "url": "https://www.youtube.com/watch?v=tmPcVCPiO-c"
-     }
+     },
+     "conf": 50
     },
     {
-     "label": "Hard — the tutorial pattern in 16ths, as played: D . . . | D . d u | . u d . | D . d u; accents on beats 1, 2 and 4",
+     "label": "Hard — the tutorial pattern in 16ths, as played: D . . . | D . d u | . u d . | D . d u; accents on beats 1, 2 and 4 · Confidence 50% (1 source: measured from your tutorial's audio)",
      "s": "D...D.du.ud.D.du",
      "src": {
       "label": "Your YouTube tutorial (“down up down down”) — every 16th measured, 0:51–3:09",
       "url": "https://www.youtube.com/watch?v=Ja4ib4VyIDU"
-     }
+     },
+     "conf": 50
     }
    ],
    "versions": {
     "simple": {
      "label": "Easy",
-     "desc": "Capo 1, open chords only (Em Am D G C, Bm7 in Instrumental 2), one chord per bar. Pallavi, Charanam and Instrumental 1 from MJ Music Notes (they match the recording bar for bar); “Okasari chusi” from Bonson's chart (G Em C D, the first chord of each bar) because the recording plays G–C–Em–Am–C–D there, not MJ's Em.",
+     "desc": "Capo 1, open chords only (Em Am D G C, Bm7 in Instrumental 2), one chord per bar. Pallavi, Charanam and Instrumental 1 from MJ Music Notes (they match the recording bar for bar); “Okasari chusi” from Bonson's chart (G Em C D, the first chord of each bar) because the recording plays G–C–Em–Am–C–D there, not MJ's Em. Confidence 100%: MJ Music Notes / Bonson's chart + your recording (88.7% match).",
      "src": {
       "label": "MJ Music Notes + Bonson's chart (Indian Guitar Tabs / UG) for “Okasari chusi”",
       "url": "https://mjmusicnotes.com/nenu-nuvvantu-guitar-chords/"
@@ -242,11 +245,12 @@
         "D"
        ]
       }
-     ]
+     ],
+     "conf": 100
     },
     "intermediate": {
      "label": "Medium",
-     "desc": "Capo 1. Bonson's chart (Indian Guitar Tabs, copied on Ultimate Guitar) in Em shapes — the same changes the tutor plays: Em→Am inside the Pallavi's second bar, “Okasari chusi” G C | Em Am | C | D. Charanam from MJ Music Notes (C G on “Musugesukodu” / “Nanu nannugane”, which the recording plays; Bonson's C Em does not fit).",
+     "desc": "Capo 1. Bonson's chart (Indian Guitar Tabs, copied on Ultimate Guitar) in Em shapes — the same changes the tutor plays: Em→Am inside the Pallavi's second bar, “Okasari chusi” G C | Em Am | C | D. Charanam from MJ Music Notes (C G on “Musugesukodu” / “Nanu nannugane”, which the recording plays; Bonson's C Em does not fit). Confidence 100%: Bonson's chart + MJ + your tutorial + your recording (84.4% match).",
      "src": {
       "label": "Bonson's chart (Indian Guitar Tabs / Ultimate Guitar) + your tutorial + MJ Music Notes (Charanam)",
       "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
@@ -425,11 +429,12 @@
         "D"
        ]
       }
-     ]
+     ],
+     "conf": 100
     },
     "band": {
      "label": "Hard",
-     "desc": "Medium plus what the recording plays, measured from the bass and instrument stems: A → Am (B♭ → B♭m) in the later Pallavis and the ending, G D and Em Bm in Instrumental 1, B → Bm in Instrumental 2, D Em / D Bm at the ends of the Charanams, and the bass-line version of the second “Okasari chusi” (G Am | Bm Em | Am | D).",
+     "desc": "Medium plus what the recording plays, measured from the bass and instrument stems: A → Am (B♭ → B♭m) in the later Pallavis and the ending, G D and Em Bm in Instrumental 1, B → Bm in Instrumental 2, D Em / D Bm at the ends of the Charanams, and the bass-line version of the second “Okasari chusi” (G Am | Bm Em | Am | D). Confidence 50%: base chords 100% (Bonson + MJ + recording); the extra colour chords are measured only — 50%.",
      "src": {
       "label": "Bonson's chart + MJ Music Notes + measurement of your recording (Demucs bass / instrument stems)",
       "url": "https://www.indianguitartabs.com/chords/threads/chords-sub-nenu-nuvvantu-orange-telugu.47210/"
@@ -608,7 +613,8 @@
         "D"
        ]
       }
-     ]
+     ],
+     "conf": 50
     }
    },
    "notes": [
@@ -618,7 +624,8 @@
     "MJ Music Notes writes the pattern as DDD-DU-DUDD-DU; it can't be placed on the beat grid without guessing, so it isn't used as a pattern.",
     "Shapes with capo 1: Em = Fm, Am = B♭m, D = E♭, G = A♭, C = D♭, Bm = Cm, A = B♭. Easy plays Bm as Bm7 (x20202).",
     "Pattern 1 (Easy): D D U D D from YouTube's Ask summary of your tutorial at 0:36 — down on 1, 2, up on the & of 2, down on 3 and 4, no up after 4. It replaces ChordZone's generic DU DU DU DU. The measured tutorial pattern (Hard) ends with a light up on the a of 4.",
-    "Pattern 2 (Medium): EliteTarun's on-screen DDUUDD DU, played as 8 strokes, one per 8th (my placement). It replaces the 8th-note simplification of the measured pattern, whose directions didn't match Pattern 3."
+    "Pattern 2 (Medium): EliteTarun's on-screen DDUUDD DU, played as 8 strokes, one per 8th (my placement). It replaces the 8th-note simplification of the measured pattern, whose directions didn't match Pattern 3.",
+    "Confidence (rule 4): each verified source = 50%, AI summary = 25%, my own beat placement caps at 50%. Easy chords 100%, Medium 100%, Hard 50% (colour chords measured only). Pattern 1 25%, Pattern 2 50%, Pattern 3 50% — Pattern 1 is below the Easy rule until you confirm it by ear."
    ],
    "sources": [
     {

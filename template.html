@@ -510,6 +510,12 @@ const QA_GATES=[["g1","Sources (≥2)"],["g2","Key / capo / tempo verified"],["g
 // 1. Every strumming pattern names its source: a tutorial / chord site, the user, or a measurement of the recording. No generic defaults.
 // 2. Easy / Medium / Hard chord versions each name their source (tutorials first; the recording settles disagreements).
 // 3. Easy = open chords only (no barre): barre chords are swapped for open shapes (F→Fmaj7, Bm→Bm7 …).
+// 4. CONFIDENCE FILTER — score every chord version and strumming pattern by its independent, verified sources:
+//    each source that states the same thing = 50% (1 source 50%, 2 agreeing sources 100%, capped at 100%).
+//    Verified = text on a tutorial screen / chord site, a measurement of the recording, or the user confirming by ear.
+//    An AI summary (e.g. YouTube's Ask) counts as half a source (25%); a beat placement I chose myself caps the item at 50%.
+//    Easy chords and Pattern 1 (Easy) must be 100%; Medium/Hard and Patterns 2–3 need ≥ 50%; below 50% stays out of
+//    the file (notes only) and never goes into Auto. Write the score in the label: "· 100% (2 sources)".
 const OPEN_CHORDS=new Set(["A","Am","A7","Am7","Asus2","Asus4","Aadd9","B7","Bm7","C","C7","Cadd9","Cmaj7","Csus2","D","D7","Dm","Dm7","Dmaj7","Dsus2","Dsus4","D/F#","E","E7","Em","Em7","Esus4","Emaj7","Fmaj7","G","G7","Gmaj7","Gsus2","Gsus4","G/B","Em/G","C/G"]);
 function ruleIssues(s){const out=[];
   (s.strums||[]).forEach((x,i)=>{if(!x.src)out.push("Pattern "+(i+1)+" ("+String(x.label||x.s).replace(/^Pattern \d+ — /,"").slice(0,40)+") has no source");});

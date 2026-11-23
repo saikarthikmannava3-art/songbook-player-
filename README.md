@@ -70,6 +70,8 @@ Takes UG's words as written, puts the song's **Easy** chords on them (`--version
 1. Sources (≥2) · 2. Key/capo/tempo verified · 3. Chords & strumming from sources: Easy / Medium / Hard chords and every strumming pattern come only from the song's tutorials / chord sites, you, or a measurement of the recording, each with its source (no generic defaults); Easy = open chords only — checked by the app (badge) and `check_rules()` in the pipeline · 4. Beats from the recording · 5. Sections aligned · 6. Measured accuracy ≥ 80% · 7. Lyrics match the chart · 8. **Play-along backing**: guitar removed from the song's MP3, soft guide guitar only where the accompaniment drops out (`pipeline/make_backing.py`, or 🎸 Remove guitar / the MP3 field in ＋ New song).
 Songs that miss a gate show as **Draft** in the app.
 
+**Confidence filter** (every chord version and strumming pattern): each independent, verified source that states it = 50% (2 agreeing sources = 100%). Verified = on-screen tutorial text, a chord site, a measurement of the recording, or you confirming by ear; an AI summary counts as half a source, and a beat placement chosen by the assistant caps it at 50%. Easy chords and Pattern 1 must be 100%; Medium/Hard and Patterns 2–3 need at least 50%; anything lower stays in the notes, never in the chart or Auto. The score goes in the label.
+
 ```bash
 pip install librosa numpy        # plus ffmpeg for mp3/m4a
 python3 pipeline/songbook_pipeline.py songs/7-years.json "7 Years.m4a" --out songs/7-years.json

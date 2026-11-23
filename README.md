@@ -51,11 +51,20 @@ Demucs splits the song into 6 stems; the guitar is removed, everything else stay
 | `songs/*.json` | One song per file (open with **⇧ Open song file**) |
 | `pipeline/songbook_pipeline.py` | Times a song chart to an MP3/M4A (gates 4–6 of the 7-gate checklist) |
 | `pipeline/make_backing.py` | Makes a no-guitar play-along backing from a song file (Demucs) |
+| `pipeline/fetch_lyrics.py` | Lyrics sheet from a song's Ultimate Guitar link: UG's words + the song's Easy chords, lined up with the chart (gate 7), saved locally and to your cloud |
 | `pipeline/serve.py` | Local server for the app + the 🎸 Remove guitar button |
 | `images/artists/` | Artist photos from Wikimedia Commons — authors and licences in `CREDITS.json` |
 
 ## Your own files (not in the repo)
 Song MP3s and lyrics `.txt` files are copyrighted, so `.gitignore` keeps them out. The same goes for `audio/` (backing tracks, stems), `songs/<id>-lyrics.txt` (lyrics the app loads automatically when present) and `songbook/` (your songbook PDFs and their page index). Load them in the app with **🎵 Load song file** / **📁 Connect my music folder** and **⇧ Open .txt** — the app remembers them on each device.
+
+## Lyrics from Ultimate Guitar
+```bash
+python3 pipeline/fetch_lyrics.py SONG_ID "https://tabs.ultimate-guitar.com/tab/…"   # first time: the song's UG link (print links work too)
+python3 pipeline/fetch_lyrics.py SONG_ID      # refresh later (the link is saved in the song as lyricsSrc)
+python3 pipeline/fetch_lyrics.py --all        # refresh every song that has a link
+```
+Takes UG's words as written, puts the song's **Easy** chords on them (`--version intermediate|band` for another version; the choice is saved), and checks that every section changes chords in the chart's order, so the lyrics follow live. Writes `songs/<id>-lyrics.txt` (not committed) and saves it to your cloud. After a refresh, each device replaces its saved copy of that sheet once. Push the song file so the app knows.
 
 ## Mandatory song pipeline
 1. Sources (≥2) · 2. Key/capo/tempo verified · 3. Chords & strumming from sources: Easy / Medium / Hard chords and every strumming pattern come only from the song's tutorials / chord sites, you, or a measurement of the recording, each with its source (no generic defaults); Easy = open chords only — checked by the app (badge) and `check_rules()` in the pipeline · 4. Beats from the recording · 5. Sections aligned · 6. Measured accuracy ≥ 80% · 7. Lyrics match the chart · 8. **Play-along backing**: guitar removed from the song's MP3, soft guide guitar only where the accompaniment drops out (`pipeline/make_backing.py`, or 🎸 Remove guitar / the MP3 field in ＋ New song).

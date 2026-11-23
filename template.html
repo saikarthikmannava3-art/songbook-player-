@@ -910,6 +910,9 @@ const headerName=l=>l.replace(/^[\s{#]+|[}:\s]+$/g,"").replace(/^(c|comment|soc|
 function renderLyrics(){
   const s=cur,box=document.createElement("details");box.className="card lyr";box.id="lyrBox";box.open=store.get("sb-lyr-open",true);
   box.addEventListener("toggle",()=>store.set("sb-lyr-open",box.open));
+  // sheet refreshed from its Ultimate Guitar link (pipeline/fetch_lyrics.py stamps lyricsSrc.updated): replace this device's copy once
+  const lv=s.lyricsSrc&&s.lyricsSrc.updated;
+  if(lv&&store.get("sb-lyr-ver-"+s.id,null)!==lv){try{localStorage.removeItem(lyrKey());}catch(e){}lyrTried[s.id]=0;store.set("sb-lyr-ver-"+s.id,lv);}
   const text=store.get(lyrKey(),null);
   // no lyrics saved in this browser yet → load songs/<id>-lyrics.txt if it sits beside the app (kept local, never committed)
   if(text==null&&!lyrTried[s.id]){lyrTried[s.id]=1;fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null).catch(()=>null)

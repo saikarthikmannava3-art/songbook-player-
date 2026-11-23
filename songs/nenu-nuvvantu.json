@@ -73,7 +73,7 @@
      },
      "sections": [
       {
-       "name": "Pallavi",
+       "name": "Pallavi (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -90,7 +90,7 @@
        ]
       },
       {
-       "name": "Okasari chusi",
+       "name": "Okasari chusi (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G",
@@ -104,7 +104,7 @@
        ]
       },
       {
-       "name": "Pallavi 2",
+       "name": "Pallavi 2 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -116,7 +116,7 @@
        ]
       },
       {
-       "name": "Instrumental 1",
+       "name": "Instrumental 1 (Interlude)",
        "feel": "mid",
        "bars": [
         "Em",
@@ -130,7 +130,7 @@
        ]
       },
       {
-       "name": "Charanam 1",
+       "name": "Charanam 1 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -150,7 +150,7 @@
        ]
       },
       {
-       "name": "Pallavi 3",
+       "name": "Pallavi 3 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -162,7 +162,7 @@
        ]
       },
       {
-       "name": "Instrumental 2",
+       "name": "Instrumental 2 (Interlude)",
        "feel": "mid",
        "bars": [
         "Bm7",
@@ -176,7 +176,7 @@
        ]
       },
       {
-       "name": "Charanam 2",
+       "name": "Charanam 2 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -196,7 +196,7 @@
        ]
       },
       {
-       "name": "Pallavi 4",
+       "name": "Pallavi 4 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -214,7 +214,7 @@
        ]
       },
       {
-       "name": "Okasari chusi 2",
+       "name": "Okasari chusi 2 (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G",
@@ -228,7 +228,7 @@
        ]
       },
       {
-       "name": "Pallavi — ending",
+       "name": "Pallavi — ending (Chorus · outro)",
        "feel": "full",
        "bars": [
         "Em",
@@ -257,7 +257,7 @@
      },
      "sections": [
       {
-       "name": "Pallavi",
+       "name": "Pallavi (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -274,7 +274,7 @@
        ]
       },
       {
-       "name": "Okasari chusi",
+       "name": "Okasari chusi (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G C",
@@ -288,7 +288,7 @@
        ]
       },
       {
-       "name": "Pallavi 2",
+       "name": "Pallavi 2 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -300,7 +300,7 @@
        ]
       },
       {
-       "name": "Instrumental 1",
+       "name": "Instrumental 1 (Interlude)",
        "feel": "mid",
        "bars": [
         "Em",
@@ -314,7 +314,7 @@
        ]
       },
       {
-       "name": "Charanam 1",
+       "name": "Charanam 1 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -334,7 +334,7 @@
        ]
       },
       {
-       "name": "Pallavi 3",
+       "name": "Pallavi 3 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -346,7 +346,7 @@
        ]
       },
       {
-       "name": "Instrumental 2",
+       "name": "Instrumental 2 (Interlude)",
        "feel": "mid",
        "bars": [
         "Bm",
@@ -360,7 +360,7 @@
        ]
       },
       {
-       "name": "Charanam 2",
+       "name": "Charanam 2 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -380,7 +380,7 @@
        ]
       },
       {
-       "name": "Pallavi 4",
+       "name": "Pallavi 4 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -398,7 +398,7 @@
        ]
       },
       {
-       "name": "Okasari chusi 2",
+       "name": "Okasari chusi 2 (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G C",
@@ -412,7 +412,7 @@
        ]
       },
       {
-       "name": "Pallavi — ending",
+       "name": "Pallavi — ending (Chorus · outro)",
        "feel": "full",
        "bars": [
         "Em",
@@ -441,7 +441,7 @@
      },
      "sections": [
       {
-       "name": "Pallavi",
+       "name": "Pallavi (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -458,7 +458,7 @@
        ]
       },
       {
-       "name": "Okasari chusi",
+       "name": "Okasari chusi (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G C",
@@ -472,7 +472,7 @@
        ]
       },
       {
-       "name": "Pallavi 2",
+       "name": "Pallavi 2 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -484,7 +484,7 @@
        ]
       },
       {
-       "name": "Instrumental 1",
+       "name": "Instrumental 1 (Interlude)",
        "feel": "mid",
        "bars": [
         "Em",
@@ -498,7 +498,7 @@
        ]
       },
       {
-       "name": "Charanam 1",
+       "name": "Charanam 1 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -518,7 +518,7 @@
        ]
       },
       {
-       "name": "Pallavi 3",
+       "name": "Pallavi 3 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -530,7 +530,7 @@
        ]
       },
       {
-       "name": "Instrumental 2",
+       "name": "Instrumental 2 (Interlude)",
        "feel": "mid",
        "bars": [
         "Bm",
@@ -544,7 +544,7 @@
        ]
       },
       {
-       "name": "Charanam 2",
+       "name": "Charanam 2 (Verse)",
        "feel": "full",
        "bars": [
         "G",
@@ -564,7 +564,7 @@
        ]
       },
       {
-       "name": "Pallavi 4",
+       "name": "Pallavi 4 (Chorus)",
        "feel": "full",
        "bars": [
         "Em",
@@ -582,7 +582,7 @@
        ]
       },
       {
-       "name": "Okasari chusi 2",
+       "name": "Okasari chusi 2 (Anupallavi · second theme)",
        "feel": "full",
        "bars": [
         "G Am",
@@ -596,7 +596,7 @@
        ]
       },
       {
-       "name": "Pallavi — ending",
+       "name": "Pallavi — ending (Chorus · outro)",
        "feel": "full",
        "bars": [
         "Em",
@@ -625,7 +625,8 @@
     "Shapes with capo 1: Em = Fm, Am = B♭m, D = E♭, G = A♭, C = D♭, Bm = Cm, A = B♭. Easy plays Bm as Bm7 (x20202).",
     "Pattern 1 (Easy): D D U D D from YouTube's Ask summary of your tutorial at 0:36 — down on 1, 2, up on the & of 2, down on 3 and 4, no up after 4. It replaces ChordZone's generic DU DU DU DU. The measured tutorial pattern (Hard) ends with a light up on the a of 4.",
     "Pattern 2 (Medium): EliteTarun's on-screen DDUUDD DU, played as 8 strokes, one per 8th (my placement). It replaces the 8th-note simplification of the measured pattern, whose directions didn't match Pattern 3.",
-    "Confidence (rule 4): each verified source = 50%, AI summary = 25%, my own beat placement caps at 50%. Easy chords 100%, Medium 100%, Hard 50% (colour chords measured only). Pattern 1 75% (AI summary + your ear check; one more written source would make it 100%), Pattern 2 50%, Pattern 3 50%."
+    "Confidence (rule 4): each verified source = 50%, AI summary = 25%, my own beat placement caps at 50%. Easy chords 100%, Medium 100%, Hard 50% (colour chords measured only). Pattern 1 75% (AI summary + your ear check; one more written source would make it 100%), Pattern 2 50%, Pattern 3 50%.",
+    "Section names: Pallavi = chorus (the refrain that keeps coming back), Charanam = verse, Anupallavi = second theme / pre-chorus ('Okasari chusi'), Instrumental = interlude."
    ],
    "sources": [
     {
@@ -701,7 +702,7 @@
     },
     "disputed": "Gate 6 scored on the instruments only (Demucs guitar+piano+bass+other stems). check_timing.py (gate 9): the pipeline's grid was 1 beat late (bass 6x stronger on its beat 4) — map shifted −1 beat; fit 0.450 → 0.564, bass now hardest on beat 1; scores above are on the corrected grid. Okasari chusi: MJ writes Em…D / Em…G / Em…D, but the recording (bass A♭ D♭ | C B♭ | B♭ | E♭) plays Bonson's G C | Em Am | C | D — Easy and Medium follow Bonson. Charanam: Bonson's C Em on 'Musugesukodu' / 'Nanu nannugane' not used — the recording plays MJ's C G. Instrumental 2: MJ's Em D Em D does not fit; the recording plays Cm | B♭m A♭ | C Cm | B♭m A♭ | Fm (Bm | Am G | B Bm | Am G | Em in shapes). MJ's strum DDD-DU-DUDD-DU not placed on the grid (ambiguous)."
    },
-   "rev": 4,
+   "rev": 5,
    "map": [
     3.458,
     32.135,

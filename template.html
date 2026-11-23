@@ -1511,7 +1511,7 @@ function renderDrill(d){
     const secs=[],seen=new Set();let curS=null;flat.forEach(b=>{if(!curS||b.sec){curS={name:b.secName,bars:[]};secs.push(curS);}curS.bars.push(b.toks.map(t=>({c:t.c,b:t.b})));});
     if(flat.length)seqs.push({label:"📜 Whole song ("+flat.length+" bars)",bars:secs.flatMap(x=>x.bars)});
     secs.forEach(x=>{const sig=JSON.stringify(x.bars);if(seen.has(sig))return;seen.add(sig);const split=x.bars.some(b=>b.length>1);
-      seqs.push({label:"📜 "+x.name.replace(/\s*\d+$/,"")+" ("+x.bars.length+" bars"+(split?", changes inside bars":"")+")",bars:x.bars});});}
+      seqs.push({label:"📜 "+x.name.replace(/\s*\d+(?=\s*\(|$)/,"")+" ("+x.bars.length+" bars"+(split?", changes inside bars":"")+")",bars:x.bars});});}
   // patterns: this song's sourced strums (for their time signature) + practice patterns for every time signature
   const songPats=(cur.strums||[]).filter(x=>x&&x.s&&patTs(x.s)).map(x=>({ts:patTs(x.s),label:"🎵 "+x.label,s:String(x.s),src:x.src?(x.src.label||String(x.src)):""}));
   const defTs=(songPats[0]||{}).ts||"4/4";

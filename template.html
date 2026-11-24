@@ -917,14 +917,17 @@ function renderLyrics(){
   const s=cur,box=document.createElement("details");box.className="card lyr";box.id="lyrBox";box.open=store.get("sb-lyr-open",true);
   box.addEventListener("toggle",()=>store.set("sb-lyr-open",box.open));
   // sheet refreshed from its Ultimate Guitar link (pipeline/fetch_lyrics.py stamps lyricsSrc.updated): replace this device's copy once
-  const lv=s.lyricsSrc&&s.lyricsSrc.updated;
-  if(lv&&store.get("sb-lyr-ver-"+s.id,null)!==lv){try{localStorage.removeItem(lyrKey());}catch(e){}lyrTried[s.id]=0;store.set("sb-lyr-ver-"+s.id,lv);}
+  const lv=s.lyricsSrc&&s.lyricsSrc.updated,lvOld=lv&&store.get("sb-lyr-ver-"+s.id,null)!==lv;
+  if(lvOld&&!lyrTried["v"+s.id]){lyrTried["v"+s.id]=1;   // swap only once the new sheet has actually arrived (file beside the app, else your cloud)
+    fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null).catch(()=>null)
+      .then(async t=>{if(!(t&&t.trim()))t=await cloudLyricsGet(s.id);if(!(t&&t.trim()))return;
+        store.set(lyrKey(),t);store.set("sb-lyr-ver-"+s.id,lv);store.set("sb-lyr-cloud-"+s.id,Date.now());if(cur===s)rerenderLyrics();toast("🎤 Lyrics for "+s.title+" updated");});}
   const text=store.get(lyrKey(),null);
   // no lyrics saved in this browser yet → load songs/<id>-lyrics.txt if it sits beside the app (kept local, never committed)
   if(text==null&&!lyrTried[s.id]){lyrTried[s.id]=1;fetch("songs/"+encodeURIComponent(s.id)+"-lyrics.txt",{cache:"no-store"}).then(r=>r.ok?r.text():null).catch(()=>null)
     .then(async t=>{let from="file";if(!(t&&t.trim())){t=await cloudLyricsGet(s.id);from="cloud";}
       if(t&&t.trim()&&cur===s&&store.get(lyrKey(),null)==null){store.set(lyrKey(),t);rerenderLyrics();if(from==="cloud")toast("☁️ Lyrics for "+s.title+" loaded from your cloud");else cloudLyricsSave(s.id,1500);}});}
-  else if(text!=null&&cloudKey()&&!store.get("sb-lyr-cloud-"+s.id,null))cloudLyricsSave(s.id,2500);
+  else if(text!=null&&!lvOld&&cloudKey()&&!store.get("sb-lyr-cloud-"+s.id,null))cloudLyricsSave(s.id,2500);
   box.appendChild(el("summary",null,"Lyrics with chords"));
   const tools=el("div","tools");
   const eb=el("button",null,lyrEdit?"✓ Done editing":"✎ Paste / edit lyrics");eb.type="button";eb.setAttribute("aria-pressed",lyrEdit?"true":"false");

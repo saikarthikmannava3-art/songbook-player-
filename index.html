@@ -2200,16 +2200,17 @@ async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)re
   const nud=(d,l)=>{const b=el("button","libbtn",l);b.type="button";b.addEventListener("click",()=>{off.value=(+off.value+d).toFixed(2);});return b;};
   offRow.append(el("span",null,"Song time at the video's start:"),nud(-1,"−1s"),nud(-0.1,"−0.1"),off,nud(0.1,"+0.1"),nud(1,"+1s"));host.appendChild(offRow);
   const opts=el("div","takebar");const mk=(k,l,d)=>{const lab=el("label","rgauto");const c=document.createElement("input");c.type="checkbox";c.checked=store.get("sb-vi-"+k,d);c.addEventListener("change",()=>store.set("sb-vi-"+k,c.checked));lab.append(c,l);lab._c=c;return lab;};
-  const oFix=mk("fix","🎸 Guitar sound fix",true),oLyr=mk("lyr","Add lyrics",true),oChd=mk("chd","Show chord names",true),oMix=mk("mix2","Mix in the song (with its singing)",true);const oIso=mk("iso","🎚 Isolate my guitar (removes the song your phone heard)",true);oIso.title="Uses Demucs on the Mac's Songbook server, so the speaker in the room doesn't bury your guitar";opts.append(oFix,oIso,oLyr,oChd,oMix);host.appendChild(opts);
+  const oFix=mk("fix","🎸 Guitar sound fix",true),oLyr=mk("lyr","Add lyrics",true),oChd=mk("chd","Show chord names",true),oMix=mk("mix2","Mix in the song (with its singing)",true);const oIso=mk("iso","🎚 Isolate my guitar (removes the song your phone heard)",true);oIso.title="Uses Demucs on the Mac's Songbook server, so the speaker in the room doesn't bury your guitar";const oNat=mk("nat","🌿 Natural sound — your phone's own sound, song turned up (best)",true);oNat.title="Keeps your recording (guitar and the song in the room, naturally in sync) and only rebalances it: song up, guitar a little down. Needs the Songbook server on your Mac";opts.append(oNat,oFix,oIso,oLyr,oChd,oMix);host.appendChild(opts);
   const bl=el("label","rgauto");bl.title="How loud your guitar is next to the song. 0 dB = as loud as the song; −6 dB (default) keeps the singing clear";const blr=document.createElement("input");blr.type="range";blr.min=-12;blr.max=3;blr.step=1;blr.value=store.get("sb-vi-gdb6",VMIX.gdb);
   const blv=el("span",null,(+blr.value>0?"+":"")+blr.value+" dB");blr.addEventListener("input",()=>{blv.textContent=(+blr.value>0?"+":"")+blr.value+" dB";store.set("sb-vi-gdb6",+blr.value);});
   const blh=document.createElement("small");blh.className="muted";blh.textContent=" · the song is the main sound; strum spikes are held down and the video never clips";bl.append("Your guitar vs the song ",blr,blv,blh);host.appendChild(bl);
+  const syncNat=()=>{const on=oNat._c.checked;[oFix,oIso,oMix,bl].forEach(e=>{e.style.opacity=on?0.4:1;e.title=on?"Not used with 🌿 Natural sound":"";});};oNat._c.addEventListener("change",syncNat);syncNat();
   const go=el("button","libbtn primary","✨ Make the video");go.type="button";const bar=el("div","dbar");const fill=el("i");bar.appendChild(fill);bar.hidden=true;host.append(go,bar);
   alignVideo(file,s).then(r=>{if(cur!==s)return;if(!r){st.textContent="No song audio on this device to match against — set the start time by hand (play the preview and match it to the chords).";return;}
     if(r.err){st.textContent=r.err+" — set the start time by hand.";return;}off.value=r.offset.toFixed(2);host._align=r;
     host._vb=r.vb;const sc=scoreTake(r.vb,s,r.offset);host._score=sc;const old=host.querySelector(".scorecard,.scorenote");if(old)old.remove();const card=scoreCard(sc);card.classList.add("scorenote");st.after(card);
     st.textContent=r.score>0.25?"✓ Matched: your video starts at "+fmt(Math.max(0,r.offset))+" of the song"+(r.offset<0?" (the song begins "+(-r.offset).toFixed(1)+" s into your video)":"")+".":"≈ Best guess "+fmt(Math.max(0,r.offset))+" — the song is hard to hear in this video, check it with the preview.";});
-  go.addEventListener("click",()=>makeVideo(file,s,+off.value||0,{fix:oFix._c.checked,iso:oIso._c.checked,lyrics:oLyr._c.checked||oChd._c.checked,words:oLyr._c.checked,chords:oChd._c.checked,mix:oMix._c.checked,gdb:+blr.value},go,bar,fill,st));}
+  go.addEventListener("click",()=>makeVideo(file,s,+off.value||0,{nat:oNat._c.checked,fix:oFix._c.checked,iso:oIso._c.checked,lyrics:oLyr._c.checked||oChd._c.checked,words:oLyr._c.checked,chords:oChd._c.checked,mix:oMix._c.checked,gdb:+blr.value},go,bar,fill,st));}
 // Full-quality path (mandatory when the Mac's Songbook server is running): offline audio (guitar fix + backing at the matched offset),
 // offline lyric overlay frames drawn by drawFrame at 10 fps, ffmpeg overlays them on the ORIGINAL video at its own frame rate.
 // 🎚 Video sound — guardrails (2026-11-23: a 7 Years video had the guitar loudest in 86% of seconds, the singing 4 dB under it,
@@ -2254,31 +2255,37 @@ async function songBackingBlob(s){const r=await idb("get",s.id);if(r&&r.blob&&is
   if(r&&r.blob)return {blob:r.blob,name:r.name||"",backing:false};return null;}
 // checks before a video is made — each one stops the render once with a clear message; tapping again goes ahead
 async function videoGuard(s,o,st,go){const host=$("vidImport")||{},warn=[];
-  if(o.mix){const sb=await songBackingBlob(s);host._song=sb;
+  if(o.mix&&!o.nat){const sb=await songBackingBlob(s);host._song=sb;
     if(!sb)warn.push("No song audio on this device, so the video would have only your guitar. Connect your cloud (☁️) or load the song's backing first.");
     else if(!sb.backing)warn.push("The song file here still has the original guitar (“"+sb.name+"”), so it will clash with yours. Load the no-guitar backing (🎸 Remove guitar) for a clean mix.");}
   const al=host._align;if(al&&!al.err&&al.score<=0.25)warn.push("The song is hard to hear in your video, so the start time is a guess. Play the preview and check the lyrics line up.");
-  if(o.mix&&!o.iso)warn.push("“Isolate my guitar” is off: the song your phone heard plus the clean song will sound like an echo.");
+  if(o.mix&&!o.iso&&!o.nat)warn.push("“Isolate my guitar” is off: the song your phone heard plus the clean song will sound like an echo.");
   const key=JSON.stringify([s.id,o.mix,o.iso,o.gdb,warn]);
   if(warn.length&&host._guardOk!==key){host._guardOk=key;st.textContent="⚠ Before making the video: "+warn.join(" ")+" Tap ✨ Make the video again to go ahead anyway.";go.textContent="✨ Make the video anyway";return false;}
   return true;}
 async function hqAvailable(){try{const r=await fetch("api/health",{cache:"no-store"});if(!r.ok)return false;const h=await r.json();return !!(h.ok&&h.ffmpeg&&h.render);}catch(e){return false;}}
 async function makeVideo(file,s,offset,o,go,bar,fill,st){if(!(await videoGuard(s,o,st,go)))return;go.textContent="✨ Make the video";if(await hqAvailable())return makeVideoHQ(file,s,offset,o,go,bar,fill,st);
-  toast("Real-time video (the full-quality 30 fps version needs the app opened on your Mac with the Songbook server)");return makeVideoRT(file,s,offset,o,go,bar,fill,st);}
+  toast(o.nat?"🌿 Natural sound needs the app opened on your Mac with the Songbook server — this copy keeps your phone's sound as recorded":"Real-time video (the full-quality 30 fps version needs the app opened on your Mac with the Songbook server)");return makeVideoRT(file,s,offset,o,go,bar,fill,st);}
 async function makeVideoHQ(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop the current recording first");return;}audio();pause();go.disabled=true;bar.hidden=false;
   const prog=(p,msg)=>{fill.style.width=Math.round(p*100)+"%";st.textContent=msg;};
   try{
     prog(0.02,"🎬 Full quality · reading the video…");
     let vb=($("vidImport")||{})._vb;if(!vb)vb=await ctx.decodeAudioData(await file.arrayBuffer());
+    let mixed,rep;
+    if(o.nat){prog(0.05,"🎬 Full quality · 1/4 🌿 natural sound: rebalancing your recording with its own stems (Demucs, 1–2 min)…");
+      const q=await fetch("api/natural",{method:"POST",body:toWav(vb,1)});if(!q.ok)throw new Error("natural sound: "+(await q.text()).slice(0,160));
+      let R={};try{R=JSON.parse(decodeURIComponent(q.headers.get("X-Report")||"{}"));}catch(e){}const sg=v=>(v>=0?"+":"")+v;
+      mixed=await ctx.decodeAudioData(await q.arrayBuffer());rep="🌿 Natural sound: "+(R.before==null?"song turned up, guitar a little down (no singing heard in this take)":"singing "+sg(R.before)+" → "+sg(R.after)+" dB over your guitar")+" · peak "+R.peak+" dBFS · no clipping";($("vidImport")||{})._rep=rep;}
+    else{
     prog(0.05,"🎬 Full quality · 1/4 sound: guitar fix"+(o.mix?" + backing":"")+"…");
     let gtr=null;if(o.iso){try{prog(0.06,"🎬 Full quality · 1/4 isolating your guitar from the room sound (Demucs)…");
       const q=await fetch("api/isolate",{method:"POST",body:toWav(vb,1)});if(q.ok)gtr=await ctx.decodeAudioData(await q.arrayBuffer());else toast("Guitar isolation skipped: "+(await q.text()).slice(0,80));}catch(e){toast("Guitar isolation skipped");}}
     const oc=new OfflineAudioContext(2,vb.length,vb.sampleRate),src=oc.createBufferSource();src.buffer=gtr||vb;(o.fix?guitarChain(oc,src):src).connect(oc.destination);src.start();
     if(gtr){const room=oc.createBufferSource(),rg=oc.createGain();room.buffer=vb;rg.gain.value=0.05;room.connect(rg).connect(oc.destination);room.start();}  // a trace of the room, so it still sounds live
-    let mixed=await oc.startRendering();
+    mixed=await oc.startRendering();
     let back=null;if(o.mix){const sb=($("vidImport")||{})._song||await songBackingBlob(s);if(sb){const ab=await ctx.decodeAudioData(await sb.blob.arrayBuffer()),ob=new OfflineAudioContext(2,vb.length,vb.sampleRate),bs=ob.createBufferSource();
       bs.buffer=ab;bs.connect(ob.destination);bs.start(Math.max(0,-offset),Math.max(0,offset));back=await ob.startRendering();}}
-    const vm=videoMix(bufChs(mixed),back&&bufChs(back),vb.sampleRate,o);mixed=chsBuf(vm.chs,vb.sampleRate);const rep=soundReport(vm.report);($("vidImport")||{})._rep=rep;
+    const vm=videoMix(bufChs(mixed),back&&bufChs(back),vb.sampleRate,o);mixed=chsBuf(vm.chs,vb.sampleRate);rep=soundReport(vm.report);($("vidImport")||{})._rep=rep;}
     const wav=toWav(mixed,1);
     prog(0.12,"🎬 Full quality · 2/4 uploading the video to the Songbook server…");
     let r=await fetch("api/render/start?name="+encodeURIComponent(file.name),{method:"POST",body:file});if(!r.ok)throw new Error("server: "+(await r.text()).slice(0,120));const info=await r.json(),id=info.id;
@@ -2291,7 +2298,7 @@ async function makeVideoHQ(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop t
     await Promise.all(pool);
     prog(0.82,"🎬 Full quality · 4/4 sending the sound…");r=await fetch("api/render/audio?id="+id,{method:"POST",body:wav});if(!r.ok)throw new Error("audio upload");
     prog(0.88,"🎬 Full quality · putting it together at the original frame rate (ffmpeg)…");
-    const label=[o.fix?"guitar fix":"",o.lyrics?"lyrics":"",o.mix?"backing":""].filter(Boolean).join(" + ")||"copy";
+    const label=[o.nat?"natural sound":(o.fix?"guitar fix":""),o.lyrics?"lyrics":"",o.mix&&!o.nat?"backing":""].filter(Boolean).join(" + ")||"copy";
     r=await fetch("api/render/finish?id="+id+"&w="+W+"&ovfps=10&label="+encodeURIComponent(label),{method:"POST"});if(!r.ok)throw new Error((await r.text()).slice(0,200));
     const name=decodeURIComponent(r.headers.get("X-Filename")||(file.name+".mp4")),blob=new Blob([await r.blob()],{type:"video/mp4"});
     await tdb("put",{songId:s.id,name:name.replace(/\.mp4$/,""),date:Date.now(),dur,mixed:!!o.mix,clean:!!o.fix,video:true,hq:true,from:offset,type:"video/mp4",blob,score:($("vidImport")||{})._score||null});
@@ -2304,7 +2311,7 @@ async function makeVideoRT(file,s,offset,o,go,bar,fill,st){if(rec){toast("Stop t
   const sc=Math.min(1,1280/Math.max(v.videoWidth,v.videoHeight)),cv=document.createElement("canvas");cv.width=Math.round(v.videoWidth*sc/2)*2;cv.height=Math.round(v.videoHeight*sc/2)*2;
   const dest=ctx.createMediaStreamDestination(),src=ctx.createMediaElementSource(v);
   const lim=ctx.createDynamicsCompressor();lim.threshold.value=-3;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=0.002;lim.release.value=0.12;lim.connect(dest);
-  const gg=ctx.createGain(),sg=ctx.createGain();(o.fix?guitarChain(ctx,src):src).connect(gg).connect(lim);
+  const gg=ctx.createGain(),sg=ctx.createGain();(o.fix&&!o.nat?guitarChain(ctx,src):src).connect(gg).connect(lim);if(o.nat)o={...o,mix:false};
   let ba=null;if(o.mix){const sb=($("vidImport")||{})._song||await songBackingBlob(s);if(sb){ba=new Audio(URL.createObjectURL(sb.blob));ctx.createMediaElementSource(ba).connect(sg).connect(lim);
     try{const vb=($("vidImport")||{})._vb,ab=await ctx.decodeAudioData(await sb.blob.arrayBuffer());const gl=vb?activeLevel(bufChs(vb),vb.sampleRate):0,bl=activeLevel(bufChs(ab),ab.sampleRate);
       if(gl>0&&bl>0){const g=bl*Math.pow(10,(o.gdb!=null?o.gdb:VMIX.gdb)/20)/gl,top=Math.max(g,1);gg.gain.value=g/top*0.7;sg.gain.value=0.7/top;}}catch(e){}}}

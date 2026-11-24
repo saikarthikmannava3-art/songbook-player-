@@ -8,6 +8,8 @@ serve.py: serves the Songbook Player like `python3 -m http.server`, plus the �
 Endpoints (localhost only):
   GET  /api/health   → {"ok":true,"demucs":bool,"ffmpeg":bool}
   POST /api/isolate  → body = WAV of a take; returns the guitar stem (removes the song the phone heard in the room)
+  POST /api/natural  → body = WAV of a take; returns the natural mix (natural_mix.py: your phone's own sound, song turned
+                       up / guitar down with its own stems, cleaned and levelled); header X-Report = JSON sound check
   POST /api/backing  → body = the song file; headers X-Filename, X-Title, X-Artist (URL-encoded), X-Guide
                        returns the finished .m4a (also saved to ~/Downloads/Songbook Backing Tracks)
 """
@@ -16,6 +18,7 @@ import http.server, importlib.util, json, os, shutil, subprocess, sys, tempfile,
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import make_backing as mb  # noqa: E402
+import natural_mix as nm  # noqa: E402
 
 JOB = threading.Lock()
 MAX_BYTES = 300 * 1024 * 1024
@@ -38,7 +41,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.split("?")[0] == "/api/health":
             return self._json(200, {"ok": True, "demucs": importlib.util.find_spec("demucs") is not None,
-                                    "ffmpeg": shutil.which("ffmpeg") is not None, "render": True, "busy": JOB.locked()})
+                                    "ffmpeg": shutil.which("ffmpeg") is not None, "render": True, "natural": True, "busy": JOB.locked()})
         return super().do_GET()
 
     def do_POST(self):
@@ -47,6 +50,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self._render(p[len("/api/render/"):])
         if p == "/api/isolate":
             return self._isolate()
+        if p == "/api/natural":
+            return self._natural()
         if p != "/api/backing":
             return self._json(404, {"error": "not found"})
         if self.client_address[0] not in ("127.0.0.1", "::1"):
@@ -109,6 +114,30 @@ def _isolate(self):
 
 
 Handler._isolate = _isolate
+
+
+def _natural(self):
+    """POST /api/natural: body = WAV of a take → the natural mix as WAV (see natural_mix.py)."""
+    if self.client_address[0] not in ("127.0.0.1", "::1"):
+        return self._json(403, {"error": "local use only"})
+    body = _read_body(self, MAX_BYTES)
+    if not body: return self._json(400, {"error": "send a WAV"})
+    if not JOB.acquire(blocking=False):
+        return self._json(409, {"error": "busy, try again in a minute"})
+    tmp = tempfile.mkdtemp(prefix="sb-nat-")
+    try:
+        src, out = os.path.join(tmp, "take.wav"), os.path.join(tmp, "natural.wav")
+        open(src, "wb").write(body)
+        try: rep = nm.natural(src, out)
+        except Exception as e: return self._json(500, {"error": str(e)[-300:]})
+        data = open(out, "rb").read()
+        self.send_response(200); self.send_header("Content-Type", "audio/wav"); self.send_header("Content-Length", str(len(data)))
+        self.send_header("X-Report", urllib.parse.quote(json.dumps(rep))); self.end_headers(); self.wfile.write(data)
+    finally:
+        JOB.release(); shutil.rmtree(tmp, ignore_errors=True)
+
+
+Handler._natural = _natural
 
 RENDERS = {}
 RENDER_OUT = os.path.expanduser("~/Downloads/Songbook Videos")

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""remix_video.py — give an existing Songbook video the new sound (song first, guitar under it, no clipping).
+"""remix_video.py — give an existing Songbook video a better sound, keeping its picture (lyrics/chords already drawn in).
 
-Keeps the video's picture (lyrics/chords already drawn in) and rebuilds the sound with the same steps as the app's
-"✨ Make the video" (index.html: guitarChain → videoMix):
+Default — 🌿 natural (the app's default too): your phone's own recording, rebalanced with its own Demucs stems:
+song + singing up, guitar a little down, light clean-up, −16 dB level, −1 dBFS limiter (pipeline/natural_mix.py).
+Nothing is layered on top, so it sounds like the room, not "separated". Chosen on Nenu Nuvvantu (version C).
+
+  ~/.venvs/demucs/bin/python pipeline/remix_video.py LYRICS_VIDEO.mp4 RECORDING.mov
+
+--separated: the older method, = the app with 🌿 off (index.html: guitarChain → videoMix):
   1. Your guitar: Demucs pulls it out of your phone recording (the room's copy of the song is dropped),
      plus a 5 % trace of the room so it still sounds live; the app's guitar tone (no pick/air boost, cut at 4.2 kHz).
   2. The song: the no-guitar backing (best), or --song-from VIDEO: the song recovered from an older render of this
@@ -12,12 +17,14 @@ Keeps the video's picture (lyrics/chords already drawn in) and rebuilds the soun
   4. Prints the sound check and writes "<video> (NEW sound).mp4" next to the video.
 
 Usage:
-  ~/.venvs/demucs/bin/python pipeline/remix_video.py LYRICS_VIDEO.mp4 RECORDING.mov --song BACKING.m4a [--gdb -4]
-  ~/.venvs/demucs/bin/python pipeline/remix_video.py LYRICS_VIDEO.mp4 RECORDING.mov --song-from OLD_RENDER.mp4
+  ~/.venvs/demucs/bin/python pipeline/remix_video.py LYRICS_VIDEO.mp4 RECORDING.mov --separated --song BACKING.m4a [--gdb -4]
+  ~/.venvs/demucs/bin/python pipeline/remix_video.py LYRICS_VIDEO.mp4 RECORDING.mov --separated --song-from OLD_RENDER.mp4
 Needs: ffmpeg, node, the Demucs venv (demucs, soundfile, numpy).
 """
 import argparse, os, shutil, subprocess, sys, tempfile
 import numpy as np, soundfile as sf
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import natural_mix
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 44100
@@ -63,12 +70,22 @@ def onset_env(x, hop=441):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("video"); ap.add_argument("recording")
-    g = ap.add_mutually_exclusive_group(required=True); g.add_argument("--song"); g.add_argument("--song-from")
+    ap.add_argument("--separated", action="store_true", help="older method: separated guitar + a song file (needs --song or --song-from)")
+    g = ap.add_mutually_exclusive_group(); g.add_argument("--song"); g.add_argument("--song-from")
     ap.add_argument("--gdb", type=float, default=-6, help="your guitar vs the song in dB (default −6)")
     ap.add_argument("--out")
     a = ap.parse_args()
+    if a.separated and not (a.song or a.song_from): ap.error("--separated needs --song or --song-from")
+    if not a.separated and (a.song or a.song_from): ap.error("--song/--song-from only apply with --separated")
     tmp = tempfile.mkdtemp(prefix="sb-remix-")
     try:
+        if not a.separated:
+            print("🌿 natural sound: rebalancing your recording with its own stems (Demucs, a few minutes)…")
+            mixw = os.path.join(tmp, "mix.wav"); print("   " + natural_mix.report_text(natural_mix.natural(a.recording, mixw)))
+            out = a.out or os.path.splitext(a.video)[0].replace(" (guitar fix + lyrics + backing)", "") + " (natural sound).mp4"
+            run(["ffmpeg", "-loglevel", "error", "-y", "-i", a.video, "-i", mixw, "-map", "0:v:0", "-map", "1:a:0",
+                 "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out])
+            print("✓ " + out); return
         print("1/4 separating your guitar from the recording (Demucs)…")
         rec = wav(a.recording, os.path.join(tmp, "rec.wav"))
         gtr, room_song = split_guitar(os.path.join(tmp, "rec.wav"), tmp)

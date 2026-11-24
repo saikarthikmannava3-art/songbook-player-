@@ -911,7 +911,7 @@ function parseLine(line){ // → [{chord, text, start}] where start = index of t
   segs.push({chord,text:line.slice(last),start:last});
   return segs.filter((s,i)=>i>0||s.text.length);
 }
-const isHeader=l=>/^\s*(\{.*\}|#.*|[A-Za-z][\w\s\-']{0,24}:)\s*$/.test(l);
+const isHeader=l=>/^\s*(\{.*\}|#.*|[A-Za-z][\w\s\-'—–().,&]{0,32}:)\s*$/.test(l);   // "Pallavi — ending:", "Verse 1 (soft):" …
 const headerName=l=>l.replace(/^[\s{#]+|[}:\s]+$/g,"").replace(/^(c|comment|soc|start_of_\w+)\s*:\s*/i,"");
 function renderLyrics(){
   const s=cur,box=document.createElement("details");box.className="card lyr";box.id="lyrBox";box.open=store.get("sb-lyr-open",true);

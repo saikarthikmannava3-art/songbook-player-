@@ -307,7 +307,15 @@ def embed(song):
 
 def gate7(sections, text):
     """Same idea as buildLyricSync() in the app: section k ↔ the k-th sheet heading, chord-change order must match."""
-    found = re.findall(r'^(.+?):\n((?:.+\n?)+)', text.split('\n\n', 1)[1], re.M)
+    # headings exactly as the app reads them (isHeader() in index.html)
+    head = re.compile(r"^\s*([A-Za-z][\w\s\-'—–().,&]{0,32}):\s*$")
+    found, cur = [], None
+    for line in text.split('\n\n', 1)[1].split('\n'):
+        m = head.match(line)
+        if m:
+            cur = [m.group(1).strip(), ""]; found.append(cur)
+        elif cur:
+            cur[1] += line + "\n"
     bad = []
     for k, s in enumerate(sections):
         name, body = found[k] if k < len(found) else ("", "")

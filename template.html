@@ -2201,8 +2201,8 @@ async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)re
   offRow.append(el("span",null,"Song time at the video's start:"),nud(-1,"−1s"),nud(-0.1,"−0.1"),off,nud(0.1,"+0.1"),nud(1,"+1s"));host.appendChild(offRow);
   const opts=el("div","takebar");const mk=(k,l,d)=>{const lab=el("label","rgauto");const c=document.createElement("input");c.type="checkbox";c.checked=store.get("sb-vi-"+k,d);c.addEventListener("change",()=>store.set("sb-vi-"+k,c.checked));lab.append(c,l);lab._c=c;return lab;};
   const oFix=mk("fix","🎸 Guitar sound fix",true),oLyr=mk("lyr","Add lyrics",true),oChd=mk("chd","Show chord names",true),oMix=mk("mix2","Mix in the song (with its singing)",true);const oIso=mk("iso","🎚 Isolate my guitar (removes the song your phone heard)",true);oIso.title="Uses Demucs on the Mac's Songbook server, so the speaker in the room doesn't bury your guitar";opts.append(oFix,oIso,oLyr,oChd,oMix);host.appendChild(opts);
-  const bl=el("label","rgauto");bl.title="How loud your guitar is next to the song. 0 dB = as loud as the song; −4 dB (default) keeps the singing clear";const blr=document.createElement("input");blr.type="range";blr.min=-12;blr.max=3;blr.step=1;blr.value=store.get("sb-vi-gdb",VMIX.gdb);
-  const blv=el("span",null,(+blr.value>0?"+":"")+blr.value+" dB");blr.addEventListener("input",()=>{blv.textContent=(+blr.value>0?"+":"")+blr.value+" dB";store.set("sb-vi-gdb",+blr.value);});
+  const bl=el("label","rgauto");bl.title="How loud your guitar is next to the song. 0 dB = as loud as the song; −6 dB (default) keeps the singing clear";const blr=document.createElement("input");blr.type="range";blr.min=-12;blr.max=3;blr.step=1;blr.value=store.get("sb-vi-gdb6",VMIX.gdb);
+  const blv=el("span",null,(+blr.value>0?"+":"")+blr.value+" dB");blr.addEventListener("input",()=>{blv.textContent=(+blr.value>0?"+":"")+blr.value+" dB";store.set("sb-vi-gdb6",+blr.value);});
   const blh=document.createElement("small");blh.className="muted";blh.textContent=" · the song is the main sound; strum spikes are held down and the video never clips";bl.append("Your guitar vs the song ",blr,blv,blh);host.appendChild(bl);
   const go=el("button","libbtn primary","✨ Make the video");go.type="button";const bar=el("div","dbar");const fill=el("i");bar.appendChild(fill);bar.hidden=true;host.append(go,bar);
   alignVideo(file,s).then(r=>{if(cur!==s)return;if(!r){st.textContent="No song audio on this device to match against — set the start time by hand (play the preview and match it to the chords).";return;}
@@ -2215,7 +2215,7 @@ async function openVideoImport(file){const s=cur,host=$("vidImport");if(!host)re
 // 🎚 Video sound — guardrails (2026-11-23: a 7 Years video had the guitar loudest in 86% of seconds, the singing 4 dB under it,
 // strum spikes 18 dB over the average): the SONG is the main sound, your guitar sits under it at a measured level,
 // strum spikes are held down, the whole mix is brought to a normal loudness and never clips. The song is never turned down.
-const VMIX={gdb:-4,crest:12,target:-16,ceiling:-1};
+const VMIX={gdb:-6,crest:12,target:-16,ceiling:-1};   // −6: the singing stays ≥ ~2 dB over your guitar (checked on 3 songs)
 const isBackingName=n=>/backing|no guitar|karaoke|instrumental|minus ?one/i.test(n||"");
 function winRms(chs,a,b){let s=0,c=0;for(const d of chs)for(let j=a;j<b;j+=2){s+=d[j]*d[j];c++;}return Math.sqrt(s/Math.max(1,c));}
 function levels(chs,sr){const hop=Math.round(sr*0.25),n=chs[0].length,L=[];for(let i=0;i+hop<=n;i+=hop)L.push(winRms(chs,i,i+hop));return L;}

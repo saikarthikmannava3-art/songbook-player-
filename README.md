@@ -52,6 +52,7 @@ Demucs splits the song into 6 stems; the guitar is removed, everything else stay
 | `pipeline/songbook_pipeline.py` | Times a song chart to an MP3/M4A (gates 4–6 of the 7-gate checklist) |
 | `pipeline/make_backing.py` | Makes a no-guitar play-along backing from a song file (Demucs) |
 | `pipeline/fetch_lyrics.py` | Lyrics sheet from a song's Ultimate Guitar link: UG's words + the song's Easy chords, lined up with the chart (gate 7), saved locally and to your cloud |
+| `pipeline/remix_video.py` | Gives an existing lyrics video the new sound: your guitar (Demucs) 6 dB under the song, strum spikes held down, no clipping — same mix as the app (`videoMix`) |
 | `pipeline/serve.py` | Local server for the app + the 🎸 Remove guitar button |
 | `images/artists/` | Artist photos from Wikimedia Commons — authors and licences in `CREDITS.json` |
 
